@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DealSpark Recovery Desk</title><link rel="stylesheet" href="styles.css"></head>
+<body><main class="shell">
+<header class="hero"><div><p class="eyebrow">DealSpark</p><h1>Recovery Desk</h1><p>Turn missed leads into booked opportunities.</p></div><a href="index.html" class="secondary" style="padding:11px;border-radius:10px;text-decoration:none">Product home</a></header>
+<section class="metrics" aria-label="Pipeline metrics"><div><span>Open</span><strong id="openCount">0</strong></div><div><span>Qualified</span><strong id="qualifiedCount">0</strong></div><div><span>Booked</span><strong id="bookedCount">0</strong></div><div><span>Won</span><strong id="wonCount">0</strong></div></section>
+<section class="card"><h2>Add opportunity</h2><form id="leadForm"><input id="name" name="name" placeholder="Customer name" required><input id="contact" name="contact" placeholder="Phone or email" required><input id="service" name="service" placeholder="Service needed" required><textarea id="notes" name="notes" placeholder="What happened?"></textarea><button type="submit">Add to recovery desk</button></form></section>
+<section class="card"><div class="toolbar"><div><h2>Pipeline</h2><input id="search" placeholder="Search pipeline"></div><div class="actions"><button id="exportBtn" class="secondary">Export CSV</button><button id="clearBtn" class="danger">Clear data</button></div></div><div id="pipeline" class="pipeline"></div></section>
+</main><script src="app.js"></script></body></html>
