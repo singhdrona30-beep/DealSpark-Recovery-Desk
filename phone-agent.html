@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DealSpark — AI Phone Receptionist Demo</title>
+<style>
+body{margin:0;background:#f6f8fb;color:#101828;font-family:Inter,system-ui,sans-serif}.wrap{max-width:1100px;margin:auto;padding:32px 18px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:35px}.brand{font-weight:900;font-size:22px}.back{color:#155eef;text-decoration:none;font-weight:700}.eyebrow{color:#155eef;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.hero h1{font-size:clamp(2.3rem,5vw,4rem);margin:8px 0}.hero p{color:#667085;max-width:760px;line-height:1.6}.phone{max-width:520px;margin:28px auto 0;background:#101828;border-radius:30px;padding:22px;box-shadow:0 25px 70px #10182825}.screen{background:#fff;border-radius:20px;overflow:hidden}.head{padding:20px;text-align:center;border-bottom:1px solid #e4e7ec}.avatar{width:54px;height:54px;border-radius:50%;background:#155eef;color:#fff;display:grid;place-items:center;margin:0 auto 10px;font-weight:900}.status{font-size:12px;color:#067647;font-weight:800}.conversation{padding:20px;min-height:300px}.bubble{max-width:82%;padding:12px 14px;border-radius:15px;margin:10px 0;line-height:1.45;font-size:14px}.ai{background:#f2f4f7;color:#344054}.caller{background:#155eef;color:#fff;margin-left:auto}.controls{padding:16px;border-top:1px solid #e4e7ec;display:flex;gap:8px}.controls button{flex:1;border:1px solid #d0d5dd;background:#fff;border-radius:10px;padding:11px;font-weight:800;cursor:pointer}.controls button.primary{background:#155eef;color:#fff;border-color:#155eef}.result{margin-top:20px;background:#fff;border:1px solid #e4e7ec;border-radius:18px;padding:20px}.result h3{margin-top:0}.actions{display:flex;flex-wrap:wrap;gap:8px}.action{padding:8px 11px;border-radius:9px;background:#ecfdf3;border:1px solid #abefc6;color:#067647;font-size:13px;font-weight:800}.note{color:#667085;font-size:12px;margin-top:16px;text-align:center}
+</style></head><body><main class="wrap">
+<header class="top"><div class="brand">DealSpark</div><a class="back" href="index.html">← Back to products</a></header>
+<section class="hero"><div class="eyebrow">Product Demo • AI Phone Receptionist</div><h1>Your AI receptionist answers every call.</h1><p>Run a simulated HVAC customer call and see how DealSpark can identify the problem, capture the caller, qualify the opportunity and book the next step.</p></section>
+<section class="phone"><div class="screen"><div class="head"><div class="avatar">DS</div><b>DealSpark AI Receptionist</b><div class="status">● Online • Ready to answer</div></div><div id="conversation" class="conversation"></div><div class="controls"><button onclick="startCall()" class="primary">☎ Start Demo Call</button><button onclick="resetCall()">↻ Reset</button></div></div></section>
+<section class="result"><h3>AI Call Summary</h3><div id="summary">Start the demo call to see what the AI captures.</div><div id="actions" class="actions"></div></section>
+<div class="note">Demo mode — fictional customer, phone number and appointment. No real call is placed.</div>
+</main>
+<script>
+const convo=document.getElementById("conversation"),summary=document.getElementById("summary"),actions=document.getElementById("actions");
+let running=false;
+function bubble(text,type){const d=document.createElement("div");d.className="bubble "+type;d.textContent=text;convo.appendChild(d)}
+function startCall(){if(running)return;running=true;convo.innerHTML="";actions.innerHTML="";summary.textContent="AI is handling the call…";const steps=[
+["ai","Hi, thanks for calling. You've reached the DealSpark virtual receptionist. How can I help?"],
+["caller","My AC isn't cooling and I need someone tomorrow."],
+["ai","Absolutely. I can help with that. May I get your first name?"],
+["caller","James."],
+["ai","Thanks, James. What's the best number for our HVAC team to reach you?"],
+["caller","555-0198."],
+["ai","Got it. I have an AC repair request for tomorrow. I'll get this qualified for the team and arrange the next available appointment."],
+["ai","Thanks for calling. You're all set."]
+];let i=0;function next(){if(i<steps.length){bubble(steps[i][1],steps[i][0]);i++;setTimeout(next,650)}else{finish()}}next()}
+function finish(){summary.innerHTML="<b>James M.</b> • AC repair • Tomorrow • 555-0198";actions.innerHTML=["Call answered","Service identified","Customer captured","Lead qualified","Appointment requested"].map(x=>"<span class='action'>✓ "+x+"</span>").join("")}
+function resetCall(){running=false;convo.innerHTML="";summary.textContent="Start the demo call to see what the AI captures.";actions.innerHTML=""}
+</script></body></html>
