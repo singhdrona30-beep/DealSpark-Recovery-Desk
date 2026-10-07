@@ -29,7 +29,7 @@ function handle(raw){
    nextAfterService(); return;
  }
  if(state.step==="date"){
-   state.date=text;state.step="time";say("And what time works best? If you're flexible, just say "any time".");return;
+   state.date=text;state.step="time";say("And what time works best? If you're flexible, just say \"any time\".");return;
  }
  if(state.step==="time"){
    state.time=text;state.step="name";say("Thanks. What's your name?");return;
