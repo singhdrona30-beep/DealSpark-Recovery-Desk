@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DealSpark — Lead Recovery Demo</title><link rel="stylesheet" href="styles.css">
+<style>
+body{margin:0;background:#f6f8fb;color:#101828;font-family:Inter,system-ui,sans-serif}.wrap{max-width:1100px;margin:auto;padding:30px 18px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px}.brand{font-weight:900;font-size:22px}.back{color:#155eef;text-decoration:none;font-weight:700}.hero{margin-bottom:24px}.eyebrow{color:#155eef;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.hero h1{font-size:clamp(2.2rem,5vw,4rem);margin:8px 0}.hero p{color:#667085;max-width:700px;line-height:1.6}.demo{background:#fff;border:1px solid #e4e7ec;border-radius:22px;box-shadow:0 18px 55px #10182812;overflow:hidden}.bar{padding:18px 20px;border-bottom:1px solid #e4e7ec;display:flex;justify-content:space-between;align-items:center}.bar b{font-size:16px}.btn{border:0;border-radius:10px;padding:10px 14px;background:#155eef;color:#fff;font-weight:800;cursor:pointer}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:18px}.stat{border:1px solid #e4e7ec;border-radius:14px;padding:15px}.stat small{color:#667085}.stat strong{display:block;font-size:25px;margin-top:5px}.leads{padding:0 18px 18px}.lead{border:1px solid #e4e7ec;border-radius:14px;padding:16px;margin-top:10px;display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:12px;align-items:center}.lead small{display:block;color:#667085;margin-top:4px}.pill{display:inline-block;background:#eff8ff;color:#175cd3;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:800}.actions button{border:1px solid #d0d5dd;background:#fff;border-radius:8px;padding:7px 9px;margin-left:5px;cursor:pointer}.note{padding:0 18px 20px;color:#667085;font-size:13px}@media(max-width:750px){.stats{grid-template-columns:1fr 1fr}.lead{grid-template-columns:1fr}.actions button{margin:6px 6px 0 0}}
+</style></head>
+<body><main class="wrap">
+<header class="top"><div class="brand">DealSpark</div><a class="back" href="index.html">← Back to products</a></header>
+<section class="hero"><div class="eyebrow">Product Demo</div><h1>Lead Recovery Engine</h1><p>Recover leads that would normally disappear. This interactive demo shows how DealSpark can organize new opportunities, follow up, qualify prospects and move them toward a booking.</p></section>
+<section class="demo"><div class="bar"><b>Recovery Inbox</b><button class="btn" onclick="addLead()">＋ Simulate New Lead</button></div>
+<div class="stats"><div class="stat"><small>New</small><strong id="new">2</strong></div><div class="stat"><small>Follow-up</small><strong id="follow">1</strong></div><div class="stat"><small>Qualified</small><strong id="qualified">1</strong></div><div class="stat"><small>Booked</small><strong id="booked">0</strong></div></div>
+<div class="leads" id="leads"></div><div class="note">Demo mode — actions are simulated locally. No real customer messages are sent.</div></section>
+</main>
+<script>
+let leads=[
+{name:"Mike's Plumbing",service:"Emergency plumbing",contact:"Mike • 555-0142",status:"New"},
+{name:"Sarah Johnson",service:"Roof repair",contact:"sarah@example.com",status:"Follow-up"},
+{name:"Northside Dental",service:"Dental appointment",contact:"555-0188",status:"Qualified"}
+];
+function render(){const box=document.getElementById("leads");box.innerHTML="";const counts={New:0,"Follow-up":0,Qualified:0,Booked:0};leads.forEach((x,i)=>{counts[x.status]=(counts[x.status]||0)+1;const el=document.createElement("div");el.className="lead";el.innerHTML="<div><b>"+x.name+"</b><small>"+x.service+"</small></div><div>"+x.contact+"</div><div><span class='pill'>"+x.status+"</span></div><div class='actions'><button onclick='advance("+i+")'>"+(x.status==="Booked"?"Won":"Advance")+"</button><button onclick='followUp("+i+")'>Follow up</button></div>";box.appendChild(el)});Object.keys(counts).forEach(k=>document.getElementById(k.toLowerCase().replace("-","")).textContent=counts[k])}
+function advance(i){const order=["New","Follow-up","Qualified","Booked"];const n=order.indexOf(leads[i].status);if(n<order.length-1)leads[i].status=order[n+1];render()}
+function followUp(i){leads[i].status="Follow-up";alert("Demo: DealSpark would send a follow-up to "+leads[i].name+".");render()}
+function addLead(){leads.unshift({name:"New Website Lead",service:"Service request",contact:"555-0199",status:"New"});render()}
+render();
+</script></body></html>
