@@ -1,21 +1,82 @@
-const LEAD_KEY="dealspark_recovery_desk_v1";const $=id=>document.getElementById(id);const messages=$("messages");const quick=$("quick");let state={step:"idle",service:"",name:"",contact:""};
+const LEAD_KEY="dealspark_recovery_desk_v1";
+const $=id=>document.getElementById(id);
+const messages=$("messages"),quick=$("quick");
+let state={intent:"",service:"",date:"",time:"",name:"",contact:"",step:"idle"};
+
 function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function say(text){const el=document.createElement("div");el.className="msg bot";el.innerHTML=esc(text);messages.appendChild(el);messages.scrollTop=messages.scrollHeight}
 function user(text){const el=document.createElement("div");el.className="msg user";el.textContent=text;messages.appendChild(el);messages.scrollTop=messages.scrollHeight}
-function addLead(){let rows=[];try{rows=JSON.parse(localStorage.getItem(LEAD_KEY)||"[]")}catch{};rows.unshift({id:crypto.randomUUID(),name:state.name,contact:state.contact,service:state.service,notes:"Captured by DealSpark website chatbot.",status:"New",createdAt:new Date().toISOString()});localStorage.setItem(LEAD_KEY,JSON.stringify(rows))}
 function buttons(items){quick.innerHTML="";items.forEach(x=>{const b=document.createElement("button");b.textContent=x;b.onclick=()=>handle(x);quick.appendChild(b)})}
-function handle(raw){const text=raw.trim();if(!text)return;user(text);quick.innerHTML="";
-if(state.step==="service"){state.service=text;state.step="name";say("Great. What's your name?");return}
-if(state.step==="name"){state.name=text;state.step="contact";say("Thanks, "+text+". What's the best phone number or email for the business to contact you?");return}
-if(state.step==="contact"){state.contact=text;addLead();state.step="idle";say("You're all set. We've captured your request. A team member can follow up with you shortly.");buttons(["Book an appointment","Ask another question"]);return}
-const l=text.toLowerCase();
-if(/book|appointment|schedule/.test(l)){say("Absolutely. Tell me what service you need and I'll capture the request for booking.");state.step="service";return}
-if(/price|cost|quote|estimate/.test(l)){say("We can help with a quote. What service are you looking for?");state.step="service";return}
-if(/human|person|agent|call/.test(l)){say("No problem. I can capture your details for a human follow-up.");state.step="service";return}
-if(/hours|open|available/.test(l)){say("We're available to help 24/7 through this assistant. For a specific service appointment, tell me what you need.");return}
-if(/service|help|need|looking/.test(l)){say("I'd be happy to help. What service do you need?");state.step="service";return}
-say("I can help with services, quotes, appointments and connecting you with the business. What would you like help with?");
-buttons(["Get a quote","Book an appointment","Talk to someone"])}
+function saveLead(){
+ let rows=[];try{rows=JSON.parse(localStorage.getItem(LEAD_KEY)||"[]")}catch{}
+ rows.unshift({id:crypto.randomUUID(),name:state.name,contact:state.contact,service:state.service,
+ notes:`Intent: ${state.intent||"General"} | Requested date: ${state.date||"Not specified"} | Requested time: ${state.time||"Not specified"} | Captured by DealSpark website chatbot.`,
+ status:state.intent==="appointment"?"Booked":"New",createdAt:new Date().toISOString()});
+ localStorage.setItem(LEAD_KEY,JSON.stringify(rows));
+}
+function reset(){state={intent:"",service:"",date:"",time:"",name:"",contact:"",step:"idle"}}
+function nextAfterService(){
+ if(state.intent==="appointment"){state.step="date";say("Got it — "+state.service+". What day would you like? You can say something like tomorrow, Friday, or October 12.");}
+ else {state.step="name";say("Perfect. What's your name?");}
+}
+function handle(raw){
+ const text=raw.trim();if(!text)return;user(text);quick.innerHTML="";
+ const l=text.toLowerCase();
+
+ // If we are collecting a known field, interpret the answer instead of restarting.
+ if(state.step==="service"){
+   state.service=text;
+   nextAfterService(); return;
+ }
+ if(state.step==="date"){
+   state.date=text;state.step="time";say("And what time works best? If you're flexible, just say "any time".");return;
+ }
+ if(state.step==="time"){
+   state.time=text;state.step="name";say("Thanks. What's your name?");return;
+ }
+ if(state.step==="name"){
+   state.name=text;state.step="contact";say("Thanks, "+text+". What's the best phone number or email for the business to contact you?");return;
+ }
+ if(state.step==="contact"){
+   state.contact=text;saveLead();
+   const summary=`${state.service} • ${state.date||"date flexible"} • ${state.time||"time flexible"}`;
+   say("You're all set. I captured "+summary+". The business can now follow up with you.");
+   buttons(["Start another request","Ask a question"]);reset();return;
+ }
+
+ // Understand natural language first, including service names in the first message.
+ const serviceMatch=l.match(/\b(plumb(?:er|ing)?|hvac|heating|cooling|roof(?:er|ing)?|clean(?:er|ing)?|landscap(?:e|ing)|electric(?:ian|al)?|renovation(?:s)?|towing|dental|dentist|mortgage|insurance|real estate|auto repair|car repair|painting)\b/i);
+ if(serviceMatch) state.service=serviceMatch[0];
+
+ if(/\b(book|appointment|schedule|come out|visit)\b/.test(l)){
+   state.intent="appointment";
+   if(state.service){state.step="date";say("Absolutely. I can help schedule "+state.service+". What day would you like?");}
+   else {state.step="service";say("Absolutely. What service do you need?");}
+   return;
+ }
+ if(/\b(price|cost|quote|estimate|how much)\b/.test(l)){
+   state.intent="quote";
+   if(state.service){state.step="name";say("Sure — I can help with a "+state.service+" quote. What's your name?");}
+   else {state.step="service";say("Sure. What service would you like a quote or estimate for?");}
+   return;
+ }
+ if(/\b(human|person|agent|someone|call me)\b/.test(l)){
+   state.intent="human";
+   if(state.service){state.step="name";say("Of course. I can pass this to the team. What's your name?");}
+   else {state.step="service";say("Of course. What service do you need help with?");}
+   return;
+ }
+ if(/\b(hours|open|closed|available|24\/7)\b/.test(l)){
+   say("I'm available 24/7. For the business's exact hours, tell me what you're looking for and I'll capture the request.");return;
+ }
+ if(state.service){
+   state.intent=state.intent||"service";
+   say("I can help with "+state.service+". Would you like a quote, an appointment, or a call from the team?");
+   buttons(["Get a quote","Book an appointment","Talk to someone"]);return;
+ }
+ say("I can help with quotes, appointments, service questions, or a human follow-up. Tell me what you need in your own words.");
+ buttons(["Get a quote","Book an appointment","Talk to someone"]);
+}
 $("chatForm").addEventListener("submit",e=>{e.preventDefault();const i=$("chatInput");handle(i.value);i.value=""});
-say("Hi! I'm the DealSpark virtual receptionist. I can answer questions, help with a quote, or capture a request for the business.");
+say("Hi! I'm the DealSpark virtual receptionist. Tell me what you need in your own words — for example, “I need a plumber tomorrow.”");
 buttons(["Get a quote","Book an appointment","Talk to someone"]);
