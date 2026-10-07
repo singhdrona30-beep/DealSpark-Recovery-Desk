@@ -25,9 +25,13 @@ function startCall(){if(running)return;running=true;convo.innerHTML="";actions.i
 ["caller","James."],
 ["ai","Thanks, James. What's the best number for our HVAC team to reach you?"],
 ["caller","555-0198."],
-["ai","Got it. I have an AC repair request for tomorrow. I'll get this qualified for the team and arrange the next available appointment."],
-["ai","Thanks for calling. You're all set."]
+["ai","Thanks, James. I have an AC repair request for tomorrow. Let me check which qualified technician has the right availability and enough travel time to get there on schedule."],
+["ai","I have a 9:00 to 10:30 AM arrival window available with Mike. The repair is estimated at about 60 minutes, and I've included travel time and a safety buffer so he has enough time to arrive on schedule."],
+["caller","That works for me."],
+["ai","Perfect. I've reserved that appointment for you. I'll send the appointment details to the HVAC team and confirm the visit. Is there anything else I can help you with today?"],
+["caller","No, that's everything. Thank you."],
+["ai","You're very welcome, James. Your AC repair is booked for tomorrow with Mike, with an arrival window of 9:00 to 10:30 AM. Thanks for calling, and we'll see you tomorrow."]
 ];let i=0;function next(){if(i<steps.length){bubble(steps[i][1],steps[i][0]);i++;setTimeout(next,650)}else{finish()}}next()}
-function finish(){summary.innerHTML="<b>James M.</b> • AC repair • Tomorrow • 555-0198";actions.innerHTML=["Call answered","Service identified","Customer captured","Lead qualified","Appointment requested"].map(x=>"<span class='action'>✓ "+x+"</span>").join("")}
+function finish(){summary.innerHTML="<b>James M.</b> • AC repair • Tomorrow • Mike R. • 9:00–10:30 AM";actions.innerHTML=["Call answered","Service identified","Customer captured","Technician matched","Travel buffer checked","Appointment booked","Customer confirmation ready"].map(x=>"<span class='action'>✓ "+x+"</span>").join("")}
 function resetCall(){running=false;convo.innerHTML="";summary.textContent="Start the demo call to see what the AI captures.";actions.innerHTML="";renderSlots()}
 </script></body></html>
