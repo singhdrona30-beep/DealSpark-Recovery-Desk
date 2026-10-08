@@ -1,0 +1,3 @@
+import {json,options,getSession} from "./_lib/auth.js";
+export async function onRequest({request}){if(request.method==="OPTIONS")return options();return json({error:"Method not allowed"},405)}
+export async function onRequestGet({request,env}){const s=await getSession(request,env);if(!s)return json({error:"Please sign in again"},401);const r=await env.DB.prepare("SELECT id,action,entity_type,entity_id,details,created_at FROM audit_log WHERE workspace_id=? ORDER BY created_at DESC LIMIT 200").bind(s.workspace_id).all();return json({ok:true,audit:r.results||[]})}
