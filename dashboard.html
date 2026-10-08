@@ -4,7 +4,7 @@
 <body><main class="shell">
 <header class="hero"><div><p class="eyebrow">DealSpark</p><h1>Recovery Desk</h1><p id="bizName">Loading account…</p></div><div><a href="product-suite.html" class="secondary" style="padding:11px;border-radius:10px;text-decoration:none">Product Suite</a> <a href="index.html" class="secondary" style="padding:11px;border-radius:10px;text-decoration:none">Product home</a> <button id="logout" class="secondary">Log out</button></div></header>
 <section class="metrics"><div><span>Open</span><strong id="openCount">0</strong></div><div><span>Qualified</span><strong id="qualifiedCount">0</strong></div><div><span>Booked</span><strong id="bookedCount">0</strong></div><div><span>Won</span><strong id="wonCount">0</strong></div></section>
-<section class="card"><div class="accountbar"><div><h2>Customer leads</h2><p class="muted">Live D1-backed leads for this business.</p></div><div id="sub" class="status">Loading subscription…</div></div><div id="leads"><p class="muted">Loading…</p></div></section>
+<section class="card"><div id="activation" class="status">Checking activation…</div><div class="accountbar"><div><h2>Customer leads</h2><p class="muted">Live D1-backed leads for this business.</p></div><div id="sub" class="status">Loading subscription…</div></div><div id="leads"><p class="muted">Loading…</p></div></section>
 <section class="card"><h2>Add opportunity</h2><form id="leadForm"><input id="name" placeholder="Customer name" required><input id="contact" placeholder="Phone or email" required><input id="service" placeholder="Service needed" required><textarea id="notes" placeholder="What happened?"></textarea><button type="submit">Add to recovery desk</button></form><div id="formMsg" class="muted"></div></section>
 </main>
 <script>
@@ -16,7 +16,7 @@ async function load(){
  const r=await fetch(API+"/api/account",{headers}); const d=await r.json();
  if(!r.ok){localStorage.removeItem("dealspark_dashboard_key");location.href="signup.html";return}
  document.getElementById("bizName").textContent=d.business.name+" • "+d.business.phone;
- document.getElementById("sub").textContent=(d.subscription?.plan||"starter").toUpperCase()+" • "+(d.subscription?.status||"setup");
+ document.getElementById("sub").textContent=(d.subscription?.plan||"starter").toUpperCase()+" • "+(d.subscription?.status||"setup");document.getElementById("activation").innerHTML=d.subscription?.status==="active"?`<b>✓ Subscription active</b> <a href="onboarding.html">Business setup & phone configuration →</a>`:`<b>Payment not active yet.</b> Complete checkout, then configure your business.`;
  const leads=d.leads||[]; document.getElementById("openCount").textContent=leads.filter(x=>x.status==="New"||x.status==="Follow-up").length;
  document.getElementById("qualifiedCount").textContent=leads.filter(x=>x.status==="Qualified").length;
  document.getElementById("bookedCount").textContent=leads.filter(x=>x.status==="Booked").length;
