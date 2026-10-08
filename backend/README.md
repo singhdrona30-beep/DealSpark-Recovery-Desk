@@ -2,8 +2,6 @@
 
 The public GitHub Pages site is the customer-facing layer. The production API is a Cloudflare Worker backed by Cloudflare D1.
 
-GitHub Pages remains the demo/front end; it does not run server-side code. GitHub Actions can deploy the Worker automatically once Cloudflare credentials are configured. citeturn0search10turn1search7
-
 ## What is implemented
 
 - D1 schema for businesses, users, leads, conversations, appointments, reps and events.
@@ -34,7 +32,7 @@ GitHub Pages remains the demo/front end; it does not run server-side code. GitHu
 1. Create a Cloudflare account.
 2. Create a D1 database named `dealspark-prod`.
 3. Copy the D1 database ID.
-4. Create a Cloudflare API token with the permissions required to deploy Workers.
+4. Create a Cloudflare API token with permission to deploy Workers.
 5. In the GitHub repository, add Actions secrets:
    - `CLOUDFLARE_API_TOKEN`
    - `CLOUDFLARE_ACCOUNT_ID`
@@ -45,13 +43,11 @@ GitHub Pages remains the demo/front end; it does not run server-side code. GitHu
    - `TWILIO_SITE_KEY`
 7. Pushing backend changes to `main` will run the deployment workflow.
 
-Cloudflare documents D1 creation/bindings and migration application, and its GitHub Actions deployment requires an API token and account ID. citeturn1search2turn1search1turn1search7
-
 ## Security
 
-Never place `ADMIN_TOKEN`, `TWILIO_AUTH_TOKEN`, Cloudflare credentials, AI keys, email-provider keys or payment secrets in GitHub Pages JavaScript. GitHub recommends least-privilege workflow permissions and using secrets for sensitive values. citeturn0search13turn0search3
+Never place `ADMIN_TOKEN`, `TWILIO_AUTH_TOKEN`, Cloudflare credentials, AI keys, email-provider keys or payment secrets in GitHub Pages JavaScript.
 
-Twilio request validation uses HMAC signing in the Worker. Cloudflare Workers support Web Crypto HMAC operations for this type of request verification. citeturn1search0turn1search4
+Twilio request validation uses HMAC signing in the Worker.
 
 ## Current status
 
@@ -59,6 +55,6 @@ Twilio request validation uses HMAC signing in the Worker. Cloudflare Workers su
 
 **Public frontend:** live on GitHub Pages.
 
-**Production API:** ready to deploy, but not claimed live until the Cloudflare account/database/credentials are actually connected.
+**Production API:** ready to deploy, but not claimed live until the Cloudflare account, database and credentials are actually connected.
 
 Once deployed, the next integration is to put the Worker URL and business public key into the chatbot configuration, then connect the Recovery Desk and Twilio webhook to the same API.
