@@ -113,8 +113,8 @@ export default {
           `UPDATE leads SET
            status=COALESCE(?1,status), name=COALESCE(?2,name), phone=COALESCE(?3,phone),
            email=COALESCE(?4,email), service=COALESCE(?5,service), notes=COALESCE(?6,notes),
-           updated_at=?7 WHERE id=?8`
-        ).bind(b.status ?? null,b.name ?? null,b.phone ?? null,b.email ?? null,b.service ?? null,b.notes ?? null,now(),id).run();
+           updated_at=?7 WHERE id=?8 AND business_id=?9`
+        ).bind(b.status ?? null,b.name ?? null,b.phone ?? null,b.email ?? null,b.service ?? null,b.notes ?? null,now(),id,business.id).run();
         return withCors(json({ ok: true, id }));
       }
 
