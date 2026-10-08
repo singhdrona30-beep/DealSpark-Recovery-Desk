@@ -1,0 +1,114 @@
+name: DealSpark Global Marketing Engine
+
+on:
+  schedule:
+    - cron: "30 2 * * *"
+    - cron: "30 14 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-global-campaign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build regional landing pages and ad queue
+        run: |
+          python - <<'PY'
+          import json, pathlib, html, datetime
+
+          base = "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/"
+          regions = [
+            ("usa","United States","AI receptionist for US service businesses"),
+            ("canada","Canada","AI receptionist for Canadian service businesses"),
+            ("uk","United Kingdom","AI receptionist for UK service businesses"),
+            ("australia","Australia","AI receptionist for Australian service businesses"),
+            ("new-zealand","New Zealand","AI receptionist for New Zealand service businesses"),
+            ("ireland","Ireland","AI receptionist for Irish service businesses"),
+            ("south-africa","South Africa","AI receptionist for South African service businesses"),
+            ("uae","United Arab Emirates","AI receptionist for UAE service businesses"),
+            ("india","India","AI receptionist for Indian service businesses"),
+            ("singapore","Singapore","AI receptionist for Singapore service businesses"),
+            ("philippines","Philippines","AI receptionist for Philippine service businesses"),
+            ("mexico","Mexico","AI receptionist for Mexican service businesses"),
+            ("brazil","Brazil","AI receptionist for Brazilian service businesses"),
+            ("germany","Germany","AI receptionist for German service businesses"),
+            ("france","France","AI receptionist for French service businesses"),
+            ("netherlands","Netherlands","AI receptionist for Dutch service businesses"),
+            ("spain","Spain","AI receptionist for Spanish service businesses"),
+            ("italy","Italy","AI receptionist for Italian service businesses"),
+            ("japan","Japan","AI receptionist for Japanese service businesses"),
+            ("global","Global","24/7 AI receptionist and lead recovery for service businesses"),
+          ]
+          industries = ["HVAC","plumbing","roofing","cleaning","landscaping","towing","dental","auto services"]
+
+          pathlib.Path("global").mkdir(exist_ok=True)
+          queue = []
+
+          for slug, country, headline in regions:
+              path = pathlib.Path("global") / f"{slug}.html"
+              title = f"DealSpark | {headline}"
+              desc = f"DealSpark helps {country} businesses answer missed calls, qualify leads, recover inquiries and book appointments."
+              cards = "".join(
+                  f"<li><strong>{i}</strong> — recover missed calls, qualify inquiries and move customers toward booked appointments.</li>"
+                  for i in industries
+              )
+              body = f"""<!doctype html>
+          <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+          <title>{html.escape(title)}</title>
+          <meta name="description" content="{html.escape(desc)}">
+          <meta name="robots" content="index,follow">
+          <link rel="canonical" href="{base}global/{slug}.html">
+          <meta property="og:title" content="{html.escape(title)}">
+          <meta property="og:description" content="{html.escape(desc)}">
+          <meta property="og:url" content="{base}global/{slug}.html">
+          <style>body{{font-family:Arial,sans-serif;max-width:900px;margin:auto;padding:40px 20px;line-height:1.6;color:#172033}}a{{display:inline-block;background:#172033;color:#fff;padding:12px 18px;border-radius:9px;text-decoration:none;font-weight:800}}li{{margin:10px 0}}</style>
+          </head><body>
+          <p><strong>DealSpark</strong></p>
+          <h1>{html.escape(headline)}</h1>
+          <p>{html.escape(desc)}</p>
+          <h2>Recover more revenue</h2><ul>{cards}</ul>
+          <p><a href="{base}">See the live DealSpark demo</a></p>
+          <p>AI receptionist • lead recovery • appointment booking • follow-up</p>
+          </body></html>"""
+              path.write_text(body, encoding="utf-8")
+
+              for industry in industries:
+                  queue.append({
+                    "country": country,
+                    "industry": industry,
+                    "destination": f"{base}global/{slug}.html",
+                    "headline": f"{industry} businesses: stop losing leads after hours",
+                    "primary_text": f"Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+                    "cta": "See the live demo",
+                    "status": "ready_for_platform_post"
+                  })
+
+          pathlib.Path("data").mkdir(exist_ok=True)
+          pathlib.Path("data/global-ad-queue.json").write_text(
+              json.dumps({"generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                           "note":"Ad copy and regional landing pages prepared. Actual paid/social posting requires the destination platform's authorized account/API credentials.",
+                           "queue": queue}, indent=2),
+              encoding="utf-8"
+          )
+
+          urls = [base] + [f"{base}global/{s}.html" for s,_,_ in regions]
+          sitemap = ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+                     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+          for u in urls:
+              sitemap.append(f"<url><loc>{u}</loc></url>")
+          sitemap.append("</urlset>")
+          pathlib.Path("sitemap-global.xml").write_text("\n".join(sitemap), encoding="utf-8")
+          PY
+
+      - name: Commit marketing assets
+        run: |
+          git config user.name "DealSpark Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add global data/global-ad-queue.json sitemap-global.xml
+          git diff --cached --quiet || git commit -m "Build global DealSpark marketing campaign assets"
+          git push
