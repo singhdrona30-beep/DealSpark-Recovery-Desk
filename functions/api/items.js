@@ -1,0 +1,18 @@
+import {json,options,readBody,getSession} from "./_lib/auth.js";
+const PRODUCTS=new Set(["BillGuard","StockWatch","StaffDesk","ReviewShield","OpsVault","LeadFlow","QuotePilot","ScheduleFlow","DispatchDesk","AssetCare"]);
+export async function onRequest({request}){if(request.method==="OPTIONS")return options();return json({error:"Method not allowed"},405)}
+export async function onRequestGet({request,env}){
+ const s=await getSession(request,env);if(!s)return json({error:"Please sign in again"},401);
+ const r=await env.DB.prepare("SELECT id,workspace_id,product,item,issue,status,source,created_at,updated_at FROM operational_items WHERE workspace_id=? ORDER BY created_at DESC LIMIT 500").bind(s.workspace_id).all();
+ return json({ok:true,items:r.results||[]});
+}
+export async function onRequestPost({request,env}){
+ const s=await getSession(request,env);if(!s)return json({error:"Please sign in again"},401);
+ const b=await readBody(request),product=String(b.product||""),item=String(b.item||"").trim(),issue=String(b.issue||"").trim();
+ if(!PRODUCTS.has(product))return json({error:"Choose a valid DealSpark product"},400);
+ if(!item||!issue)return json({error:"Item name and issue are required"},400);
+ const id=crypto.randomUUID(),now=new Date().toISOString();
+ await env.DB.prepare("INSERT INTO operational_items (id,workspace_id,product,item,issue,status,source,created_at,updated_at) VALUES (?,?,?,?,?,'needs_review','manual',?,?)").bind(id,s.workspace_id,product,item,issue,now,now).run();
+ await env.DB.prepare("INSERT INTO audit_log (id,workspace_id,action,entity_type,entity_id,details,created_at) VALUES (?,?,?,?,?,?,?)").bind(crypto.randomUUID(),s.workspace_id,"item.created","operational_item",id,JSON.stringify({product,item}),now).run();
+ return json({ok:true,id});
+}
