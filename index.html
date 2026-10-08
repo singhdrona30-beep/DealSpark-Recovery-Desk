@@ -59,5 +59,27 @@ launch.onclick=open;bot.querySelector(".sales-close").onclick=close;
 bot.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{const go=b.dataset.go;if(go==="demo"){location.hash="demo";bot.querySelector("#salesStatus").textContent="Free demo ready — try the AI receptionist, lead recovery and AI phone agent before you buy.";}if(go==="pricing")showPrice();if(go==="quote"){bot.querySelector(".sales-form").hidden=false;bot.querySelector("#salesStatus").textContent="Tell us where to send the information."; }if(go==="call"){bot.querySelector(".sales-form").hidden=false;bot.querySelector("#salesStatus").textContent="Leave your details and the DealSpark team can follow up."; }});
 document.querySelectorAll("[data-price]").forEach(b=>b.onclick=()=>{open();bot.querySelector(".sales-form").hidden=false;bot.querySelector("#salesStatus").textContent="Great choice: "+b.dataset.price+". We can confirm the fit and apply the 10% launch discount after your free demo.";});setTimeout(()=>{if(!sessionStorage.getItem("dealspark_sales_seen")){open();sessionStorage.setItem("dealspark_sales_seen","1")}},5000);
 bot.querySelector(".sales-form").addEventListener("submit",async e=>{e.preventDefault();const fd=new FormData(e.target);const status=bot.querySelector("#salesStatus");status.textContent="Sending your request…";try{const r=await fetch(API+"/api/leads",{method:"POST",headers:{"content-type":"application/json","x-dealspark-site-key":KEY},body:JSON.stringify({name:String(fd.get("name")),email:String(fd.get("email")),service:"DealSpark sales inquiry",intent:"sales",status:"New",source:"website-sales-bot",notes:"Business: "+String(fd.get("company")||"Not provided")})});if(!r.ok)throw new Error();status.textContent="Got it — your request is captured. The DealSpark team can follow up.";e.target.reset()}catch{const subject=encodeURIComponent("DealSpark Sales Request");const body=encodeURIComponent("Name: "+String(fd.get("name"))+"\nBusiness: "+String(fd.get("company")||"Not provided")+"\nEmail: "+String(fd.get("email"))+"\n\nPlease send me the DealSpark information.");window.location.href="mailto:dealspark.ai@gmail.com?subject="+subject+"&body="+body;status.textContent="Your email app is opening with the DealSpark request ready to send."}});
-})();</script></body>
+})();</script><!-- DealSpark privacy-friendly analytics -->
+<script>
+(function(){
+  const ENDPOINT="https://dealspark-analytics.singhdrona30.workers.dev";
+  try{
+    const sid=sessionStorage.getItem("ds_sid")||(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random());
+    sessionStorage.setItem("ds_sid",sid);
+    function send(event,extra){
+      const payload={event:event,session_id:sid,page:location.pathname,referrer:document.referrer||"",ts:new Date().toISOString(),...(extra||{})};
+      try{navigator.sendBeacon(ENDPOINT,new Blob([JSON.stringify(payload)],{type:"application/json"}));}
+      catch(e){fetch(ENDPOINT,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(payload),keepalive:true}).catch(()=>{});}
+    }
+    send("page_view");
+    document.addEventListener("click",function(e){
+      const a=e.target.closest("a,button"); if(!a)return;
+      const href=a.href||"";
+      if(a.dataset.dealsparkDemo==="true"||href.includes("chatbot.html")||href.includes("lead-recovery.html")||href.includes("phone-agent.html")) send("demo_click",{target:href||a.textContent.trim()});
+      if(a.dataset.dealsparkLead==="true") send("lead_click",{target:href||a.textContent.trim()});
+    },{passive:true});
+  }catch(e){}
+})();
+</script>
+</body>
 </html>
