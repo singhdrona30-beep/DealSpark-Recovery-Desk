@@ -1,0 +1,15 @@
+name = "dealspark-api"
+main = "src/index.js"
+compatibility_date = "2026-10-07"
+
+[vars]
+# Set production secrets with Wrangler/GitHub Actions:
+# ADMIN_TOKEN
+# TWILIO_AUTH_TOKEN
+# TWILIO_SITE_KEY
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dealspark-prod"
+database_id = "REPLACE_WITH_CLOUDFLARE_D1_DATABASE_ID"
+migrations_dir = "migrations"
