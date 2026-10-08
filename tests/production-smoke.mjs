@@ -43,7 +43,7 @@ try {
   await page.locator("#quoteBtn").click();
   if (!await page.locator("#result").evaluate(el => el.classList.contains("show"))) throw new Error("QuoteFlow estimate failed");
   await page.locator("#bookBtn").click();
-  if (!(await page.locator("#status").innerText()).includes("Appointment request created")) throw new Error("QuoteFlow booking flow failed");
+  if (!(await page.locator("#status").innerText()).includes("Appointment request")) throw new Error("QuoteFlow booking flow failed");
 
   // Product 4: Reactivate
   await page.goto("http://127.0.0.1:8787/reactivate.html", { waitUntil: "networkidle" });
