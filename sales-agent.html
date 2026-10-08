@@ -30,4 +30,4 @@ function send(q){if(!q)return;add(q,"user");setTimeout(()=>add(reply(q)),220)}
 add("Hi! I'm the DealSpark Sales Agent. I can explain the products, pricing and demos. What would you like to know?");
 document.querySelectorAll("[data-msg]").forEach(b=>b.onclick=()=>send(b.dataset.msg));
 document.querySelector("#form").onsubmit=e=>{e.preventDefault();const i=document.querySelector("#input");send(i.value.trim());i.value=""};
-</script></body></html>
+</script><script>(function(){try{const sid=sessionStorage.getItem("ds_sid")||(crypto.randomUUID?crypto.randomUUID():String(Date.now())+Math.random());sessionStorage.setItem("ds_sid",sid);const ep="https://dealspark-analytics.singhdrona30.workers.dev";navigator.sendBeacon(ep,new Blob([JSON.stringify({event:"page_view",session_id:sid,page:location.pathname,referrer:document.referrer||"",ts:new Date().toISOString()})],{type:"application/json"}))}catch(e){}})();</script></body></html>
