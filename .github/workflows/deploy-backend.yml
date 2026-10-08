@@ -1,0 +1,38 @@
+name: Deploy DealSpark Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend/**"
+      - ".github/workflows/deploy-backend.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install
+        run: npm install
+
+      - name: Validate Worker
+        run: npx wrangler deploy --dry-run
+
+      - name: Deploy Worker
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ACCOUNT_ID != '' && secrets.CLOUDFLARE_D1_DATABASE_ID != '' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          sed -i "s/REPLACE_WITH_CLOUDFLARE_D1_DATABASE_ID/${{ secrets.CLOUDFLARE_D1_DATABASE_ID }}/" wrangler.toml
+          npx wrangler d1 migrations apply dealspark-prod --remote
+          npx wrangler deploy
