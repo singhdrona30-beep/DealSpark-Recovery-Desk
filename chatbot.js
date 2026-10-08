@@ -1,4 +1,6 @@
 const LEAD_KEY="dealspark_recovery_desk_v1";
+const DEALSPARK_API_BASE=window.DEALSPARK_API_BASE||"";
+const DEALSPARK_SITE_KEY=window.DEALSPARK_SITE_KEY||"";
 const $=id=>document.getElementById(id);
 const messages=$("messages"),quick=$("quick");
 let state={intent:"",service:"",date:"",time:"",name:"",contact:"",step:"idle"};
@@ -8,11 +10,34 @@ function say(text){const el=document.createElement("div");el.className="msg bot"
 function user(text){const el=document.createElement("div");el.className="msg user";el.textContent=text;messages.appendChild(el);messages.scrollTop=messages.scrollHeight}
 function buttons(items){quick.innerHTML="";items.forEach(x=>{const b=document.createElement("button");b.textContent=x;b.onclick=()=>handle(x);quick.appendChild(b)})}
 function saveLead(){
+ const lead={
+   id:crypto.randomUUID(),
+   name:state.name,
+   contact:state.contact,
+   service:state.service,
+   notes:`Intent: ${state.intent||"General"} | Requested date: ${state.date||"Not specified"} | Requested time: ${state.time||"Not specified"} | Captured by DealSpark website chatbot.`,
+   status:state.intent==="appointment"?"Booked":"New",
+   createdAt:new Date().toISOString()
+ };
  let rows=[];try{rows=JSON.parse(localStorage.getItem(LEAD_KEY)||"[]")}catch{}
- rows.unshift({id:crypto.randomUUID(),name:state.name,contact:state.contact,service:state.service,
- notes:`Intent: ${state.intent||"General"} | Requested date: ${state.date||"Not specified"} | Requested time: ${state.time||"Not specified"} | Captured by DealSpark website chatbot.`,
- status:state.intent==="appointment"?"Booked":"New",createdAt:new Date().toISOString()});
+ rows.unshift(lead);
  localStorage.setItem(LEAD_KEY,JSON.stringify(rows));
+ if(DEALSPARK_API_BASE && DEALSPARK_SITE_KEY){
+   fetch(DEALSPARK_API_BASE.replace(/\/$/,"")+"/api/leads",{
+     method:"POST",
+     headers:{"content-type":"application/json","x-dealspark-site-key":DEALSPARK_SITE_KEY},
+     body:JSON.stringify({
+       name:lead.name,
+       phone:/^\+?[0-9 ()-]{7,}$/.test(lead.contact)?lead.contact:"",
+       email:/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.contact)?lead.contact:"",
+       service:lead.service,
+       intent:state.intent||"lead",
+       status:lead.status,
+       source:"website-chatbot",
+       notes:lead.notes
+     })
+   }).catch(()=>{});
+ }
 }
 function reset(){state={intent:"",service:"",date:"",time:"",name:"",contact:"",step:"idle"}}
 function nextAfterService(){
