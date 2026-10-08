@@ -4,6 +4,20 @@ const cors={
   "access-control-allow-headers":"content-type,authorization,x-dealspark-key",
   "access-control-allow-methods":"GET,POST,PUT,OPTIONS"
 };
+const VERSION="3.0";
+const SAFE_MODE=false;
+const PRODUCTS={
+  BillGuard:{name:"BillGuard",description:"Monitor invoices, overdue items and recurring billing issues.",prices:[99,249,499]},
+  StockWatch:{name:"StockWatch",description:"Monitor inventory levels, reorder risk and stock exceptions.",prices:[129,299,599]},
+  StaffDesk:{name:"StaffDesk",description:"Organize onboarding documents, training and recurring HR administration.",prices:[149,349,699]},
+  ReviewShield:{name:"ReviewShield",description:"Monitor customer feedback, flag urgent complaints and draft owner-reviewed responses.",prices:[99,249,499]},
+  OpsVault:{name:"OpsVault",description:"Track business documents, licenses, certificates and expirations.",prices:[129,299,599]},
+  LeadFlow:{name:"LeadFlow",description:"Capture, qualify and control sales lead follow-up.",prices:[99,199,399]},
+  QuotePilot:{name:"QuotePilot",description:"Organize quote-ready job intake and missing scope information.",prices:[129,249,499]},
+  ScheduleFlow:{name:"ScheduleFlow",description:"Control appointments, callbacks and schedule exceptions.",prices:[129,249,499]},
+  DispatchDesk:{name:"DispatchDesk",description:"Coordinate field jobs, technician assignments and arrival exceptions.",prices:[129,249,499]},
+  AssetCare:{name:"AssetCare",description:"Track equipment maintenance, service history and due dates.",prices:[119,229,449]}
+};
 const json=(data,status=200)=>new Response(JSON.stringify(data),{status,headers:cors});
 const text=async r=>{try{return await r.json()}catch{return {}}};
 const id=()=>crypto.randomUUID();
@@ -36,7 +50,12 @@ async function seedWorkspace(env,businessId,workspaceId){
     ["StockWatch","Northside HVAC • 16x20 filter","4 units left • reorder 20"],
     ["StaffDesk","Maria • Sales Rep","2 documents missing • training due tomorrow"],
     ["ReviewShield","Harbour Plumbing • 2-star review","Technician arrived late • urgent complaint"],
-    ["OpsVault","Summit Roofing • Insurance certificate","Expires in 12 days"]
+    ["OpsVault","Summit Roofing • Insurance certificate","Expires in 12 days"],
+    ["LeadFlow","ABC Roofing • Web lead #1042","Roof replacement • $18,500 estimate • missed follow-up risk"],
+    ["QuotePilot","Northside HVAC • Service request #771","No-cooling call • 2.5-ton residential unit • quote information incomplete"],
+    ["ScheduleFlow","Metro Plumbing • Tuesday schedule","14 appointments • 2 callbacks • schedule conflict"],
+    ["DispatchDesk","Metro Service Team • Job #771","Technician arrival window needs review • schedule exception"],
+    ["AssetCare","Harbour Electrical • Van #14","Oil service due in 420 km • maintenance due"]
   ];
   for(const [p,item,issue] of samples){
     await env.DB.prepare("INSERT INTO operational_items(id,workspace_id,product,item,issue,status,source) VALUES(?,?,?,?,?,?,?)")
@@ -47,8 +66,9 @@ export default {
  async fetch(request,env){
   const u=new URL(request.url);
   if(request.method==="OPTIONS")return new Response(null,{headers:cors});
-  if(u.pathname==="/health")return json({ok:true,service:"dealspark-saas",database:"connected",version:"2.0"});
+  if(u.pathname==="/health")return json({ok:true,service:"dealspark-saas",database:"connected",version:VERSION,safe_mode:SAFE_MODE,products:Object.keys(PRODUCTS).length});
   if(u.pathname==="/api/plans")return json({starter:{price:79,name:"AI Receptionist"},growth:{price:149,name:"Lead Recovery"},pro:{price:249,name:"AI Phone Agent"},business:{price:399,name:"Full DealSpark"}});
+  if(u.pathname==="/api/products")return json({version:VERSION,safe_mode:SAFE_MODE,products:Object.values(PRODUCTS)});
   if(u.pathname==="/api/auth/register"&&request.method==="POST"){
     const b=await text(request),email=String(b.email||"").trim().toLowerCase(),name=String(b.business_name||"").trim(),password=String(b.password||"");
     if(!email||!name||password.length<8)return json({error:"business_name, email and an 8+ character password are required"},400);
@@ -60,7 +80,7 @@ export default {
     await env.DB.prepare("INSERT INTO users(id,business_id,email,role,created_at,password_hash,password_salt) VALUES(?,?,?,?,?,?,?)").bind(userId,businessId,email,"owner",now,ph,salt).run();
     await seedWorkspace(env,businessId,workspaceId);
     const token=await session(env,{id:userId,workspace_id:workspaceId});
-    return json({ok:true,token,workspace:{id:workspaceId,name},message:"Workspace created"});
+    return json({ok:true,token,workspace:{id:workspaceId,name},message:"Workspace created",product_count:Object.keys(PRODUCTS).length});
   }
   if(u.pathname==="/api/auth/login"&&request.method==="POST"){
     const b=await text(request),email=String(b.email||"").trim().toLowerCase(),password=String(b.password||"");
@@ -76,6 +96,12 @@ export default {
     if(!me)return json({error:"Unauthorized"},401);
     return json({user:{id:me.user_id,email:me.email,role:me.role},workspace_id:me.workspace_id});
   }
+  if(u.pathname==="/api/recovery"){
+    if(!me)return json({error:"Unauthorized"},401);
+    const counts=await env.DB.prepare("SELECT status,COUNT(*) AS count FROM operational_items WHERE workspace_id=? GROUP BY status").bind(me.workspace_id).all();
+    const integrations=await env.DB.prepare("SELECT COUNT(*) AS count FROM integrations WHERE workspace_id=?").bind(me.workspace_id).first();
+    return json({ok:true,version:VERSION,safe_mode:SAFE_MODE,workspace_id:me.workspace_id,product_count:Object.keys(PRODUCTS).length,item_counts:counts.results,integration_count:integrations?.count||0,checked_at:new Date().toISOString()});
+  }
   if(u.pathname==="/api/items"){
     if(!me)return json({error:"Unauthorized"},401);
     if(request.method==="GET"){
@@ -85,6 +111,7 @@ export default {
     if(request.method==="POST"){
       const b=await text(request),product=String(b.product||"").trim(),item=String(b.item||"").trim(),issue=String(b.issue||"").trim();
       if(!product||!item||!issue)return json({error:"product, item and issue are required"},400);
+      if(!PRODUCTS[product])return json({error:"Unsupported product. Use /api/products for the current catalog."},400);
       const iid=id();await env.DB.prepare("INSERT INTO operational_items(id,workspace_id,product,item,issue,status,source) VALUES(?,?,?,?,?,?,?)").bind(iid,me.workspace_id,product,item,issue,"needs_review","manual").run();
       await env.DB.prepare("INSERT INTO audit_log(id,workspace_id,action,entity_type,entity_id,details) VALUES(?,?,?,?,?,?)").bind(id(),me.workspace_id,"created","operational_item",iid,JSON.stringify({product,item})).run();
       return json({ok:true,id:iid});
