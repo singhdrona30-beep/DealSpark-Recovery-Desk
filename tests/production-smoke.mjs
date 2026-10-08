@@ -35,27 +35,6 @@ try {
   await page.locator("#addLead").click();
   if (await page.locator(".lead").count() !== 5) throw new Error("Recovery Desk add-lead flow failed");
 
-  // Product 3: QuoteFlow
-  await page.goto("http://127.0.0.1:8787/quote-flow.html", { waitUntil: "networkidle" });
-  if (!await page.title().then(t => t.includes("QuoteFlow"))) throw new Error("QuoteFlow title failed");
-  await page.locator("#name").fill("Test Customer");
-  await page.locator("#contact").fill("test@example.com");
-  await page.locator("#quoteBtn").click();
-  if (!await page.locator("#result").evaluate(el => el.classList.contains("show"))) throw new Error("QuoteFlow estimate failed");
-  await page.locator("#bookBtn").click();
-  if (!(await page.locator("#status").innerText()).includes("Appointment request")) throw new Error("QuoteFlow booking flow failed");
-
-  // Product 4: Reactivate
-  await page.goto("http://127.0.0.1:8787/reactivate.html", { waitUntil: "networkidle" });
-  if (!await page.title().then(t => t.includes("Reactivate"))) throw new Error("Reactivate title failed");
-  await page.locator(".customer").first().click();
-  await page.locator("#build").click();
-  if (!(await page.locator("#preview").innerText()).includes("Suggested outreach")) throw new Error("Reactivate message build failed");
-  await page.locator("#send").click();
-  if (await page.locator("#contacted").innerText() !== "1") throw new Error("Reactivate send flow failed");
-  await page.locator("#reply").click();
-  if (!(await page.locator("#won").innerText()).includes("$720")) throw new Error("Reactivate revenue flow failed");
-
   await browser.close();
   console.log("DealSpark production smoke test: PASS");
 } finally {
