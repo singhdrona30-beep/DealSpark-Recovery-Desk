@@ -112,7 +112,7 @@ export default {
   }
   if(u.pathname==="/api/signup"&&request.method==="POST"){
     const b=await text(request),email=String(b.email||"").trim().toLowerCase(),n=String(b.business_name||"").trim();
-    if(!e||!n)return json({error:"business_name and email are required"},400);
+    if(!email||!n)return json({error:"business_name and email are required"},400);
   }
   const key=request.headers.get("x-dealspark-key")||u.searchParams.get("key");
   if(key){
