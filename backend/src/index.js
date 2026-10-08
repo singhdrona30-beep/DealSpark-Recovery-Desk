@@ -66,6 +66,17 @@ export default {
     const path = url.pathname;
 
     try {
+      if (path === "/api/bootstrap" && request.method === "POST") {
+        if (!(await requireAdmin(request, env))) return withCors(json({ error: "Unauthorized" }, 401));
+        const b = await body(request);
+        const id = crypto.randomUUID();
+        const publicKey = crypto.randomUUID() + crypto.randomUUID();
+        await env.DB.prepare(
+          "INSERT INTO businesses (id,name,public_key,timezone,phone,created_at) VALUES (?1,?2,?3,?4,?5,?6)"
+        ).bind(id,b.name || "DealSpark Demo Business",publicKey,b.timezone || "America/Toronto",b.phone || "",now()).run();
+        return withCors(json({ ok: true, business_id: id, public_key: publicKey }));
+      }
+
       if (path === "/health") {
         return withCors(json({ ok: true, service: "dealspark-api", time: now() }));
       }
