@@ -105,7 +105,8 @@ export default {
       }
 
       if (path.startsWith("/api/leads/") && request.method === "PATCH") {
-        if (!(await requireAdmin(request, env))) return withCors(json({ error: "Unauthorized" }, 401));
+        const business = await publicBusiness(env, request.headers.get("x-dealspark-site-key"));
+        if (!business) return withCors(json({ error: "Invalid site key" }, 401));
         const id = path.split("/").pop();
         const b = await body(request);
         await env.DB.prepare(
@@ -118,19 +119,21 @@ export default {
       }
 
       if (path === "/api/leads" && request.method === "GET") {
-        if (!(await requireAdmin(request, env))) return withCors(json({ error: "Unauthorized" }, 401));
+        const business = await publicBusiness(env, request.headers.get("x-dealspark-site-key"));
+        if (!business) return withCors(json({ error: "Invalid site key" }, 401));
         const limit = Math.min(Number(url.searchParams.get("limit") || 100), 500);
         const rows = await env.DB.prepare(
-          "SELECT * FROM leads ORDER BY created_at DESC LIMIT ?1"
-        ).bind(limit).all();
+          "SELECT * FROM leads WHERE business_id = ?1 ORDER BY created_at DESC LIMIT ?2"
+        ).bind(business.id, limit).all();
         return withCors(json({ ok: true, leads: rows.results || [] }));
       }
 
       if (path === "/api/dashboard" && request.method === "GET") {
-        if (!(await requireAdmin(request, env))) return withCors(json({ error: "Unauthorized" }, 401));
+        const business = await publicBusiness(env, request.headers.get("x-dealspark-site-key"));
+        if (!business) return withCors(json({ error: "Invalid site key" }, 401));
         const rows = await env.DB.prepare(
-          "SELECT status, COUNT(*) AS count FROM leads GROUP BY status"
-        ).all();
+          "SELECT status, COUNT(*) AS count FROM leads WHERE business_id = ?1 GROUP BY status"
+        ).bind(business.id).all();
         return withCors(json({ ok: true, metrics: rows.results || [] }));
       }
 
