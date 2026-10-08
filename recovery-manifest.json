@@ -1,16 +1,28 @@
 {
   "name": "DealSpark Lead Recovery",
   "short_name": "Lead Recovery",
+  "id": "./lead-recovery.html",
   "start_url": "./lead-recovery.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
   "background_color": "#f7f9fc",
   "theme_color": "#155eef",
   "description": "Recover missed opportunities with automated lead follow-up and qualification.",
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "recovery-icon.svg",
-      "sizes": "any",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "recovery-icon.svg",
+      "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"
     }
