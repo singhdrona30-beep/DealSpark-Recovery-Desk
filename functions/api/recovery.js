@@ -1,0 +1,3 @@
+import {json,options,getSession} from "./_lib/auth.js";
+export async function onRequest({request}){if(request.method==="OPTIONS")return options();return json({error:"Method not allowed"},405)}
+export async function onRequestGet({request,env}){const s=await getSession(request,env);if(!s)return json({error:"Please sign in again"},401);return json({ok:true,safe_mode:true,version:"2026-10-launch",product_count:10,workspace_id:s.workspace_id,external_actions_enabled:false})}
