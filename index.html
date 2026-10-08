@@ -26,6 +26,21 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-s
 @media(max-width:900px){.pricing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.navlinks{gap:12px}.navlinks a{font-size:.85rem}}
 @media(max-width:680px){.nav{height:auto;min-height:68px;align-items:flex-start;padding:15px 0;flex-direction:column;gap:10px}.navlinks{flex-wrap:wrap}.hero{padding:58px 0 44px}.proofgrid,.how,.faq-grid,.product-grid{grid-template-columns:1fr}.product{grid-template-columns:64px minmax(0,1fr);gap:14px;padding:17px}.product img{width:64px;height:64px}.demo-panel{grid-template-columns:1fr;padding:24px}.demo-panel .btn{justify-self:start}.pricing-grid{grid-template-columns:1fr}.plan p{min-height:0}}
 </style>
+<style>
+
+/* Layout safety: keep labels, badges, cards and FAQ copy inside their containers. */
+.hero .eyebrow{max-width:100%;white-space:normal;line-height:1.45;text-align:center}
+.hero h1,.hero p,.sectionhead h2,.sectionhead p{overflow-wrap:anywhere}
+.how,.faq-grid,.pricing-grid,.product-grid{align-items:stretch}
+.how article,.faq,.plan,.product{min-width:0;overflow-wrap:anywhere}
+.how h3,.how p,.faq h3,.faq p,.plan .label,.plan .saving,.plan .amount,.plan p,.plan li{overflow-wrap:anywhere;word-break:normal}
+.plan .saving{display:inline-flex;align-items:center;justify-content:center;max-width:100%;white-space:normal;line-height:1.4;text-align:center}
+.plan .amount{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px;line-height:1.15}
+.plan .amount span{white-space:normal;line-height:1.4}
+.faq{height:100%;line-height:1.6}
+.faq p,.how p{line-height:1.65}
+
+</style>
 </head>
 <body>
 <header><div class="wrap nav"><a class="brand" href="./">Deal<span>Spark</span></a><nav class="navlinks" aria-label="Main navigation"><a href="#products">Products</a><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="sales-agent.html">Ask Sales</a><a class="navcta" href="chatbot.html">Try the demo</a></nav></div></header>
