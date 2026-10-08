@@ -1,6 +1,6 @@
 const LEAD_KEY="dealspark_recovery_desk_v1";
-const DEALSPARK_API_BASE=window.DEALSPARK_API_BASE||"";
-const DEALSPARK_SITE_KEY=window.DEALSPARK_SITE_KEY||"";
+const DEALSPARK_API_BASE=window.DEALSPARK_API_BASE||"https://dealspark-recovery-desk.singhdrona30.workers.dev";
+const DEALSPARK_SITE_KEY=window.DEALSPARK_SITE_KEY||"cd3b4a45-2b2a-452d-87a1-22da12ec721058b5c12c-c8b5-45a8-b737-25b4c582981a";
 const $=id=>document.getElementById(id);
 const messages=$("messages"),quick=$("quick");
 let state={intent:"",service:"",date:"",time:"",name:"",contact:"",step:"idle"};
