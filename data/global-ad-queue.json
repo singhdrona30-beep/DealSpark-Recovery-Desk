@@ -1,0 +1,1446 @@
+{
+  "generated_at": "2026-10-08T14:48:34.502231+00:00",
+  "note": "Ad copy and regional landing pages prepared. Actual paid/social posting requires the destination platform's authorized account/API credentials.",
+  "queue": [
+    {
+      "country": "United States",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/usa.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United States",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/usa.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United States",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/usa.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United States",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/usa.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United States",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/usa.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United States",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/usa.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United States",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/usa.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United States",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/usa.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Canada",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/canada.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Canada",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/canada.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Canada",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/canada.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Canada",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/canada.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Canada",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/canada.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Canada",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/canada.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Canada",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/canada.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Canada",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/canada.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Kingdom",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uk.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Kingdom",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uk.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Kingdom",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uk.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Kingdom",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uk.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Kingdom",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uk.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Kingdom",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uk.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Kingdom",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uk.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Kingdom",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uk.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Australia",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/australia.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Australia",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/australia.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Australia",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/australia.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Australia",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/australia.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Australia",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/australia.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Australia",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/australia.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Australia",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/australia.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Australia",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/australia.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "New Zealand",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/new-zealand.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "New Zealand",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/new-zealand.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "New Zealand",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/new-zealand.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "New Zealand",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/new-zealand.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "New Zealand",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/new-zealand.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "New Zealand",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/new-zealand.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "New Zealand",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/new-zealand.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "New Zealand",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/new-zealand.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Ireland",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/ireland.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Ireland",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/ireland.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Ireland",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/ireland.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Ireland",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/ireland.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Ireland",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/ireland.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Ireland",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/ireland.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Ireland",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/ireland.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Ireland",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/ireland.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "South Africa",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/south-africa.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "South Africa",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/south-africa.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "South Africa",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/south-africa.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "South Africa",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/south-africa.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "South Africa",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/south-africa.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "South Africa",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/south-africa.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "South Africa",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/south-africa.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "South Africa",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/south-africa.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Arab Emirates",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uae.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Arab Emirates",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uae.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Arab Emirates",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uae.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Arab Emirates",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uae.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Arab Emirates",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uae.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Arab Emirates",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uae.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Arab Emirates",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uae.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "United Arab Emirates",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/uae.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "India",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/india.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "India",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/india.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "India",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/india.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "India",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/india.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "India",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/india.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "India",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/india.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "India",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/india.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "India",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/india.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Singapore",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/singapore.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Singapore",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/singapore.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Singapore",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/singapore.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Singapore",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/singapore.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Singapore",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/singapore.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Singapore",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/singapore.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Singapore",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/singapore.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Singapore",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/singapore.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Philippines",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/philippines.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Philippines",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/philippines.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Philippines",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/philippines.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Philippines",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/philippines.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Philippines",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/philippines.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Philippines",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/philippines.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Philippines",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/philippines.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Philippines",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/philippines.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Mexico",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/mexico.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Mexico",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/mexico.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Mexico",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/mexico.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Mexico",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/mexico.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Mexico",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/mexico.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Mexico",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/mexico.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Mexico",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/mexico.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Mexico",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/mexico.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Brazil",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/brazil.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Brazil",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/brazil.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Brazil",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/brazil.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Brazil",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/brazil.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Brazil",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/brazil.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Brazil",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/brazil.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Brazil",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/brazil.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Brazil",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/brazil.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Germany",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/germany.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Germany",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/germany.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Germany",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/germany.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Germany",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/germany.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Germany",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/germany.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Germany",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/germany.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Germany",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/germany.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Germany",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/germany.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "France",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/france.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "France",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/france.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "France",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/france.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "France",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/france.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "France",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/france.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "France",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/france.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "France",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/france.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "France",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/france.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Netherlands",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/netherlands.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Netherlands",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/netherlands.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Netherlands",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/netherlands.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Netherlands",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/netherlands.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Netherlands",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/netherlands.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Netherlands",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/netherlands.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Netherlands",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/netherlands.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Netherlands",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/netherlands.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Spain",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/spain.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Spain",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/spain.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Spain",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/spain.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Spain",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/spain.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Spain",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/spain.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Spain",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/spain.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Spain",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/spain.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Spain",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/spain.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Italy",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/italy.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Italy",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/italy.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Italy",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/italy.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Italy",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/italy.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Italy",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/italy.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Italy",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/italy.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Italy",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/italy.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Italy",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/italy.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Japan",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/japan.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Japan",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/japan.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Japan",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/japan.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Japan",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/japan.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Japan",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/japan.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Japan",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/japan.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Japan",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/japan.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Japan",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/japan.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Global",
+      "industry": "HVAC",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/global.html",
+      "headline": "HVAC businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Global",
+      "industry": "plumbing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/global.html",
+      "headline": "plumbing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Global",
+      "industry": "roofing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/global.html",
+      "headline": "roofing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Global",
+      "industry": "cleaning",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/global.html",
+      "headline": "cleaning businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Global",
+      "industry": "landscaping",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/global.html",
+      "headline": "landscaping businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Global",
+      "industry": "towing",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/global.html",
+      "headline": "towing businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Global",
+      "industry": "dental",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/global.html",
+      "headline": "dental businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    },
+    {
+      "country": "Global",
+      "industry": "auto services",
+      "destination": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/global/global.html",
+      "headline": "auto services businesses: stop losing leads after hours",
+      "primary_text": "Missed calls can become missed revenue. DealSpark answers, qualifies and helps book appointments 24/7.",
+      "cta": "See the live demo",
+      "status": "ready_for_platform_post"
+    }
+  ]
+}
