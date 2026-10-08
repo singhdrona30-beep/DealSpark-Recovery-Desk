@@ -6,6 +6,28 @@ const cors={
 };
 const VERSION="3.0";
 const SAFE_MODE=false;
+const CONNECTORS={
+  stripe:{name:"Stripe",status:"read_only_verified",scope:"balance/read-only",products:["BillGuard"]},
+  square:{name:"Square",status:"oauth_required",scope:"merchant data",products:["BillGuard","ScheduleFlow"]},
+  shopify:{name:"Shopify",status:"oauth_required",scope:"inventory/orders",products:["StockWatch"]},
+  quickbooks:{name:"QuickBooks Online",status:"oauth_required",scope:"accounting data",products:["BillGuard"]},
+  xero:{name:"Xero",status:"oauth_required",scope:"accounting data",products:["BillGuard"]},
+  google_business_profile:{name:"Google Business Profile",status:"oauth_required",scope:"business profile/reviews",products:["ReviewShield"]},
+  microsoft365:{name:"Microsoft 365",status:"oauth_required",scope:"mail/calendar/files",products:["StaffDesk","ScheduleFlow","OpsVault"]},
+  googledrive:{name:"Google Drive",status:"oauth_required",scope:"files",products:["OpsVault","StaffDesk"]}
+};
+const PLAYBOOKS={
+  LeadFlow:["Capture new lead","Check qualification fields","Flag missed follow-up","Prepare next action"],
+  QuotePilot:["Capture service request","Check scope completeness","Flag missing quote inputs","Prepare quote-ready summary"],
+  ScheduleFlow:["Read appointment data","Detect conflicts/callbacks","Flag schedule exceptions","Prepare owner approval"],
+  DispatchDesk:["Read open jobs","Check technician/arrival window","Flag dispatch exceptions","Prepare owner approval"],
+  AssetCare:["Read asset/service records","Check maintenance interval","Flag due/overdue assets","Prepare maintenance action"],
+  BillGuard:["Read billing signals","Flag overdue/recurring issues","Prepare review queue","Require owner approval for consequential actions"],
+  StockWatch:["Read inventory","Detect low/overstock risk","Prepare reorder list","Require owner approval"],
+  StaffDesk:["Read onboarding tasks","Flag missing documents/training","Prepare reminders","Require owner approval for consequential actions"],
+  ReviewShield:["Read real feedback","Flag urgent complaints","Draft owner-reviewed response","Never fabricate or manipulate reviews"],
+  OpsVault:["Read business documents","Check expiration dates","Prepare renewal reminders","Require owner approval for consequential actions"]
+};
 const PRODUCTS={
   BillGuard:{name:"BillGuard",description:"Monitor invoices, overdue items and recurring billing issues.",prices:[99,249,499]},
   StockWatch:{name:"StockWatch",description:"Monitor inventory levels, reorder risk and stock exceptions.",prices:[129,299,599]},
@@ -68,7 +90,13 @@ export default {
   if(request.method==="OPTIONS")return new Response(null,{headers:cors});
   if(u.pathname==="/health")return json({ok:true,service:"dealspark-saas",database:"connected",version:VERSION,safe_mode:SAFE_MODE,products:Object.keys(PRODUCTS).length});
   if(u.pathname==="/api/plans")return json({starter:{price:79,name:"AI Receptionist"},growth:{price:149,name:"Lead Recovery"},pro:{price:249,name:"AI Phone Agent"},business:{price:399,name:"Full DealSpark"}});
-  if(u.pathname==="/api/products")return json({version:VERSION,safe_mode:SAFE_MODE,products:Object.values(PRODUCTS)});
+  if(u.pathname==="/api/products")return json({version:VERSION,safe_mode:SAFE_MODE,products:Object.values(PRODUCTS).map(p=>({...p,playbook:PLAYBOOKS[p.name]||[]}))});
+  if(u.pathname==="/api/connectors")return json({version:VERSION,connectors:Object.values(CONNECTORS)});
+  if(u.pathname.startsWith("/api/playbooks/")){
+    const product=decodeURIComponent(u.pathname.slice("/api/playbooks/".length));
+    if(!PRODUCTS[product])return json({error:"Unknown product"},404);
+    return json({product,steps:PLAYBOOKS[product]||[],safe_mode:SAFE_MODE});
+  }
   if(u.pathname==="/api/auth/register"&&request.method==="POST"){
     const b=await text(request),email=String(b.email||"").trim().toLowerCase(),name=String(b.business_name||"").trim(),password=String(b.password||"");
     if(!email||!name||password.length<8)return json({error:"business_name, email and an 8+ character password are required"},400);
