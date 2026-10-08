@@ -1,8 +1,0 @@
-name = "dealspark-saas"
-main = "backend/worker.js"
-compatibility_date = "2026-10-08"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "dealspark"
-database_id = "0b366288-652e-43fb-b4a0-d5484f2916c3"
