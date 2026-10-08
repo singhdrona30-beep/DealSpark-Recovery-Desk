@@ -1,0 +1,1 @@
+export async function onRequest(){return new Response(JSON.stringify({ok:true,service:"dealspark-pages-api",database:"connected"}),{headers:{"content-type":"application/json"}})}
