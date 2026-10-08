@@ -1,0 +1,18 @@
+{
+  "name": "DealSpark Reactivate",
+  "short_name": "Reactivate",
+  "start_url": "./reactivate.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f9fc",
+  "theme_color": "#172033",
+  "description": "Turn dormant customers into new sales opportunities with personalized win-back outreach.",
+  "icons": [
+    {
+      "src": "reactivate-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
