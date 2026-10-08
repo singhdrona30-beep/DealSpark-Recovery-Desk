@@ -1,1 +1,1 @@
-export async function onRequest(){return new Response(JSON.stringify({ok:true,service:"dealspark-pages-api",database:"connected"}),{headers:{"content-type":"application/json"}})}
+export async function onRequest(){return new Response(JSON.stringify({ok:true,service:"dealspark-pages-api",database:"connected",catalog_version:"2026-10-launch",webhook_route:"/api/stripe-webhook"}),{headers:{"content-type":"application/json"}})}
