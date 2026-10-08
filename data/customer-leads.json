@@ -1,0 +1,806 @@
+{
+  "generated_at": "2026-10-08T14:37:05.376126+00:00",
+  "source": "GitHub public repository signals",
+  "leads": [
+    {
+      "industry": "hvac",
+      "company_hint": "Hvac Quotes Mcp",
+      "repository": "MarceauSolutions/hvac-quotes-mcp",
+      "description": "HVAC equipment RFQ management for contractors - MCP server for Claude Desktop",
+      "stars": 2,
+      "url": "https://github.com/MarceauSolutions/hvac-quotes-mcp",
+      "owner_url": "https://github.com/MarceauSolutions",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Awesome Contractor Software",
+      "repository": "thecompanyco01/awesome-contractor-software",
+      "description": "A curated list of software, tools, and resources for contractors and tradespeople",
+      "stars": 0,
+      "url": "https://github.com/thecompanyco01/awesome-contractor-software",
+      "owner_url": "https://github.com/thecompanyco01",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Awesome Contractor Ai Answering Service",
+      "repository": "Quirk6/awesome-contractor-ai-answering-service",
+      "description": "Curated list of AI answering services, virtual receptionists, and triage tools built for home-service contractors (HVAC, plumbing, electrical, roofing). Maintained by OnCrew.",
+      "stars": 1,
+      "url": "https://github.com/Quirk6/awesome-contractor-ai-answering-service",
+      "owner_url": "https://github.com/Quirk6",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Hvac Claude Skills",
+      "repository": "miron-tech/hvac-claude-skills",
+      "description": "5 Claude Code skills for HVAC contractors: 60-second lead research, Good/Better/Best estimates, follow-up coaching, pipeline ranking, review requests. Built by RankGrid.",
+      "stars": 6,
+      "url": "https://github.com/miron-tech/hvac-claude-skills",
+      "owner_url": "https://github.com/miron-tech",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Climat Comfort",
+      "repository": "paladin1183/Climat-Comfort",
+      "description": "Hvac contractor ",
+      "stars": 0,
+      "url": "https://github.com/paladin1183/Climat-Comfort",
+      "owner_url": "https://github.com/paladin1183",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Four Seasonshvac",
+      "repository": "marylandroleplay/Four-SeasonsHVAC",
+      "description": "hvac contractor",
+      "stars": 0,
+      "url": "https://github.com/marylandroleplay/Four-SeasonsHVAC",
+      "owner_url": "https://github.com/marylandroleplay",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Climatcomfort",
+      "repository": "paladin1183/ClimatComfort",
+      "description": "Hvac contractor",
+      "stars": 0,
+      "url": "https://github.com/paladin1183/ClimatComfort",
+      "owner_url": "https://github.com/paladin1183",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Proair Inc",
+      "repository": "marylandroleplay/proair-inc",
+      "description": "hvac contractor company",
+      "stars": 0,
+      "url": "https://github.com/marylandroleplay/proair-inc",
+      "owner_url": "https://github.com/marylandroleplay",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Precise Heating Cooling",
+      "repository": "airoxlab/Precise-Heating-Cooling",
+      "description": "Website for Precise Heating And Cooling - licensed C-20 HVAC contractor in Fresno, CA serving the Central Valley",
+      "stars": 0,
+      "url": "https://github.com/airoxlab/Precise-Heating-Cooling",
+      "owner_url": "https://github.com/airoxlab",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Slr Heating Website",
+      "repository": "Young-Jit/slr-heating-website",
+      "description": "SLR Heating & Cooling \u2014 HVAC contractor website for Valley Village & Greater LA",
+      "stars": 0,
+      "url": "https://github.com/Young-Jit/slr-heating-website",
+      "owner_url": "https://github.com/Young-Jit",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Airmax Heating Cooling Website",
+      "repository": "mrslbpy-maker/airmax-heating-cooling-website",
+      "description": "Modern, responsive marketing website for Airmax Heating and Cooling \u2014 a 24/7 HVAC contractor in Brampton, ON. Built with React, TypeScript, Vite, and Tailwind CSS.",
+      "stars": 0,
+      "url": "https://github.com/mrslbpy-maker/airmax-heating-cooling-website",
+      "owner_url": "https://github.com/mrslbpy-maker",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Mr Lees Hvac",
+      "repository": "ButterflyBabs/mr-lees-hvac",
+      "description": "Mr. Lee's Heating and Cooling LLC - Denver HVAC Contractor Website",
+      "stars": 0,
+      "url": "https://github.com/ButterflyBabs/mr-lees-hvac",
+      "owner_url": "https://github.com/ButterflyBabs",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Hvaclocate",
+      "repository": "Mattfehrsen1/hvaclocate",
+      "description": "HVAC contractor directory - find trusted heating and cooling professionals near you",
+      "stars": 0,
+      "url": "https://github.com/Mattfehrsen1/hvaclocate",
+      "owner_url": "https://github.com/Mattfehrsen1",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Airflowellc",
+      "repository": "flowehvac-cyber/Airflowellc",
+      "description": "5 star contractor serving Southern California specializing in air conditioning heating mini splits maintenance repairs and commercial hvac solutions including cooling towers with honest service and reliable workmanship ",
+      "stars": 0,
+      "url": "https://github.com/flowehvac-cyber/Airflowellc",
+      "owner_url": "https://github.com/flowehvac-cyber",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Az",
+      "repository": "nemesis-96/az",
+      "description": "Vancouver, BC HVAC, refrigeration and gas contractor. AirZ Mechanical Group installs, services and maintains the systems buildings depend on \u2014 heating, cooling, commercial refrigeration, gas fitting and boilers. Residential to commercial, new construction and retrofits. 24/7 emergency: 236-866-0419.",
+      "stars": 0,
+      "url": "https://github.com/nemesis-96/az",
+      "owner_url": "https://github.com/nemesis-96",
+      "status": "review_required"
+    },
+    {
+      "industry": "hvac",
+      "company_hint": "Symmetrical Octo Journey",
+      "repository": "Shinogreat/symmetrical-octo-journey",
+      "description": "HugheyWayneClimateCare is a trusted HVAC contractor delivering dependable heating and cooling solutions for both residential and commercial properties. From new system installations to fast, accurate air conditioning repairs, our team focuses on reliable performance, energy efficiency, and healthier indoor air. We combine skilled workmanship ",
+      "stars": 0,
+      "url": "https://github.com/Shinogreat/symmetrical-octo-journey",
+      "owner_url": "https://github.com/Shinogreat",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Gfg Contractors Llc",
+      "repository": "masoodkhilji855-debug/GFG-Contractors-LLC",
+      "description": "Plumbing services ",
+      "stars": 0,
+      "url": "https://github.com/masoodkhilji855-debug/GFG-Contractors-LLC",
+      "owner_url": "https://github.com/masoodkhilji855-debug",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Profix Contractors",
+      "repository": "cleetusbobeetus/ProFix-Contractors",
+      "description": "Plumbing etc",
+      "stars": 0,
+      "url": "https://github.com/cleetusbobeetus/ProFix-Contractors",
+      "owner_url": "https://github.com/cleetusbobeetus",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "5280Dps",
+      "repository": "5280DPS/5280DPS",
+      "description": "Colorado Plumbing Contractor",
+      "stars": 0,
+      "url": "https://github.com/5280DPS/5280DPS",
+      "owner_url": "https://github.com/5280DPS",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Afpc",
+      "repository": "huntdb95-cloud/afpc",
+      "description": "All Florida Plumbing Contractors",
+      "stars": 0,
+      "url": "https://github.com/huntdb95-cloud/afpc",
+      "owner_url": "https://github.com/huntdb95-cloud",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Rjpower",
+      "repository": "Myenum2412/RjPower",
+      "description": "Premier Electrical & Plumbing Contractors",
+      "stars": 0,
+      "url": "https://github.com/Myenum2412/RjPower",
+      "owner_url": "https://github.com/Myenum2412",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Om Enterprises",
+      "repository": "ommahadevlekawale11-dotcom/Om-Enterprises-",
+      "description": "Plumbing Contractors and Services ",
+      "stars": 0,
+      "url": "https://github.com/ommahadevlekawale11-dotcom/Om-Enterprises-",
+      "owner_url": "https://github.com/ommahadevlekawale11-dotcom",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Urban Company Clone",
+      "repository": "srikanth-vnts/Urban_Company_Clone",
+      "description": "This project is all about Cloning of \"https://www.urbancompany.com/\". It is given to us as a construct week project at Masai School. This website provide the facility to connect people with the service providers like cleaning, grooming,plumbing etc.",
+      "stars": 13,
+      "url": "https://github.com/srikanth-vnts/Urban_Company_Clone",
+      "owner_url": "https://github.com/srikanth-vnts",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Lpc",
+      "repository": "alexlinek/lpc",
+      "description": "Linek Plumbing Company website",
+      "stars": 0,
+      "url": "https://github.com/alexlinek/lpc",
+      "owner_url": "https://github.com/alexlinek",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Plumbing Company",
+      "repository": "mohammedSuhail19/plumbing-company",
+      "description": "",
+      "stars": 3,
+      "url": "https://github.com/mohammedSuhail19/plumbing-company",
+      "owner_url": "https://github.com/mohammedSuhail19",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Nelson Plumbing Company",
+      "repository": "Victor6825/Nelson-Plumbing-Company",
+      "description": "Futuristic Plumbing Website",
+      "stars": 2,
+      "url": "https://github.com/Victor6825/Nelson-Plumbing-Company",
+      "owner_url": "https://github.com/Victor6825",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Plumbing",
+      "repository": "fistos127-arch/plumbing",
+      "description": "plumbing company",
+      "stars": 0,
+      "url": "https://github.com/fistos127-arch/plumbing",
+      "owner_url": "https://github.com/fistos127-arch",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Ally Plumbing Company",
+      "repository": "TheSocialHiveTx/Ally-Plumbing-Company",
+      "description": "Plumbing",
+      "stars": 0,
+      "url": "https://github.com/TheSocialHiveTx/Ally-Plumbing-Company",
+      "owner_url": "https://github.com/TheSocialHiveTx",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Plumbingcompany",
+      "repository": "Sijan666/plumbingCompany",
+      "description": "Plumbing Company Website - A professional and highly responsive frontend application. Built with React.js.",
+      "stars": 0,
+      "url": "https://github.com/Sijan666/plumbingCompany",
+      "owner_url": "https://github.com/Sijan666",
+      "status": "review_required"
+    },
+    {
+      "industry": "plumbing",
+      "company_hint": "Plumbingcompany",
+      "repository": "TAC90/PlumbingCompany",
+      "description": "ITvitae Assignment",
+      "stars": 0,
+      "url": "https://github.com/TAC90/PlumbingCompany",
+      "owner_url": "https://github.com/TAC90",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Suresight",
+      "repository": "UNO-CSCI4830/SureSight",
+      "description": "An app to streamline the process of identifying and reporting roofing and siding damage, ultimately helping homeowners, contractors, and insurance adjusters.",
+      "stars": 12,
+      "url": "https://github.com/UNO-CSCI4830/SureSight",
+      "owner_url": "https://github.com/UNO-CSCI4830",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Takeoff Reader Ai",
+      "repository": "rasti1608/takeoff-reader-ai",
+      "description": "AI-powered construction estimating platform. Automated material takeoffs from PDF blueprints, satellite imagery, and photos for roofing, siding, and masonry contractors.",
+      "stars": 13,
+      "url": "https://github.com/rasti1608/takeoff-reader-ai",
+      "owner_url": "https://github.com/rasti1608",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Construction Calculators",
+      "repository": "buildvisionai/construction-calculators",
+      "description": "Pure TypeScript & Python calculation libraries for construction estimating \u2014 concrete, gravel, roofing, lumber, paint, flooring, and more.",
+      "stars": 6,
+      "url": "https://github.com/buildvisionai/construction-calculators",
+      "owner_url": "https://github.com/buildvisionai",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Ridgeline Lite",
+      "repository": "JulyFire365/ridgeline-lite",
+      "description": "Free roofing contractor website template \u2014 Astro 5 + Tailwind CSS 4. Lighthouse 95+, WCAG AA, single-config rebrand.",
+      "stars": 2,
+      "url": "https://github.com/JulyFire365/ridgeline-lite",
+      "owner_url": "https://github.com/JulyFire365",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Contractors",
+      "repository": "CalhounRoofing/Contractors",
+      "description": "roofing, roofing contractor, roof repair metal roofing, roofing company",
+      "stars": 0,
+      "url": "https://github.com/CalhounRoofing/Contractors",
+      "owner_url": "https://github.com/CalhounRoofing",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Roofing Contractors",
+      "repository": "sanaya15/Roofing-contractors",
+      "description": "Roofing contractors",
+      "stars": 0,
+      "url": "https://github.com/sanaya15/Roofing-contractors",
+      "owner_url": "https://github.com/sanaya15",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Craig Roof Co. Inc",
+      "repository": "craigroof/Craig-Roof-Co.-Inc",
+      "description": "Roofing Contractor",
+      "stars": 0,
+      "url": "https://github.com/craigroof/Craig-Roof-Co.-Inc",
+      "owner_url": "https://github.com/craigroof",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Roofing Webapp",
+      "repository": "rrios4/roofing-webapp",
+      "description": "The Roofing App helping small roofing companies streamline the process to manage information.",
+      "stars": 15,
+      "url": "https://github.com/rrios4/roofing-webapp",
+      "owner_url": "https://github.com/rrios4",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Roofing Business Website",
+      "repository": "pYGOD3512/Roofing-Business-Website",
+      "description": "A clean and modern Bootstrap 5 website for all kinds of Roofing company who provide roofing repair, construction services etc.",
+      "stars": 11,
+      "url": "https://github.com/pYGOD3512/Roofing-Business-Website",
+      "owner_url": "https://github.com/pYGOD3512",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Predictive Roofing",
+      "repository": "cgorha/Predictive-Roofing",
+      "description": "Predictive Roofing is a web application that  uses AI to predict hail damage and response. This service creates  a synergistic ecosystem where homeowners, roofing companies, and insurance providers are interconnected. This can lead to more efficient service delivery, improved customer experience, and better-informed business decisions for all.",
+      "stars": 9,
+      "url": "https://github.com/cgorha/Predictive-Roofing",
+      "owner_url": "https://github.com/cgorha",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Remote Roofing",
+      "repository": "dyaroshevych/remote-roofing",
+      "description": "A website for a company called \"Remote Roofing\".",
+      "stars": 2,
+      "url": "https://github.com/dyaroshevych/remote-roofing",
+      "owner_url": "https://github.com/dyaroshevych",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Roofing",
+      "repository": "ethancrystal/roofing",
+      "description": "A roofing company",
+      "stars": 0,
+      "url": "https://github.com/ethancrystal/roofing",
+      "owner_url": "https://github.com/ethancrystal",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Roofing",
+      "repository": "codewest12/roofing",
+      "description": "For a roofing company ",
+      "stars": 0,
+      "url": "https://github.com/codewest12/roofing",
+      "owner_url": "https://github.com/codewest12",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Roofingcompany",
+      "repository": "UnniqMedia/RoofingCompany",
+      "description": "AI website for roofing company",
+      "stars": 0,
+      "url": "https://github.com/UnniqMedia/RoofingCompany",
+      "owner_url": "https://github.com/UnniqMedia",
+      "status": "review_required"
+    },
+    {
+      "industry": "roofing",
+      "company_hint": "Roofingcompany",
+      "repository": "XakHD/RoofingCompany",
+      "description": "Building a Roofing Construction Website, Beginning stages for layout viewing",
+      "stars": 1,
+      "url": "https://github.com/XakHD/RoofingCompany",
+      "owner_url": "https://github.com/XakHD",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Awesome Clean Tech",
+      "repository": "nglgzz/awesome-clean-tech",
+      "description": "A community curated list of awesome clean tech companies",
+      "stars": 475,
+      "url": "https://github.com/nglgzz/awesome-clean-tech",
+      "owner_url": "https://github.com/nglgzz",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Financial Statements Text Analysis",
+      "repository": "EricHe98/Financial-Statements-Text-Analysis",
+      "description": "Documentation and code for downloading, cleaning, munging, and analyzing financial statements filed by publicly traded companies with the SEC",
+      "stars": 108,
+      "url": "https://github.com/EricHe98/Financial-Statements-Text-Analysis",
+      "owner_url": "https://github.com/EricHe98",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Company Web",
+      "repository": "jekyller/company-web",
+      "description": "A clean one-page website for a company",
+      "stars": 11,
+      "url": "https://github.com/jekyller/company-web",
+      "owner_url": "https://github.com/jekyller",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Helm Company",
+      "repository": "yasuyk/helm-company",
+      "description": "DO NOT FORK! This repository is outdated. Create a clean clone from https://github.com/manuel-uberti/helm-company which is the maintained fork.",
+      "stars": 25,
+      "url": "https://github.com/yasuyk/helm-company",
+      "owner_url": "https://github.com/yasuyk",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Edgartools",
+      "repository": "dgunning/edgartools",
+      "description": "Read and analyze SEC EDGAR filings in Python. 10-K, 8-K, XBRL financials, Form 3/4/5, 13F, ADV \u2014 clean API, well-typed, MIT-licensed.",
+      "stars": 2778,
+      "url": "https://github.com/dgunning/edgartools",
+      "owner_url": "https://github.com/dgunning",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Cleaning Company",
+      "repository": "technext/cleaning-company",
+      "description": "",
+      "stars": 3,
+      "url": "https://github.com/technext/cleaning-company",
+      "owner_url": "https://github.com/technext",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Comfort Group Cleaning",
+      "repository": "MarynaShavlak/comfort-group-cleaning",
+      "description": "Cleaning Company Comfort Group (JS project)",
+      "stars": 4,
+      "url": "https://github.com/MarynaShavlak/comfort-group-cleaning",
+      "owner_url": "https://github.com/MarynaShavlak",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Bygonespoofer",
+      "repository": "nitaybl/ByGoneSpoofer",
+      "description": "ByGone Spoofer by @nitaybl: Python utility for Roblox (Byfron) ban assistance. Automates MAC spoofing, system cleaning, and Roblox reinstall. For personal, educational, and non-commercial use only.",
+      "stars": 80,
+      "url": "https://github.com/nitaybl/ByGoneSpoofer",
+      "owner_url": "https://github.com/nitaybl",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Validate Emails",
+      "repository": "centminmod/validate-emails",
+      "description": "Self-hosted email verification script to clean up bad invalid email address lists. Supports various commercial email verification provider APIs all in one script",
+      "stars": 98,
+      "url": "https://github.com/centminmod/validate-emails",
+      "owner_url": "https://github.com/centminmod",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Tv Commercial Data Cleaning",
+      "repository": "kramea/tv_commercial_data_cleaning",
+      "description": "Data cleaning of UCI TV Commercial dataset (converting key-value pairs to dataframes).",
+      "stars": 2,
+      "url": "https://github.com/kramea/tv_commercial_data_cleaning",
+      "owner_url": "https://github.com/kramea",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Home Sparkle",
+      "repository": "Octagon-simon/home-sparkle",
+      "description": "A frontend project that offers commercial and domestic cleaning services",
+      "stars": 3,
+      "url": "https://github.com/Octagon-simon/home-sparkle",
+      "owner_url": "https://github.com/Octagon-simon",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Commercial",
+      "repository": "janitorialdirectory/commercial",
+      "description": "Janitorial Directory - Local, Honest, Hard Working, Janitors & Cleaning Companies - http://Janitorial.biz",
+      "stars": 0,
+      "url": "https://github.com/janitorialdirectory/commercial",
+      "owner_url": "https://github.com/janitorialdirectory",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Cleaning Services",
+      "repository": "Koodict/cleaning-services",
+      "description": " Cleaning Services Web App:  \"The Koodict Cleaning Services Web App is a modern and intuitive platform designed to streamline the process of booking and managing cleaning services for both residential and commercial spaces.",
+      "stars": 2,
+      "url": "https://github.com/Koodict/cleaning-services",
+      "owner_url": "https://github.com/Koodict",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Cleaning Service App",
+      "repository": "NWadugodapitiya/cleaning-service-app",
+      "description": "A full-stack web application designed to simplify the booking and management of residential and commercial cleaning services. This platform supports role-based access for users and administrators, offering a smooth and efficient experience for both clients and service managers.",
+      "stars": 2,
+      "url": "https://github.com/NWadugodapitiya/cleaning-service-app",
+      "owner_url": "https://github.com/NWadugodapitiya",
+      "status": "review_required"
+    },
+    {
+      "industry": "cleaning",
+      "company_hint": "Cleaninger",
+      "repository": "malik-tanveer/cleaninger",
+      "description": "Modern Cleaning Services Website built with React, Vite & Tailwind CSS. Featuring responsive layouts, reusable components, and a clean user experience for home and commercial cleaning services.",
+      "stars": 0,
+      "url": "https://github.com/malik-tanveer/cleaninger",
+      "owner_url": "https://github.com/malik-tanveer",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Dentned",
+      "repository": "davidegironi/dentned",
+      "description": "Dental Practice Management",
+      "stars": 86,
+      "url": "https://github.com/davidegironi/dentned",
+      "owner_url": "https://github.com/davidegironi",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Openmolar1",
+      "repository": "rowinggolfer/openmolar1",
+      "description": "Dental Practice Management Software.",
+      "stars": 55,
+      "url": "https://github.com/rowinggolfer/openmolar1",
+      "owner_url": "https://github.com/rowinggolfer",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Openmolar2",
+      "repository": "rowinggolfer/openmolar2",
+      "description": "Dental Practice Management Software.",
+      "stars": 34,
+      "url": "https://github.com/rowinggolfer/openmolar2",
+      "owner_url": "https://github.com/rowinggolfer",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Apexo",
+      "repository": "alexcorvi/apexo",
+      "description": "A web/desktop application to manage your dental clinic practice.",
+      "stars": 132,
+      "url": "https://github.com/alexcorvi/apexo",
+      "owner_url": "https://github.com/alexcorvi",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Medkey",
+      "repository": "medkey-org/medkey",
+      "description": "Medkey Hospital Information System main repository: Practice Management for Practicioners & Hospitals, EHR, Patient Engagement",
+      "stars": 57,
+      "url": "https://github.com/medkey-org/medkey",
+      "owner_url": "https://github.com/medkey-org",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Dentaldesk",
+      "repository": "thasli-p/DentalDesk",
+      "description": "DentalDesk: An open-source AI dental assistant and chatbot for dental practices. Built with   Python and LangChain, it automates appointment scheduling and patient communication on WhatsApp.",
+      "stars": 12,
+      "url": "https://github.com/thasli-p/DentalDesk",
+      "owner_url": "https://github.com/thasli-p",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Dinodent",
+      "repository": "thefinalcutbg/DinoDent",
+      "description": "Dental practice management software for the needs of all dentists in Bulgaria",
+      "stars": 36,
+      "url": "https://github.com/thefinalcutbg/DinoDent",
+      "owner_url": "https://github.com/thefinalcutbg",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Opendentist",
+      "repository": "clawnify/OpenDentist",
+      "description": "Open-source dental practice management \u2014 multi-room agenda, patient charts, treatment plans, clinical notes, billing.",
+      "stars": 21,
+      "url": "https://github.com/clawnify/OpenDentist",
+      "owner_url": "https://github.com/clawnify",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Dentic",
+      "repository": "aniskchaou/DENTIC",
+      "description": "Dentic is a web application for managing a dental care office",
+      "stars": 5,
+      "url": "https://github.com/aniskchaou/DENTIC",
+      "owner_url": "https://github.com/aniskchaou",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Tooth Tracker App",
+      "repository": "Yunuslala/Tooth-tracker-App",
+      "description": "Tooth Tracker is a dentist booking system that allows patients to schedule appointments with their dentist online, rather than having to call the dental office. The system typically provides a user-friendly interface that enables patients to choose the date and time of their appointment",
+      "stars": 10,
+      "url": "https://github.com/Yunuslala/Tooth-tracker-App",
+      "owner_url": "https://github.com/Yunuslala",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Dentist Office",
+      "repository": "Ryan-Menezes/dentist-office",
+      "description": "Manager for a dentist office",
+      "stars": 3,
+      "url": "https://github.com/Ryan-Menezes/dentist-office",
+      "owner_url": "https://github.com/Ryan-Menezes",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Dentist Links Website",
+      "repository": "giselle-ferreira/dentist-links-website",
+      "description": "Project of a social-linking website developed in React and styled-components for a dentist office.",
+      "stars": 4,
+      "url": "https://github.com/giselle-ferreira/dentist-links-website",
+      "owner_url": "https://github.com/giselle-ferreira",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Keychain Tiny Game",
+      "repository": "lucasasselli/keychain-tiny-game",
+      "description": "Keychain reaction game to kill time while you wait your turn at the dentist office.",
+      "stars": 7,
+      "url": "https://github.com/lucasasselli/keychain-tiny-game",
+      "owner_url": "https://github.com/lucasasselli",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Cist2373",
+      "repository": "mimiharu/CIST2373",
+      "description": "Dentist Office",
+      "stars": 0,
+      "url": "https://github.com/mimiharu/CIST2373",
+      "owner_url": "https://github.com/mimiharu",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Dentic Frontend Client",
+      "repository": "aniskchaou/DENTIC-FRONTEND-CLIENT",
+      "description": "Dentic is a web application for managing a dental care office",
+      "stars": 3,
+      "url": "https://github.com/aniskchaou/DENTIC-FRONTEND-CLIENT",
+      "owner_url": "https://github.com/aniskchaou",
+      "status": "review_required"
+    },
+    {
+      "industry": "dental",
+      "company_hint": "Dentistoffice",
+      "repository": "zentrev/DentistOffice",
+      "description": "Dentist Office Project",
+      "stars": 0,
+      "url": "https://github.com/zentrev/DentistOffice",
+      "owner_url": "https://github.com/zentrev",
+      "status": "review_required"
+    },
+    {
+      "industry": "landscaping",
+      "company_hint": "Badello Contractors",
+      "repository": "sushant964/Badello-contractors",
+      "description": "Southern South Landscaping",
+      "stars": 0,
+      "url": "https://github.com/sushant964/Badello-contractors",
+      "owner_url": "https://github.com/sushant964",
+      "status": "review_required"
+    },
+    {
+      "industry": "landscaping",
+      "company_hint": "Alcala Landscaping Pavers",
+      "repository": "Alcalalandscapingpavers/Alcala-Landscaping-Pavers-",
+      "description": "Contractor Gabriel ",
+      "stars": 1,
+      "url": "https://github.com/Alcalalandscapingpavers/Alcala-Landscaping-Pavers-",
+      "owner_url": "https://github.com/Alcalalandscapingpavers",
+      "status": "review_required"
+    },
+    {
+      "industry": "landscaping",
+      "company_hint": "Greenspan Landscaping App",
+      "repository": "sasquatch555/Greenspan-Landscaping-App",
+      "description": "Contractor software services ",
+      "stars": 0,
+      "url": "https://github.com/sasquatch555/Greenspan-Landscaping-App",
+      "owner_url": "https://github.com/sasquatch555",
+      "status": "review_required"
+    },
+    {
+      "industry": "landscaping",
+      "company_hint": "Clg Landscaping",
+      "repository": "ranjitmarathay/clg-landscaping",
+      "description": "Contractor Lead Generation for Landscaping",
+      "stars": 0,
+      "url": "https://github.com/ranjitmarathay/clg-landscaping",
+      "owner_url": "https://github.com/ranjitmarathay",
+      "status": "review_required"
+    }
+  ]
+}
