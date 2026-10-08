@@ -20,7 +20,30 @@ if(!key)location.href="signup.html";
 const H={"x-dealspark-key":key};
 async function load(){const r=await fetch(API+"/api/onboarding",{headers:H}),d=await r.json();if(!r.ok){status.textContent=d.error||"Unable to load account";return}
 if(d.subscription?.status!=="active"){status.textContent="Payment is not active yet. Complete Stripe checkout first.";return}
-status.className="status ok";status.textContent="Payment active. Complete this setup once and your DealSpark workspace is ready.";
+const plan=String(d.subscription?.plan||"").toLowerCase();
+const standalone={
+ leadflow:{name:"LeadFlow",demo:"ops-lab/leadflow-demo.html"},
+ quotepilot:{name:"QuotePilot",demo:"ops-lab/quotepilot-demo.html"},
+ scheduleflow:{name:"ScheduleFlow",demo:"ops-lab/scheduleflow-demo.html"},
+ dispatchdesk:{name:"DispatchDesk",demo:"ops-lab/dispatchdesk-demo.html"},
+ assetcare:{name:"AssetCare",demo:"ops-lab/assetcare-demo.html"},
+ billguard:{name:"BillGuard",demo:"ops-lab/billguard-demo.html"},
+ stockwatch:{name:"StockWatch",demo:"ops-lab/stockwatch-demo.html"},
+ staffdesk:{name:"StaffDesk",demo:"ops-lab/staffdesk-demo.html"},
+ reviewshield:{name:"ReviewShield",demo:"ops-lab/reviewshield-demo.html"},
+ opsvault:{name:"OpsVault",demo:"ops-lab/opsvault-demo.html"},
+ bundle_service_operations:{name:"Service Operations Bundle",demo:"index.html#pricing"},
+ bundle_business_control:{name:"Business Control Bundle",demo:"index.html#pricing"}
+};
+const receptionistPlans=new Set(["starter","growth","pro","business","ai_virtual_receptionist","bundle_front_office","bundle_complete"]);
+if(!receptionistPlans.has(plan)){
+ const p=standalone[plan]||{name:"Your DealSpark product",demo:"index.html#pricing"};
+ status.className="status ok";
+ status.innerHTML="Payment active. <b>"+p.name+"</b> is recorded. This form configures the AI Receptionist; your selected standalone workflow needs separate onboarding. <a href='"+p.demo+"'>Open product demo →</a> · <a href='sales-agent.html'>Contact DealSpark →</a>";
+ document.getElementById("setup").style.display="none";
+ return;
+}
+status.className="status ok";status.textContent="Payment active. Complete this AI Receptionist setup; live phone and calendar integrations still require authorization and testing.";
 const c=d.config||{};for(const [id,val] of Object.entries({name:d.business.name,phone:d.business.phone,area:c.service_area,notify:c.notification_email,services:c.services,open:c.opening_time,close:c.closing_time,greeting:c.greeting,forwarding:c.forwarding_number})){if(document.getElementById(id)&&val!==undefined)document.getElementById(id).value=val||""}}
 document.getElementById("setup").addEventListener("submit",async e=>{e.preventDefault();const m=document.getElementById("msg");m.textContent="Saving…";const body={business_name:name.value,phone:phone.value,service_area:area.value,notification_email:notify.value,services:services.value,opening_time:open.value,closing_time:close.value,greeting:greeting.value,forwarding_number:forwarding.value};const r=await fetch(API+"/api/onboarding",{method:"POST",headers:{...H,"content-type":"application/json"},body:JSON.stringify(body)});const d=await r.json();m.textContent=r.ok?"✓ Configuration saved. Your web/chat lead capture is live and your workspace is ready.":(d.error||"Could not save.");if(r.ok){status.textContent="DealSpark workspace activated";status.className="status ok"}});load();
 </script></body></html>
