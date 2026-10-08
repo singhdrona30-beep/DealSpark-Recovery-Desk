@@ -1,4 +1,4 @@
-name: DealSpark Production Smoke Test
+name: DealSpark Production Smoke Test v2
 
 on:
   push:
