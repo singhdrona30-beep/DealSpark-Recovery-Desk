@@ -1,1 +1,2 @@
 Backend deployment verification trigger. Secrets were added before this commit.
+Fresh deployment test after D1 name fix.
