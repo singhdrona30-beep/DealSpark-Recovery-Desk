@@ -34,4 +34,4 @@ function startCall(){if(running)return;running=true;convo.innerHTML="";actions.i
 ];let i=0;function next(){if(i<steps.length){bubble(steps[i][1],steps[i][0]);i++;setTimeout(next,650)}else{finish()}}next()}
 function finish(){summary.innerHTML="<b>James M.</b> • AC repair • Tomorrow • Mike R. • 9:00–10:30 AM";actions.innerHTML=["Call answered","Service identified","Customer captured","Technician matched","Travel buffer checked","Appointment booked","Customer confirmation ready"].map(x=>"<span class='action'>✓ "+x+"</span>").join("")}
 function resetCall(){running=false;convo.innerHTML="";summary.textContent="Start the demo call to see what the AI captures.";actions.innerHTML="";renderSlots()}
-</script><script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}</script></body></html>
+</script><script>if("serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});}</script><script src="pwa-install.js"></script></body></html>
