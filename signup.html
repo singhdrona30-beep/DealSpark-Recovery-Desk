@@ -1,42 +1,73 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Start DealSpark</title><link rel="stylesheet" href="styles.css">
-<style>.box{max-width:620px;margin:55px auto}.box form{display:grid;gap:12px}.box input,.box select{padding:13px;border:1px solid #d8dee8;border-radius:10px;font:inherit}.box button{padding:13px;border:0;border-radius:10px;background:#172033;color:#fff;font-weight:800;font:inherit;cursor:pointer}.msg{margin-top:14px;padding:12px;border-radius:10px;background:#f4f7fb}.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.plan{border:1px solid #d8dee8;border-radius:10px;padding:10px;cursor:pointer}.plan:has(input:checked){border:2px solid #172033}.plan input{margin-right:5px}@media(max-width:700px){.plans{grid-template-columns:1fr 1fr}}</style></head>
-<body><main class="shell"><section class="card box">
-<p class="eyebrow">DealSpark</p><h1>Start your customer account</h1>
-<p>Create your account first, then continue to secure Stripe checkout. Your selected subscription activates automatically after successful payment.</p>
-<form id="signup">
-<input name="business_name" placeholder="Business name" required>
-<input name="email" type="email" placeholder="Business email" required>
-<input name="phone" placeholder="Business phone">
-<select name="timezone"><option value="America/Toronto">Eastern Time</option><option value="America/Chicago">Central Time</option><option value="America/Denver">Mountain Time</option><option value="America/Los_Angeles">Pacific Time</option><option value="Europe/London">UK</option></select>
-<div><b>Plan</b><div class="plans">
-<label class="plan"><input type="radio" name="plan" value="starter" checked>Starter<br><small>$79/mo</small></label>
-<label class="plan"><input type="radio" name="plan" value="growth">Growth<br><small>$149/mo</small></label>
-<label class="plan"><input type="radio" name="plan" value="pro">Pro<br><small>$249/mo</small></label>
-<label class="plan"><input type="radio" name="plan" value="business">Business<br><small>$399/mo</small></label>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Start DealSpark | Secure Checkout</title>
+<meta name="description" content="Create your DealSpark business account and continue to secure Stripe checkout.">
+<link rel="stylesheet" href="styles.css">
+<style>
+.checkout{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(330px,.85fr);gap:22px;align-items:start}
+.brandbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.brand{font-size:22px;font-weight:950;letter-spacing:-.04em}.brand a{text-decoration:none;color:var(--ds-ink)}
+.intro{padding:34px}.intro h1{font-size:clamp(2.3rem,5vw,4rem);margin:6px 0 14px}.intro>p{color:var(--ds-muted);max-width:680px;font-size:17px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}.step{padding:13px;border:1px solid var(--ds-line);border-radius:13px;background:var(--ds-soft)}.step b{display:block;font-size:13px}.step span{font-size:12px;color:var(--ds-muted)}
+.formcard{padding:26px}.formcard h2{margin-top:0}.form{display:grid;gap:13px}.form label{font-size:13px;font-weight:800;color:#344054}.form input,.form select{width:100%;margin-top:6px;padding:12px 13px}.plans{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px}.plan{position:relative;border:1px solid #d8dee8;border-radius:13px;padding:13px;background:#fff;cursor:pointer;transition:.18s}.plan:hover{border-color:#9db3d5}.plan:has(input:checked){border:2px solid var(--ds-ink);background:#f8fafc;box-shadow:0 5px 16px rgba(23,32,51,.08)}.plan input{position:absolute;opacity:0}.plan strong{display:block}.plan .price{font-size:18px;font-weight:900;margin-top:3px}.plan small{color:var(--ds-muted)}
+.summary{padding:22px;position:sticky;top:20px}.summary h2{margin-top:0}.summary-plan{border:1px solid var(--ds-line);border-radius:14px;padding:17px;background:var(--ds-soft);margin:15px 0}.summary-plan strong{font-size:20px}.summary-plan .big{font-size:34px;font-weight:950;line-height:1.1;margin:5px 0}.summary ul{padding-left:19px;color:#475467;line-height:1.9}.secure{display:grid;gap:9px;margin-top:18px}.secure div{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:#475467}.secure b{color:var(--ds-green)}.offer{margin-top:16px;padding:13px;border-radius:12px;background:#eef8f3;color:#176b4a;font-size:13px}
+.msg{margin-top:14px;padding:13px;border-radius:12px;background:var(--ds-soft);border:1px solid var(--ds-line);font-size:13px}.msg.ok{background:#ecfdf3;color:#067647}
+.submit{width:100%;padding:14px;border:0;border-radius:12px;font-weight:900;font-size:15px;margin-top:4px}.fine{font-size:11px;color:#98a2b3;line-height:1.5;margin-top:14px}
+@media(max-width:800px){.checkout{grid-template-columns:1fr}.summary{position:static}.steps{grid-template-columns:1fr}.plans{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="shell">
+<header class="brandbar"><div class="brand"><a href="index.html">DealSpark</a></div><a href="index.html">← Back to website</a></header>
+<div class="checkout">
+<section class="card intro">
+<p class="eyebrow">Start your DealSpark workspace</p>
+<h1>Turn missed calls into more booked business.</h1>
+<p>Create your business account, choose the plan that fits your operation, then continue to secure Stripe checkout. Your workspace activates after successful payment.</p>
+<div class="steps"><div class="step"><b>1. Create account</b><span>Your business details</span></div><div class="step"><b>2. Secure checkout</b><span>Stripe subscription billing</span></div><div class="step"><b>3. Go live</b><span>Setup your workspace</span></div></div>
+<form id="signup" class="form">
+<label>Business name<input name="business_name" placeholder="Your company name" required></label>
+<label>Business email<input name="email" type="email" placeholder="you@company.com" required></label>
+<label>Business phone<input name="phone" placeholder="+1 555 123 4567"></label>
+<label>Business timezone<select name="timezone"><option value="America/Toronto">Eastern Time</option><option value="America/Chicago">Central Time</option><option value="America/Denver">Mountain Time</option><option value="America/Los_Angeles">Pacific Time</option><option value="Europe/London">UK / London</option></select></label>
+<div><label>Choose your plan</label><div class="plans">
+<label class="plan"><input type="radio" name="plan" value="starter" checked><strong>Starter</strong><div class="price">$79/mo</div><small>AI Receptionist</small></label>
+<label class="plan"><input type="radio" name="plan" value="growth"><strong>Growth</strong><div class="price">$149/mo</div><small>Recovery Suite</small></label>
+<label class="plan"><input type="radio" name="plan" value="pro"><strong>Pro</strong><div class="price">$249/mo</div><small>Advanced Conversion</small></label>
+<label class="plan"><input type="radio" name="plan" value="business"><strong>Business</strong><div class="price">$399/mo</div><small>Full DealSpark Suite</small></label>
 </div></div>
-<button>Continue to secure payment →</button></form><div id="msg" class="msg" hidden></div>
-<p style="margin-top:18px"><a href="index.html">← Back to DealSpark</a></p>
-</section></main>
+<button class="submit">Continue to secure checkout →</button>
+</form>
+<div id="msg" class="msg" hidden></div>
+<p class="fine">By continuing, you will be taken to Stripe Checkout for recurring monthly billing. You can review the subscription details there before completing payment. Communication/phone-provider costs, if applicable, are separate.</p>
+</section>
+<aside class="card summary">
+<p class="eyebrow">Your selected plan</p><div class="summary-plan"><strong id="sumName">Starter</strong><div class="big" id="sumPrice">$79</div><div style="color:var(--ds-muted)">USD / month</div><div id="sumDesc" style="margin-top:9px;color:#475467">AI receptionist and lead capture.</div></div>
+<ul id="sumList"><li>Website AI receptionist</li><li>Lead capture</li><li>Basic qualification</li><li>Customer dashboard</li></ul>
+<div class="offer"><b>Launch offer:</b> 10% off your first 3 months after a DealSpark demo.</div>
+<div class="secure"><div><b>✓</b><span>Secure Stripe subscription checkout</span></div><div><b>✓</b><span>No setup fee from DealSpark</span></div><div><b>✓</b><span>Workspace activation after payment</span></div><div><b>✓</b><span>Cancel according to your Stripe subscription terms</span></div></div>
+<p style="margin-top:20px"><a href="index.html#pricing">Compare all plans →</a></p>
+</aside>
+</div>
+</main>
 <script>
 const API="https://dealspark-test-api.pages.dev";
-const PAYMENTS={
- starter:"https://buy.stripe.com/3cI8wQ6ICg9OcxX0y4enS00",
- growth:"https://buy.stripe.com/7sY5kE6ICg9O7dD6WsenS01",
- pro:"https://buy.stripe.com/eVq3cwc2W4r60Pf2GcenS02",
- business:"https://buy.stripe.com/5kQeVe0ke6zefK9a8EenS03"
+const PAYMENTS={starter:"https://buy.stripe.com/3cI8wQ6ICg9OcxX0y4enS00",growth:"https://buy.stripe.com/7sY5kE6ICg9O7dD6WsenS01",pro:"https://buy.stripe.com/eVq3cwc2W4r60Pf2GcenS02",business:"https://buy.stripe.com/5kQeVe0ke6zefK9a8EenS03"};
+const info={
+starter:{name:"Starter",price:"$79",desc:"AI receptionist and lead capture.",items:["Website AI receptionist","Lead capture","Basic qualification","Customer dashboard"]},
+growth:{name:"Growth",price:"$149",desc:"Core revenue-recovery suite.",items:["Everything in Starter","Lead Recovery Desk","QuoteFlow","Reactivate","AI phone workflow"]},
+pro:{name:"Pro",price:"$249",desc:"Advanced lead-conversion system.",items:["Everything in Growth","AI Phone Agent","Lead Radar","Advanced workflows"]},
+business:{name:"Business",price:"$399",desc:"Full DealSpark business suite.",items:["All DealSpark products","Sales Agent","Advanced dashboard","Custom routing","Priority support"]}
 };
 const params=new URLSearchParams(location.search),requested=params.get("plan"),paid=params.get("paid");
 if(PAYMENTS[requested]){const radio=document.querySelector('input[name="plan"][value="'+requested+'"]');if(radio)radio.checked=true}
-if(paid==="1"){document.getElementById("msg").hidden=false;document.getElementById("msg").textContent="Payment completed. Your DealSpark subscription is being activated. Open your dashboard to continue."; }
+function updateSummary(){const plan=document.querySelector('input[name="plan"]:checked').value,d=info[plan];document.getElementById("sumName").textContent=d.name;document.getElementById("sumPrice").textContent=d.price;document.getElementById("sumDesc").textContent=d.desc;document.getElementById("sumList").innerHTML=d.items.map(x=>"<li>"+x+"</li>").join("")}
+document.querySelectorAll('input[name="plan"]').forEach(x=>x.addEventListener("change",updateSummary));updateSummary();
+if(paid==="1"){const m=document.getElementById("msg");m.hidden=false;m.className="msg ok";m.textContent="Payment completed. Your DealSpark subscription is being activated. Open your dashboard to continue."}
 document.getElementById("signup").addEventListener("submit",async e=>{
- e.preventDefault(); const f=new FormData(e.target),msg=document.getElementById("msg"),plan=String(f.get("plan"));
- msg.hidden=false;msg.textContent="Creating your account…";
- try{const r=await fetch(API+"/api/signup",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({business_name:f.get("business_name"),email:f.get("email"),phone:f.get("phone"),timezone:f.get("timezone"),plan})});
- const d=await r.json();if(!r.ok)throw new Error(d.error||"Signup failed");
- localStorage.setItem("dealspark_dashboard_key",d.dashboard_key);localStorage.setItem("dealspark_business_id",d.business_id);
- msg.textContent="Account ready. Opening secure Stripe checkout…";location.href=PAYMENTS[plan];
- }catch(err){msg.textContent="Could not create the account yet: "+err.message}
+e.preventDefault();const f=new FormData(e.target),msg=document.getElementById("msg"),plan=String(f.get("plan"));msg.hidden=false;msg.className="msg";msg.textContent="Creating your secure account…";
+try{const r=await fetch(API+"/api/signup",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({business_name:f.get("business_name"),email:f.get("email"),phone:f.get("phone"),timezone:f.get("timezone"),plan})});const d=await r.json();if(!r.ok)throw new Error(d.error||"Signup failed");localStorage.setItem("dealspark_dashboard_key",d.dashboard_key);localStorage.setItem("dealspark_business_id",d.business_id);msg.textContent="Account ready. Opening secure Stripe Checkout…";location.href=PAYMENTS[plan]}catch(err){msg.textContent="We couldn't create the account yet: "+err.message}
 });
-</script></body></html>
+</script>
+</body></html>
