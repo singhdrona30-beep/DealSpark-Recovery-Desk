@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DealSpark — Activate Your Business</title><link rel="stylesheet" href="styles.css"><style>.box{max-width:720px;margin:45px auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.box input,.box textarea,.box select{width:100%;box-sizing:border-box;padding:13px;border:1px solid #d8dee8;border-radius:10px;font:inherit}.box textarea{min-height:100px}.box label{font-weight:700;font-size:13px}.box button{padding:14px;border:0;border-radius:10px;background:#172033;color:#fff;font-weight:800;font:inherit;cursor:pointer}.status{padding:12px;border-radius:10px;background:#f4f7fb;margin:14px 0}.ok{background:#ecfdf3;color:#067647}@media(max-width:700px){.grid{grid-template-columns:1fr}}</style></head>
+<body><main class="shell"><section class="card box">
+<p class="eyebrow">DealSpark</p><h1>Activate your business</h1>
+<p>Enter the information DealSpark needs to answer inquiries, qualify leads, book appointments and route completed lead details to your team.</p>
+<div id="status" class="status">Checking your subscription…</div>
+<form id="setup" style="display:grid;gap:12px">
+<div class="grid"><label>Business name<input id="name" required></label><label>Business phone<input id="phone" required></label></div>
+<div class="grid"><label>Service area<input id="area" placeholder="Toronto, GTA, etc."></label><label>Notification email<input id="notify" type="email" required></label></div>
+<label>Services offered<textarea id="services" placeholder="HVAC repair, maintenance, installation…"></textarea></label>
+<div class="grid"><label>Opening time<input id="open" type="time" value="08:00"></label><label>Closing time<input id="close" type="time" value="18:00"></label></div>
+<label>AI greeting<textarea id="greeting">Hi, thanks for calling. You've reached the virtual receptionist. How can I help you today?</textarea></label>
+<label>Existing call-forwarding / destination number (optional)<input id="forwarding" placeholder="+1…"></label>
+<button>Save configuration & activate</button>
+</form><p id="msg"></p><p><a href="dashboard.html">Go to Recovery Desk →</a></p>
+</section></main>
+<script>
+const API="https://dealspark-test-api.pages.dev",key=localStorage.getItem("dealspark_dashboard_key"),status=document.getElementById("status");
+if(!key)location.href="signup.html";
+const H={"x-dealspark-key":key};
+async function load(){const r=await fetch(API+"/api/onboarding",{headers:H}),d=await r.json();if(!r.ok){status.textContent=d.error||"Unable to load account";return}
+if(d.subscription?.status!=="active"){status.textContent="Payment is not active yet. Complete Stripe checkout first.";return}
+status.className="status ok";status.textContent="Payment active. Complete this setup once and your DealSpark workspace is ready.";
+const c=d.config||{};for(const [id,val] of Object.entries({name:d.business.name,phone:d.business.phone,area:c.service_area,notify:c.notification_email,services:c.services,open:c.opening_time,close:c.closing_time,greeting:c.greeting,forwarding:c.forwarding_number})){if(document.getElementById(id)&&val!==undefined)document.getElementById(id).value=val||""}}
+document.getElementById("setup").addEventListener("submit",async e=>{e.preventDefault();const m=document.getElementById("msg");m.textContent="Saving…";const body={business_name:name.value,phone:phone.value,service_area:area.value,notification_email:notify.value,services:services.value,opening_time:open.value,closing_time:close.value,greeting:greeting.value,forwarding_number:forwarding.value};const r=await fetch(API+"/api/onboarding",{method:"POST",headers:{...H,"content-type":"application/json"},body:JSON.stringify(body)});const d=await r.json();m.textContent=r.ok?"✓ Configuration saved. Your web/chat lead capture is live and your workspace is ready.":(d.error||"Could not save.");if(r.ok){status.textContent="DealSpark workspace activated";status.className="status ok"}});load();
+</script></body></html>
