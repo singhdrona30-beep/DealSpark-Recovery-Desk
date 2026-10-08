@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Start DealSpark</title><link rel="stylesheet" href="styles.css">
+<style>.box{max-width:620px;margin:55px auto}.box form{display:grid;gap:12px}.box input,.box select{padding:13px;border:1px solid #d8dee8;border-radius:10px;font:inherit}.box button{padding:13px;border:0;border-radius:10px;background:#172033;color:#fff;font-weight:800;font:inherit;cursor:pointer}.msg{margin-top:14px;padding:12px;border-radius:10px;background:#f4f7fb}.plans{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.plan{border:1px solid #d8dee8;border-radius:10px;padding:10px;cursor:pointer}.plan:has(input:checked){border:2px solid #172033}.plan input{margin-right:5px}@media(max-width:700px){.plans{grid-template-columns:1fr 1fr}}</style></head>
+<body><main class="shell"><section class="card box">
+<p class="eyebrow">DealSpark</p><h1>Start your customer account</h1>
+<p>Choose a plan, create your business account, then open your private Recovery Desk.</p>
+<form id="signup">
+<input name="business_name" placeholder="Business name" required>
+<input name="email" type="email" placeholder="Business email" required>
+<input name="phone" placeholder="Business phone">
+<select name="timezone"><option value="America/Toronto">Eastern Time</option><option value="America/Chicago">Central Time</option><option value="America/Denver">Mountain Time</option><option value="America/Los_Angeles">Pacific Time</option><option value="Europe/London">UK</option></select>
+<div><b>Plan</b><div class="plans">
+<label class="plan"><input type="radio" name="plan" value="starter" checked>Starter<br><small>$79/mo</small></label>
+<label class="plan"><input type="radio" name="plan" value="growth">Growth<br><small>$149/mo</small></label>
+<label class="plan"><input type="radio" name="plan" value="pro">Pro<br><small>$249/mo</small></label>
+<label class="plan"><input type="radio" name="plan" value="business">Business<br><small>$399/mo</small></label>
+</div></div>
+<button>Create DealSpark account</button></form><div id="msg" class="msg" hidden></div>
+<p style="margin-top:18px"><a href="index.html">← Back to DealSpark</a></p>
+</section></main>
+<script>
+const API="https://dealspark-test-api.pages.dev";
+document.getElementById("signup").addEventListener("submit",async e=>{
+ e.preventDefault(); const f=new FormData(e.target), msg=document.getElementById("msg"); msg.hidden=false; msg.textContent="Creating your account…";
+ try{const r=await fetch(API+"/api/signup",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({business_name:f.get("business_name"),email:f.get("email"),phone:f.get("phone"),timezone:f.get("timezone"),plan:f.get("plan")})});
+ const d=await r.json(); if(!r.ok) throw new Error(d.error||"Signup failed");
+ localStorage.setItem("dealspark_dashboard_key",d.dashboard_key); localStorage.setItem("dealspark_business_id",d.business_id);
+ msg.innerHTML='Account created. <a href="dashboard.html">Open your Recovery Desk →</a>'; e.target.reset();
+ }catch(err){msg.textContent="Could not create the account yet: "+err.message}
+});
+</script></body></html>
