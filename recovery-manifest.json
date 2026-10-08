@@ -1,0 +1,18 @@
+{
+  "name": "DealSpark Lead Recovery",
+  "short_name": "Lead Recovery",
+  "start_url": "./lead-recovery.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f9fc",
+  "theme_color": "#155eef",
+  "description": "Recover missed opportunities with automated lead follow-up and qualification.",
+  "icons": [
+    {
+      "src": "recovery-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
