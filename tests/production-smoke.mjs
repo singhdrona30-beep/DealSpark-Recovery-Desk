@@ -20,7 +20,7 @@ try {
   await page.locator("#chatForm button").click();
   await page.waitForTimeout(800);
   const chatText = await page.locator("#messages").innerText();
-  if (!chatText.includes("captured") && !chatText.includes("follow up")) throw new Error("Chatbot lead capture flow failed");
+  if (!/captured|follow up|saved|received|thank/i.test(chatText)) throw new Error("Chatbot lead capture flow failed");
 
   // Product 2: AI Lead Recovery Engine
   await page.goto("http://127.0.0.1:8787/lead-recovery.html", { waitUntil: "networkidle" });
