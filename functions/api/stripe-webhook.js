@@ -19,15 +19,17 @@ export async function onRequestPost({request,env}){
   const plan=String(obj.metadata?.dealspark_plan||obj.subscription_data?.metadata?.dealspark_plan||"").toLowerCase();
   const customer=String(obj.customer||"");
   const subscription=String(obj.subscription||obj.id||"");
+  const periodEnd=Number(obj.current_period_end||obj.lines?.data?.[0]?.period?.end||0);
+  const periodEndIso=periodEnd?new Date(periodEnd*1000).toISOString():"";
   const status=event.type==="invoice.payment_failed"?"past_due":event.type==="customer.subscription.deleted"?"canceled":event.type==="customer.subscription.updated"?(obj.status||"active"):"active";
   if(event.type==="checkout.session.completed"){
     if(email){
-      await env.DB.prepare("UPDATE subscriptions SET plan=CASE WHEN ? IN ('starter','growth','pro','business') THEN ? ELSE plan END,status='active',stripe_customer_id=?,stripe_subscription_id=?,updated_at=? WHERE business_id IN (SELECT business_id FROM users WHERE lower(email)=?)").bind(plan,plan,customer,subscription,new Date().toISOString(),email).run();
+      await env.DB.prepare("UPDATE subscriptions SET plan=CASE WHEN ? IN ('starter','growth','pro','business') THEN ? ELSE plan END,status='active',stripe_customer_id=?,stripe_subscription_id=?,current_period_end=?,updated_at=? WHERE business_id IN (SELECT business_id FROM users WHERE lower(email)=?)").bind(plan,plan,customer,subscription,periodEndIso,new Date().toISOString(),email).run();
     }
   } else if(event.type.startsWith("customer.subscription.")){
-    await env.DB.prepare("UPDATE subscriptions SET plan=CASE WHEN ? IN ('starter','growth','pro','business') THEN ? ELSE plan END,status=?,stripe_customer_id=?,stripe_subscription_id=?,updated_at=? WHERE stripe_customer_id=? OR stripe_subscription_id=?").bind(plan,plan,status,customer,subscription,new Date().toISOString(),customer,subscription).run();
+    await env.DB.prepare("UPDATE subscriptions SET plan=CASE WHEN ? IN ('starter','growth','pro','business') THEN ? ELSE plan END,status=?,stripe_customer_id=?,stripe_subscription_id=?,current_period_end=?,updated_at=? WHERE stripe_customer_id=? OR stripe_subscription_id=?").bind(plan,plan,status,customer,subscription,periodEndIso,new Date().toISOString(),customer,subscription).run();
   } else if(event.type==="invoice.paid"||event.type==="invoice.payment_failed"){
-    await env.DB.prepare("UPDATE subscriptions SET status=?,updated_at=? WHERE stripe_customer_id=? OR stripe_subscription_id=?").bind(status,new Date().toISOString(),customer,subscription).run();
+    await env.DB.prepare("UPDATE subscriptions SET status=?,current_period_end=CASE WHEN ?<>"" THEN ? ELSE current_period_end END,updated_at=? WHERE stripe_customer_id=? OR stripe_subscription_id=?").bind(status,periodEndIso,periodEndIso,new Date().toISOString(),customer,subscription).run();
   }
   return new Response(JSON.stringify({received:true}),{headers:{"content-type":"application/json"}});
 }
