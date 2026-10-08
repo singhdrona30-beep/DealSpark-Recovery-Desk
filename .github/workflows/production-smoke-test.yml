@@ -1,0 +1,30 @@
+name: DealSpark Production Smoke Test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "chatbot.html"
+      - "chatbot.js"
+      - "chatbot.css"
+      - "lead-recovery.html"
+      - ".github/workflows/production-smoke-test.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm init -y
+      - run: npm install playwright@1.63.0
+      - run: npx playwright install --with-deps chromium
+      - name: Run production smoke tests
+        run: node tests/production-smoke.mjs
