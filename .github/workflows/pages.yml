@@ -21,6 +21,65 @@ jobs:
         uses: actions/checkout@v4
       - name: Configure Pages
         uses: actions/configure-pages@v5
+      - name: Inject analytics and build complete sitemap
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          base = "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk"
+          excluded = {
+              "signup.html", "dashboard.html", "sales-agent.html", "chatbot.html",
+              "lead-radar.html", "onboarding.html", "thank-you.html",
+              "ops-lab/connector-status.html", "ops-lab/integrations-demo.html",
+              "ops-lab/top10-integrations.html"
+          }
+          # Add one tracker to every public HTML page; remove old broken inline trackers first.
+          for page in Path(".").rglob("*.html"):
+              rel = page.as_posix()
+              if rel.startswith((".git/", "node_modules/")):
+                  continue
+              html = page.read_text(encoding="utf-8")
+              html = re.sub(
+                  r'<script\\b[^>]*>.*?dealspark-analytics\\.singhdrona30\\.workers\\.dev.*?</script>',
+                  "",
+                  html,
+                  flags=re.IGNORECASE | re.DOTALL
+              )
+              tag = '<script defer src="/DealSpark-Recovery-Desk/analytics.js"></script>'
+              if tag not in html and "</head>" in html:
+                  html = html.replace("</head>", "  " + tag + "\\n</head>", 1)
+              page.write_text(html, encoding="utf-8")
+
+          # Sitemap includes public marketing/content pages, not account or internal dashboards.
+          urls = []
+          for page in Path(".").rglob("*.html"):
+              rel = page.as_posix()
+              if rel.startswith((".git/", "node_modules/")) or rel in excluded:
+                  continue
+              if rel.startswith("global/"):
+                  # Regional templates are near-duplicates; keep them out until localized with genuinely useful content.
+                  continue
+              if rel.endswith("-demo.html") or (rel.startswith("ops-lab/") and rel not in {"ops-lab/index.html"}):
+                  continue
+              if rel in {"product/recovery-desk/index.html"}:
+                  continue
+              if rel == "index.html":
+                  url = base + "/"
+              elif rel.endswith("/index.html"):
+                  url = base + "/" + rel[:-len("index.html")]
+              else:
+                  url = base + "/" + rel
+              urls.append(url)
+          urls = sorted(set(urls))
+          xml = ['<?xml version="1.0" encoding="UTF-8"?>',
+                 '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+          for url in urls:
+              xml.append("  <url><loc>" + url + "</loc></url>")
+          xml.append("</urlset>")
+          Path("sitemap.xml").write_text("\\n".join(xml) + "\\n", encoding="utf-8")
+          print(f"Injected analytics into HTML and generated sitemap with {len(urls)} public URLs.")
+          PY
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
