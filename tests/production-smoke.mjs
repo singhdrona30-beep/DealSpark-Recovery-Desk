@@ -1,12 +1,77 @@
 import { chromium } from "playwright";
 import { spawn } from "node:child_process";
-import { normalizePhone } from "../functions/api/onboarding.js";
+import { normalizePhone, onRequest as onboardingRequest } from "../functions/api/onboarding.js";
 
 const server = spawn("python3", ["-m", "http.server", "8787"], { stdio: "ignore" });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+async function testOnboardingApi() {
+  const business = { id: "smoke-business", name: "Smoke Test HVAC", phone: "+1 (416) 555-0123", timezone: "America/Toronto" };
+  const subscription = { plan: "ai_virtual_receptionist", status: "active", current_period_end: null };
+  const input = {
+    business_name: "Smoke Test HVAC",
+    phone: "+1 (416) 555-0123",
+    notification_email: "alerts@example.com",
+    phone_connection_method: "call_forwarding",
+    current_carrier: "Smoke Test Carrier",
+    forwarding_number: "+1 (240) 231-4013",
+    service_area: "Toronto",
+    services: "HVAC repair",
+    opening_time: "08:00",
+    closing_time: "18:00",
+    greeting: "Thanks for calling."
+  };
+  const makeEnv = existingRoutes => ({
+    DB: {
+      prepare(sql) {
+        return {
+          bind(...params) {
+            return {
+              first: async () => {
+                if (sql.includes("SELECT id,name,phone,timezone FROM businesses")) return business;
+                if (sql.includes("SELECT plan,status,current_period_end,updated_at FROM subscriptions")) return subscription;
+                if (sql.includes("SELECT payload FROM events")) return null;
+                throw new Error("Unexpected onboarding SQL first(): " + sql);
+              },
+              all: async () => {
+                if (sql.includes("SELECT b.id, b.phone, e.payload FROM businesses")) return { results: existingRoutes };
+                return { results: [] };
+              },
+              run: async () => ({ success: true, changes: 1 })
+            };
+          }
+        };
+      }
+    }
+  });
+  const requestFor = body => new Request("https://smoke.test/api/onboarding", {
+    method: "POST",
+    headers: { "content-type": "application/json", "x-dealspark-key": "smoke-key" },
+    body: JSON.stringify(body)
+  });
+
+  const validResponse = await onboardingRequest({ request: requestFor(input), env: makeEnv([]) });
+  const valid = await validResponse.json();
+  if (validResponse.status !== 200 || valid.activated !== false || valid.config?.main_phone_normalized !== "14165550123" || valid.config?.forwarding_number_normalized !== "12402314013") {
+    throw new Error("Onboarding API failed normalized save / non-activation safeguards: " + JSON.stringify({ status: validResponse.status, activated: valid.activated, config: valid.config }));
+  }
+
+  const duplicateResponse = await onboardingRequest({
+    request: requestFor(input),
+    env: makeEnv([{ id: "other-business", phone: "+1 (416) 555-0123", payload: JSON.stringify({ forwarding_number: "+1 (647) 555-0199" }) }])
+  });
+  if (duplicateResponse.status !== 409) throw new Error("Onboarding API did not reject a phone number already assigned to another business.");
+
+  const loopResponse = await onboardingRequest({
+    request: requestFor({ ...input, forwarding_number: input.phone }),
+    env: makeEnv([])
+  });
+  if (loopResponse.status !== 400) throw new Error("Onboarding API did not reject a self-forwarding phone loop.");
+}
+
 try {
   if (normalizePhone("+1 (416) 555-0123") !== "14165550123" || normalizePhone("416-555-0123") !== "14165550123" || normalizePhone("+44 20 7946 0958") !== "442079460958") throw new Error("Phone number normalization failed");
+  await testOnboardingApi();
   await sleep(800);
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ serviceWorkers: "block" });
