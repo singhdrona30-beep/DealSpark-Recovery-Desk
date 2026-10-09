@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Capture changed HTML for IndexNow
         env:
           EVENT_NAME: ${{ github.event_name }}
