@@ -3,7 +3,8 @@
 // Never collects IP addresses, names, emails, or form contents.
 (function () {
   "use strict";
-  if (navigator.webdriver) return;\n  var endpoint = "https://dealspark-api.singhdrona30.workers.dev/analytics";
+  if (navigator.webdriver) return;
+  var endpoint = "https://dealspark-api.singhdrona30.workers.dev/analytics";
   try {
     var sid = sessionStorage.getItem("ds_sid");
     if (!sid) {
