@@ -55,6 +55,31 @@ jobs:
           curl -sSL https://get.livekit.io/cli | bash
           lk --version
 
+      - name: Diagnose lead-saving tool directly without a phone call
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import asyncio
+          import os
+          import sys
+          from agent import save_call_lead
+
+          required = ("VOICE_AGENT_TOKEN", "DEALSPARK_BUSINESS_ID", "DEALSPARK_API_URL")
+          print("Agent process environment:", {key: bool(os.getenv(key)) for key in required})
+          result = asyncio.run(save_call_lead(
+              name="DealSpark Automated Diagnostic",
+              phone="202-555-0148",
+              service="Automated diagnostic only",
+              email="diagnostic@example.com",
+              appointment_preference="",
+              notes="VOICE_CAPTURE_SMOKE_TEST_DO_NOT_CONTACT",
+          ))
+          print("Lead-saving tool result:", result)
+          if not result.startswith("Lead saved successfully"):
+              sys.exit("Direct lead-saving tool test failed.")
+          print("Direct lead-saving tool test passed.")
+          PY
+
       - name: Run one synthetic text conversation against the real agent code
         run: |
           set -euo pipefail
