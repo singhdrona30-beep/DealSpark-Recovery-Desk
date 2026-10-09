@@ -31,7 +31,7 @@ jobs:
           curl -sSL https://get.livekit.io/cli | bash
           command -v lk
 
-      - name: Create or reuse DealSpark dispatch rule and assign the only active number
+      - name: Repair DealSpark inbound dispatch and verify phone routing
         env:
           LIVEKIT_URL: ${{ secrets.LIVEKIT_URL }}
           LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
@@ -39,15 +39,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
-          # Configure a temporary CLI project from existing GitHub Actions secrets.
           lk project add dealspark-ci --url "$LIVEKIT_URL" --api-key "$LIVEKIT_API_KEY" --api-secret "$LIVEKIT_API_SECRET" --default
 
-          echo "Checking existing LiveKit phone numbers."
           lk number list --json > /tmp/livekit-numbers.json
           cat /tmp/livekit-numbers.json
-
-          # LiveKit CLI currently returns camelCase phone-number fields.
           mapfile -t numbers < <(jq -r '
             .items[]?
             | select((.status == "active") or (.status == "PHONE_NUMBER_STATUS_ACTIVE") or (.status == 1))
@@ -57,48 +52,62 @@ jobs:
                ((.sipDispatchRuleIds // .sip_dispatch_rule_ids // []) | join(","))]
             | join("|")
           ' /tmp/livekit-numbers.json | sort -u)
-
           if [ "${#numbers[@]}" -ne 1 ]; then
-            echo "::error::Expected exactly one active LiveKit phone number; found ${#numbers[@]}. Stopping safely."
+            echo "::error::Expected exactly one active LiveKit phone number; found ${#numbers[@]}."
             exit 1
           fi
-
           IFS='|' read -r phone_id phone_number attached_rule_ids <<< "${numbers[0]}"
-          if [ -z "$phone_id" ] || [ -z "$phone_number" ]; then
-            echo "::error::Could not reliably identify the active phone number. Stopping safely."
-            exit 1
-          fi
+          test -n "$phone_id" && test -n "$phone_number"
           echo "Verified active phone number: $phone_number"
 
-          # Reuse the rule if it already exists; avoid duplicate rules on reruns.
-          lk sip dispatch list --json > /tmp/livekit-dispatch-rules-before.json
-          echo "Current dispatch rules returned by LiveKit:"
-          cat /tmp/livekit-dispatch-rules-before.json
-          # Select only the rule whose actual config routes to the intended receptionist.
-          # A prior malformed rule with the same display name must not be reused.
-          mapfile -t existing_rule_ids < <(jq -r '
-            .items[]?
-            | select((.name // "") == "dealspark-inbound")
-            | select((.rule.dispatchRuleIndividual.roomPrefix // "") == "dealspark-call-")
-            | select(any(.roomConfig.agents[]?; .agentName == "dealspark-receptionist"))
-            | .sipDispatchRuleId // empty
-          ' /tmp/livekit-dispatch-rules-before.json | sort -u)
+          lk sip dispatch list --json > /tmp/livekit-dispatch-before.json
+          echo "Existing dispatch rules:"
+          cat /tmp/livekit-dispatch-before.json
 
-          if [ "${#existing_rule_ids[@]}" -ne 1 ]; then
-            echo "::error::Expected exactly one correctly configured DealSpark receptionist rule; found ${#existing_rule_ids[@]}. Stopping safely."
-            exit 1
+          # Repair the rule already bound to the number in place. Replacing it with
+          # a second rule can fail because LiveKit keeps the existing trunk binding.
+          if [ -n "$attached_rule_ids" ]; then
+            if [[ "$attached_rule_ids" == *,* ]]; then
+              echo "::error::More than one dispatch rule is attached; stopping safely."
+              exit 1
+            fi
+            rule_id="$attached_rule_ids"
+            echo "Repairing the currently attached dispatch rule: $rule_id"
+            jq -n '{
+              name: "dealspark-inbound",
+              rule: {dispatchRuleIndividual: {roomPrefix: "dealspark-call-"}},
+              roomConfig: {agents: [{agentName: "dealspark-receptionist"}]}
+            }' > /tmp/dealspark-dispatch-rule.json
+            lk sip dispatch update --id "$rule_id" /tmp/dealspark-dispatch-rule.json
+          else
+            mapfile -t existing_rule_ids < <(jq -r '
+              .items[]?
+              | select((.name // "") == "dealspark-inbound")
+              | select((.rule.dispatchRuleIndividual.roomPrefix // "") == "dealspark-call-")
+              | select(any(.roomConfig.agents[]?; .agentName == "dealspark-receptionist"))
+              | .sipDispatchRuleId // empty
+            ' /tmp/livekit-dispatch-before.json | sort -u)
+            if [ "${#existing_rule_ids[@]}" -ne 1 ]; then
+              echo "::error::Expected exactly one correctly configured receptionist rule; found ${#existing_rule_ids[@]}."
+              exit 1
+            fi
+            rule_id="${existing_rule_ids[0]}"
+            lk number update --id "$phone_id" --sip-dispatch-rule-id "$rule_id"
           fi
-          rule_id="${existing_rule_ids[0]}"
 
-          echo "Assigning the verified rule to the single active number."
-          lk number update --id "$phone_id" --sip-dispatch-rule-id "$rule_id"
+          echo "Verifying dispatch configuration and phone binding."
+          lk sip dispatch list --json > /tmp/livekit-dispatch-after.json
+          jq -e --arg id "$rule_id" '
+            .items[]
+            | select(.sipDispatchRuleId == $id)
+            | select(.rule.dispatchRuleIndividual.roomPrefix == "dealspark-call-")
+            | select(any(.roomConfig.agents[]?; .agentName == "dealspark-receptionist"))
+          ' /tmp/livekit-dispatch-after.json
 
-          echo "Verifying the number uses the DealSpark dispatch rule."
           lk number list --json > /tmp/livekit-numbers-after.json
           jq -e --arg id "$phone_id" --arg rule "$rule_id" '
             .items[]?
             | select(.id == $id)
             | select((.sipDispatchRuleIds // .sip_dispatch_rule_ids // []) | index($rule))
           ' /tmp/livekit-numbers-after.json
-
-          echo "Dispatch rule assignment verified. A real call is still required to confirm the agent answers."
+          echo "Dispatch configuration and phone binding verified. A real call is still required to confirm the agent answers."
