@@ -115,8 +115,19 @@ async function sendVoiceLeadNotification(env, business, lead) {
       status = "sent";
       errorCode = "";
     } else {
-      // Persist only the HTTP status; never store provider response bodies or personal data.
-      errorCode = `resend_http_${response.status}`;
+      // Classify known provider restrictions without storing raw response bodies or personal data.
+      let providerMessage = "";
+      try {
+        const providerError = await response.clone().json();
+        providerMessage = String(providerError?.message || "").toLowerCase();
+      } catch {}
+      if (response.status === 403 && providerMessage.includes("testing emails to your own email address")) {
+        errorCode = "resend_test_mode_recipient_restriction";
+      } else if (response.status === 403 && providerMessage.includes("verify a domain")) {
+        errorCode = "resend_domain_verification_required";
+      } else {
+        errorCode = `resend_http_${response.status}`;
+      }
     }
   } catch {
     errorCode = "network_error";
