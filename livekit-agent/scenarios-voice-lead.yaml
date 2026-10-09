@@ -10,7 +10,11 @@ scenarios:
       Give the information naturally, one answer at a time as the receptionist asks.
       If asked for an appointment preference, say "Tuesday at 10 AM" and confirm it when read back.
       Confirm the email address if the receptionist reads it back correctly.
-      Once the receptionist has your details and says a team member will follow up, politely end the conversation.
+      Do not end the conversation merely because the receptionist promises follow-up.
+      Wait until the receptionist invokes save_call_lead and the tool result returns.
+      If the receptionist claims the lead was saved before invoking the tool, keep the
+      conversation open so the test can detect the incorrect behavior. After the tool
+      result, politely end the conversation.
     agent_expectations: >
       The receptionist identifies itself as an AI receptionist, gathers the caller's name,
       callback number, plumbing service request, and email address, and calls the lead-saving
