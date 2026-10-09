@@ -77,3 +77,29 @@ jobs:
         with:
           OPERATION: deploy
           WORKING_DIRECTORY: livekit-agent
+
+      - name: Explicitly apply and verify runtime secrets
+        env:
+          LIVEKIT_URL: ${{ secrets.LIVEKIT_URL }}
+          LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
+          LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
+          VOICE_AGENT_TOKEN: ${{ secrets.VOICE_AGENT_TOKEN }}
+          DEALSPARK_BUSINESS_ID: ${{ secrets.DEALSPARK_BUSINESS_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSL https://get.livekit.io/cli | bash
+          lk project add dealspark-ci --url "$LIVEKIT_URL" --api-key "$LIVEKIT_API_KEY" --api-secret "$LIVEKIT_API_SECRET" --default
+          lk agent update-secrets --id CA_fbBz3h6eW7xP \
+            --secrets "VOICE_AGENT_TOKEN=$VOICE_AGENT_TOKEN" \
+            --secrets "DEALSPARK_BUSINESS_ID=$DEALSPARK_BUSINESS_ID" \
+            --secrets "DEALSPARK_API_URL=https://dealspark-api.singhdrona30.workers.dev"
+          lk agent secrets --id CA_fbBz3h6eW7xP > /tmp/dealspark-agent-secrets.txt
+          for key in VOICE_AGENT_TOKEN DEALSPARK_BUSINESS_ID DEALSPARK_API_URL; do
+            if ! grep -q "$key" /tmp/dealspark-agent-secrets.txt; then
+              echo "::error::LiveKit agent is missing runtime secret key: $key"
+              cat /tmp/dealspark-agent-secrets.txt
+              exit 1
+            fi
+            echo "Verified LiveKit runtime secret key exists: $key"
+          done
