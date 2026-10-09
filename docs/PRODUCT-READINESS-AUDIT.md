@@ -84,7 +84,7 @@ DealSpark has a working voice-agent prototype that can save test-call lead recor
 
 ## Latest follow-up after the initial audit
 
-- Shared analytics: migrated the main product pages and all ten standalone product demos away from the old credentialed beacon, which caused browser CORS errors and duplicate page-view records. The latest smoke run had zero browser console errors.
+- Shared analytics: migrated the main product pages and all ten standalone product demos away from the old credentialed beacon, which caused browser CORS errors and duplicate page-view records. The latest smoke run had zero browser console errors. The report currently shows 130 page views, 27 sessions, zero demo clicks, and zero lead clicks; the page-view count includes our automated test runs and earlier duplicate events, so it is not a verified organic-traffic figure.
 - Phone onboarding safety: fixed number normalization, added collision protection for business phone routes, rejected a call-forwarding destination that equals the public number, and changed the button label to “Save configuration” so saving cannot be mistaken for live activation.
 - Live checks: both the Worker health endpoint and Pages API health endpoint respond successfully; the Pages API reports its database connected. The current UI smoke test passed. No real customer carrier route has been provisioned or retested with a live call after tenant-specific routing was introduced.
 - Billing: Stripe has 15 active live-mode payment links with matching product-plan metadata and recurring USD prices. No checkout was run because that would create a real charge; there are zero active subscriptions in D1 and one setup subscription. Treat payment activation as unverified.
