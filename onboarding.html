@@ -46,7 +46,14 @@ if(!receptionistPlans.has(plan)){
  document.getElementById("setup").style.display="none";
  return;
 }
-status.className="status ok";status.textContent="Payment active. Complete this AI Receptionist setup; live phone and calendar integrations still require authorization and testing.";
+const phoneStatus=String(d.phone_connection_status||d.config?.phone_connection_status||"not_connected");
+if(phoneStatus==="verified_by_inbound_call"){
+ status.className="status ok";
+ status.textContent="Phone route verified by a successful inbound call. Email delivery and calendar booking must still be tested separately.";
+}else{
+ status.className="status";
+ status.textContent="Payment active. Complete this AI Receptionist setup; phone routing is not verified until a real inbound call reaches this business and saves a lead.";
+}
 const c=d.config||{};for(const [id,val] of Object.entries({name:d.business.name,phone:d.business.phone,area:c.service_area,notify:c.notification_email,services:c.services,open:c.opening_time,close:c.closing_time,greeting:c.greeting,forwarding:c.forwarding_number,connection:c.phone_connection_method,carrier:c.current_carrier})){if(document.getElementById(id)&&val!==undefined)document.getElementById(id).value=val||""}}
 document.getElementById("setup").addEventListener("submit",async e=>{
  e.preventDefault();
