@@ -40,6 +40,8 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: "72b0a6d76cd42aa06a1a54f7140c7696"
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RESEND_FROM: ${{ secrets.RESEND_FROM }}
+          AGENTMAIL_API_KEY: ${{ secrets.AGENTMAIL_API_KEY }}
+          AGENTMAIL_INBOX: ${{ secrets.AGENTMAIL_INBOX || 'dealspark@agentmail.to' }}
           VOICE_AGENT_TOKEN: ${{ secrets.VOICE_AGENT_TOKEN }}
           VOICE_NOTIFICATION_EMAIL: ${{ secrets.VOICE_NOTIFICATION_EMAIL || 'dealspark@agentmail.to' }}
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
@@ -68,4 +70,14 @@ jobs:
             echo "Voice notification recipient configured."
           else
             echo "::warning::VOICE_NOTIFICATION_EMAIL is not configured; automatic lead emails are disabled."
+          fi
+          if [ -n "$AGENTMAIL_API_KEY" ]; then
+            printf '%s' "$AGENTMAIL_API_KEY" | npx wrangler secret put AGENTMAIL_API_KEY
+            echo "AgentMail notification API credential configured."
+          else
+            echo "::warning::AGENTMAIL_API_KEY is not configured; AgentMail fallback cannot send."
+          fi
+          if [ -n "$AGENTMAIL_INBOX" ]; then
+            printf '%s' "$AGENTMAIL_INBOX" | npx wrangler secret put AGENTMAIL_INBOX
+            echo "AgentMail notification inbox configured."
           fi
