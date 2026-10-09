@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T19:00:33.526730Z",
+  "generated_at": "2026-10-09T13:35:41.775681Z",
   "source": "GitHub public repository search",
   "prospects": [
     {
@@ -34,22 +34,22 @@
     },
     {
       "industry": "hvac",
-      "repository": "benimasamba/marvin-air",
-      "owner": "benimasamba",
-      "description": "hvac business ",
-      "stars": 0,
-      "url": "https://github.com/benimasamba/marvin-air",
-      "owner_url": "https://github.com/benimasamba",
-      "review_required": true
-    },
-    {
-      "industry": "hvac",
       "repository": "mehtabkhan0561-svg/Green-Energy-Savers",
       "owner": "mehtabkhan0561-svg",
       "description": "HVAC Business",
       "stars": 0,
       "url": "https://github.com/mehtabkhan0561-svg/Green-Energy-Savers",
       "owner_url": "https://github.com/mehtabkhan0561-svg",
+      "review_required": true
+    },
+    {
+      "industry": "hvac",
+      "repository": "benimasamba/marvin-air",
+      "owner": "benimasamba",
+      "description": "hvac business ",
+      "stars": 0,
+      "url": "https://github.com/benimasamba/marvin-air",
+      "owner_url": "https://github.com/benimasamba",
       "review_required": true
     },
     {
@@ -214,22 +214,22 @@
     },
     {
       "industry": "hvac",
-      "repository": "hvacproo/cg-heating-cooling-website",
-      "owner": "hvacproo",
-      "description": "C&G Heating and Cooling LLC business website",
-      "stars": 0,
-      "url": "https://github.com/hvacproo/cg-heating-cooling-website",
-      "owner_url": "https://github.com/hvacproo",
-      "review_required": true
-    },
-    {
-      "industry": "hvac",
       "repository": "sharkitect-cards/maldonado-heating-and-cooling",
       "owner": "sharkitect-cards",
       "description": "Digital business card - Carlos Maldonado, Maldonado Heating & Cooling",
       "stars": 0,
       "url": "https://github.com/sharkitect-cards/maldonado-heating-and-cooling",
       "owner_url": "https://github.com/sharkitect-cards",
+      "review_required": true
+    },
+    {
+      "industry": "hvac",
+      "repository": "hvacproo/cg-heating-cooling-website",
+      "owner": "hvacproo",
+      "description": "C&G Heating and Cooling LLC business website",
+      "stars": 0,
+      "url": "https://github.com/hvacproo/cg-heating-cooling-website",
+      "owner_url": "https://github.com/hvacproo",
       "review_required": true
     },
     {
@@ -354,22 +354,22 @@
     },
     {
       "industry": "plumbing",
-      "repository": "jdstein1/plumbing",
-      "owner": "jdstein1",
-      "description": "organized links to plumbing related businesses",
-      "stars": 0,
-      "url": "https://github.com/jdstein1/plumbing",
-      "owner_url": "https://github.com/jdstein1",
-      "review_required": true
-    },
-    {
-      "industry": "plumbing",
       "repository": "loganmartheze26-creator/Storm",
       "owner": "loganmartheze26-creator",
       "description": "Plumbing business ",
       "stars": 0,
       "url": "https://github.com/loganmartheze26-creator/Storm",
       "owner_url": "https://github.com/loganmartheze26-creator",
+      "review_required": true
+    },
+    {
+      "industry": "plumbing",
+      "repository": "jdstein1/plumbing",
+      "owner": "jdstein1",
+      "description": "organized links to plumbing related businesses",
+      "stars": 0,
+      "url": "https://github.com/jdstein1/plumbing",
+      "owner_url": "https://github.com/jdstein1",
       "review_required": true
     },
     {
@@ -394,12 +394,12 @@
     },
     {
       "industry": "plumbing",
-      "repository": "donnie256/Lekdetectie-Briljant",
-      "owner": "donnie256",
-      "description": "Plumbing Business Website",
+      "repository": "Alibina817/Power-plumbers-and-drains",
+      "owner": "Alibina817",
+      "description": "Family Plumbing Business ",
       "stars": 0,
-      "url": "https://github.com/donnie256/Lekdetectie-Briljant",
-      "owner_url": "https://github.com/donnie256",
+      "url": "https://github.com/Alibina817/Power-plumbers-and-drains",
+      "owner_url": "https://github.com/Alibina817",
       "review_required": true
     },
     {
@@ -494,12 +494,12 @@
     },
     {
       "industry": "plumbing",
-      "repository": "malolimasawe-oss/Plumbing-experts-mfuleni",
-      "owner": "malolimasawe-oss",
-      "description": "Plumbing company, deals with plumbing",
+      "repository": "MeshackDev/emergencyantzplumbing",
+      "owner": "MeshackDev",
+      "description": "Plumbing Company",
       "stars": 0,
-      "url": "https://github.com/malolimasawe-oss/Plumbing-experts-mfuleni",
-      "owner_url": "https://github.com/malolimasawe-oss",
+      "url": "https://github.com/MeshackDev/emergencyantzplumbing",
+      "owner_url": "https://github.com/MeshackDev",
       "review_required": true
     },
     {
@@ -917,7 +917,7 @@
       "repository": "dgunning/edgartools",
       "owner": "dgunning",
       "description": "Read and analyze SEC EDGAR filings in Python. 10-K, 8-K, XBRL financials, Form 3/4/5, 13F, ADV \u2014 clean API, well-typed, MIT-licensed.",
-      "stars": 2778,
+      "stars": 2779,
       "url": "https://github.com/dgunning/edgartools",
       "owner_url": "https://github.com/dgunning",
       "review_required": true
@@ -957,7 +957,7 @@
       "repository": "writeonlycode/hugo-up-business",
       "owner": "writeonlycode",
       "description": "Up Business is a clean and modern landing page, inspired on light illustrations with a modern look, that can be used for companies or to showcase a product.",
-      "stars": 40,
+      "stars": 39,
       "url": "https://github.com/writeonlycode/hugo-up-business",
       "owner_url": "https://github.com/writeonlycode",
       "review_required": true
@@ -1147,7 +1147,7 @@
       "repository": "alexcorvi/apexo",
       "owner": "alexcorvi",
       "description": "A web/desktop application to manage your dental clinic practice.",
-      "stars": 132,
+      "stars": 133,
       "url": "https://github.com/alexcorvi/apexo",
       "owner_url": "https://github.com/alexcorvi",
       "review_required": true
@@ -1187,7 +1187,7 @@
       "repository": "ganraj21/Dental_Clinic",
       "owner": "ganraj21",
       "description": "A single page material theme for a dental clinic website is a sleek and modern design that showcases all the important information about a dental clinic in one place. The theme uses Google's Material design principles, which emphasizes simplicity and functionality. ",
-      "stars": 65,
+      "stars": 66,
       "url": "https://github.com/ganraj21/Dental_Clinic",
       "owner_url": "https://github.com/ganraj21",
       "review_required": true
@@ -1257,7 +1257,7 @@
       "repository": "danielbatres/orthodontic-dentistry-clinical-management",
       "owner": "danielbatres",
       "description": "A Java application designed to streamline the management of clinics offering dental and orthodontic services. This project, developed using Java Swing, provides essential tools for such clinics, making it ideal for single-doctor practices. It helps manage patients, appointments, records and more.",
-      "stars": 28,
+      "stars": 27,
       "url": "https://github.com/danielbatres/orthodontic-dentistry-clinical-management",
       "owner_url": "https://github.com/danielbatres",
       "review_required": true
@@ -1514,12 +1514,12 @@
     },
     {
       "industry": "landscaping",
-      "repository": "itsyourfavorite/sauvecito",
-      "owner": "itsyourfavorite",
-      "description": "Landscaping Company",
+      "repository": "sebs6175/green",
+      "owner": "sebs6175",
+      "description": "landscaping company",
       "stars": 0,
-      "url": "https://github.com/itsyourfavorite/sauvecito",
-      "owner_url": "https://github.com/itsyourfavorite",
+      "url": "https://github.com/sebs6175/green",
+      "owner_url": "https://github.com/sebs6175",
       "review_required": true
     },
     {
@@ -1674,22 +1674,22 @@
     },
     {
       "industry": "landscaping",
-      "repository": "sungwoopark-sites/df-landscape-site",
-      "owner": "sungwoopark-sites",
-      "description": "D F Landscape - Landscaping & Hardscape Contractor, Anaheim CA",
-      "stars": 0,
-      "url": "https://github.com/sungwoopark-sites/df-landscape-site",
-      "owner_url": "https://github.com/sungwoopark-sites",
-      "review_required": true
-    },
-    {
-      "industry": "landscaping",
       "repository": "Orbit-AI-Demo/Flora-Landscape-Contractors-1784036502846",
       "owner": "Orbit-AI-Demo",
       "description": "",
       "stars": 0,
       "url": "https://github.com/Orbit-AI-Demo/Flora-Landscape-Contractors-1784036502846",
       "owner_url": "https://github.com/Orbit-AI-Demo",
+      "review_required": true
+    },
+    {
+      "industry": "landscaping",
+      "repository": "sungwoopark-sites/df-landscape-site",
+      "owner": "sungwoopark-sites",
+      "description": "D F Landscape - Landscaping & Hardscape Contractor, Anaheim CA",
+      "stars": 0,
+      "url": "https://github.com/sungwoopark-sites/df-landscape-site",
+      "owner_url": "https://github.com/sungwoopark-sites",
       "review_required": true
     },
     {
