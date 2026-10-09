@@ -81,6 +81,41 @@ export default {
         return withCors(json({ ok: true, service: "dealspark-api", time: now() }));
       }
 
+      // Anonymous first-party traffic events; never store IPs, names, emails, or form contents.
+      if (path === "/analytics" && request.method === "POST") {
+        const b = await body(request);
+        const event = String(b.event || "");
+        const sessionId = String(b.session_id || "").slice(0, 80);
+        const page = String(b.page || "/").slice(0, 300);
+        const referrer = String(b.referrer || "").slice(0, 1000);
+        const target = String(b.target || "").slice(0, 1000);
+        if (!["page_view", "demo_click", "lead_click"].includes(event) || !sessionId || !page.startsWith("/")) {
+          return withCors(json({ error: "Invalid analytics event" }, 400));
+        }
+        await env.DB.prepare(
+          "INSERT INTO traffic_events (id,event,session_id,page,referrer,target,created_at) VALUES (?1,?2,?3,?4,?5,?6,?7)"
+        ).bind(crypto.randomUUID(), event, sessionId, page, referrer, target, now()).run();
+        return withCors(json({ ok: true }));
+      }
+
+      if (path === "/report" && request.method === "GET") {
+        const totals = await env.DB.prepare(
+          "SELECT SUM(CASE WHEN event='page_view' THEN 1 ELSE 0 END) AS page_views, SUM(CASE WHEN event='demo_click' THEN 1 ELSE 0 END) AS demo_clicks, SUM(CASE WHEN event='lead_click' THEN 1 ELSE 0 END) AS lead_clicks, COUNT(DISTINCT session_id) AS unique_sessions FROM traffic_events"
+        ).first();
+        const recent = await env.DB.prepare(
+          "SELECT created_at AS ts, event, page FROM traffic_events ORDER BY created_at DESC LIMIT 30"
+        ).all();
+        return withCors(json({
+          totals: {
+            page_views: Number(totals?.page_views || 0),
+            demo_clicks: Number(totals?.demo_clicks || 0),
+            lead_clicks: Number(totals?.lead_clicks || 0),
+            unique_sessions: Number(totals?.unique_sessions || 0)
+          },
+          recent: recent.results || []
+        }));
+      }
+
       if (path === "/api/leads" && request.method === "POST") {
         const business = await publicBusiness(env, request.headers.get("x-dealspark-site-key"));
         if (!business) return withCors(json({ error: "Invalid site key" }, 401));
