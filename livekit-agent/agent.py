@@ -4,7 +4,7 @@ import json
 import os
 import urllib.error
 import urllib.request
-from livekit import agents
+from livekit import agents, rtc
 from livekit.agents import Agent, AgentServer, AgentSession, TurnHandlingOptions, RunContext, get_job_context, inference, function_tool
 
 load_dotenv(".env.local")
@@ -70,23 +70,34 @@ Do not continue the conversation after a clear goodbye or decline. After saying
 """
 
 
-@function_tool
-async def save_call_lead(
+async def _save_call_lead_impl(
     name: str,
     phone: str,
     service: str,
     email: str = "",
     appointment_preference: str = "",
     notes: str = "",
+    *,
+    business_id: str = "",
+    called_number: str = "",
+    is_phone_call: bool = False,
 ) -> str:
-    """Save the caller's lead to the configured DealSpark business. Use after collecting the caller's details."""
+    """Shared lead-save implementation used by the demo and tenant-specific phone tools."""
     api_url = os.getenv("DEALSPARK_API_URL", "https://dealspark-api.singhdrona30.workers.dev").rstrip("/")
     token = os.getenv("VOICE_AGENT_TOKEN", "")
-    business_id = os.getenv("DEALSPARK_BUSINESS_ID", "")
-    if not token or not business_id:
+    business_id = str(business_id or "").strip()
+    called_number = str(called_number or "").strip()
+    if not token:
         return "Lead could not be saved because voice lead capture is not configured. Do not claim it was saved."
+    if is_phone_call and not called_number:
+        return "Lead could not be saved because the inbound dialed number was unavailable. Do not claim it was saved."
+    if not business_id and not called_number:
+        return "Lead could not be saved because no business route is configured. Do not claim it was saved."
+
     payload = json.dumps({
-        "business_id": business_id,
+        "business_id": business_id if not is_phone_call else "",
+        "called_number": called_number,
+        "is_phone_call": is_phone_call,
         "name": name,
         "phone": phone,
         "service": service,
@@ -117,14 +128,12 @@ async def save_call_lead(
             return "Lead saved successfully, but email notification is not configured yet. Do not say an email was sent."
         return "Lead save was not confirmed. Do not claim success."
     except urllib.error.HTTPError as exc:
-        # Log only the HTTP status and a bounded, sanitized response body; never log auth headers or tokens.
         try:
             body = exc.read(1000).decode("utf-8", errors="replace")
             try:
                 parsed = json.loads(body)
                 safe_detail = str(parsed.get("error") or parsed.get("message") or parsed.get("detail") or "HTTP request rejected")
             except (ValueError, AttributeError):
-                # Non-JSON edge responses often explain 403s (for example, an access or WAF block).
                 safe_detail = "non-JSON response: " + " ".join(body.split())[:140]
                 if token:
                     safe_detail = safe_detail.replace(token, "[REDACTED]")
@@ -135,6 +144,43 @@ async def save_call_lead(
     except (urllib.error.URLError, TimeoutError, ValueError, OSError) as exc:
         print(f"VOICE_LEAD_SAVE_NETWORK_ERROR type={type(exc).__name__} detail={str(exc)[:180]}")
         return "Lead save failed. Do not claim success; tell the caller a team member will need to follow up."
+
+
+@function_tool
+async def save_call_lead(
+    name: str,
+    phone: str,
+    service: str,
+    email: str = "",
+    appointment_preference: str = "",
+    notes: str = "",
+) -> str:
+    """Save a test or demo caller's lead to the configured DealSpark business."""
+    return await _save_call_lead_impl(
+        name, phone, service, email, appointment_preference, notes,
+        business_id=os.getenv("DEALSPARK_BUSINESS_ID", ""),
+    )
+
+
+def make_tenant_save_call_lead(business_id: str, called_number: str, is_phone_call: bool):
+    """Bind the correct tenant route to a tool instance so concurrent calls cannot cross tenants."""
+    @function_tool
+    async def save_call_lead(
+        name: str,
+        phone: str,
+        service: str,
+        email: str = "",
+        appointment_preference: str = "",
+        notes: str = "",
+    ) -> str:
+        """Save the caller's lead to the business identified by the inbound phone route."""
+        return await _save_call_lead_impl(
+            name, phone, service, email, appointment_preference, notes,
+            business_id=business_id,
+            called_number=called_number,
+            is_phone_call=is_phone_call,
+        )
+    return save_call_lead
 
  
 @function_tool
@@ -152,12 +198,21 @@ async def end_call(ctx: RunContext) -> str:
 
 
 class DealSparkReceptionist(Agent):
-    def __init__(self) -> None:
-        super().__init__(instructions=DEALSPARK_INSTRUCTIONS, tools=[save_call_lead, end_call])
+    def __init__(self, business_id: str = "", called_number: str = "", is_phone_call: bool = False) -> None:
+        lead_tool = make_tenant_save_call_lead(business_id, called_number, is_phone_call)
+        super().__init__(instructions=DEALSPARK_INSTRUCTIONS, tools=[lead_tool, end_call])
 
 
 @server.rtc_session(agent_name="dealspark-receptionist")
 async def dealspark_receptionist(ctx: agents.JobContext):
+    participant = await ctx.wait_for_participant()
+    is_phone_call = participant.kind == rtc.ParticipantKind.PARTICIPANT_KIND_SIP
+    attributes = getattr(participant, "attributes", {}) or {}
+    # For inbound SIP, this is the number dialed by the caller, not the caller's own number.
+    called_number = str(attributes.get("sip.trunkPhoneNumber", "") or "").strip() if is_phone_call else ""
+    # A phone call is resolved by its dialed number. Never use the single demo business ID for SIP calls.
+    business_id = "" if is_phone_call else os.getenv("DEALSPARK_BUSINESS_ID", "")
+
     session = AgentSession(
         stt=inference.STT(model="deepgram/nova-3", language="en"),
         llm=inference.LLM(model="google/gemma-4-31b-it"),
@@ -166,7 +221,14 @@ async def dealspark_receptionist(ctx: agents.JobContext):
             turn_detection=inference.TurnDetector(),
         ),
     )
-    await session.start(room=ctx.room, agent=DealSparkReceptionist())
+    await session.start(
+        room=ctx.room,
+        agent=DealSparkReceptionist(
+            business_id=business_id,
+            called_number=called_number,
+            is_phone_call=is_phone_call,
+        ),
+    )
     await session.generate_reply(
         instructions="Greet the caller now using the DealSpark opening greeting."
     )
