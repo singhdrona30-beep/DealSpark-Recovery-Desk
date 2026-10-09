@@ -85,7 +85,7 @@ const key=localStorage.getItem("dealspark_dashboard_key");
 const $=id=>document.getElementById(id);
 const productNames=["BillGuard","StockWatch","StaffDesk","ReviewShield","OpsVault","LeadFlow","QuotePilot","ScheduleFlow","DispatchDesk","AssetCare"];
 const connectorLabels={stripe:"Stripe",square:"Square",shopify:"Shopify",quickbooks:"QuickBooks Online",xero:"Xero",google_business_profile:"Google Business Profile",microsoft365:"Microsoft 365",googledrive:"Google Drive"};
-let products=[],connectors=[],items=[],active=false;
+let products=[],connectors=[],items=[],active=false,allowedProductNames=new Set();
 function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n}
 function button(text,cls,handler){const b=el("button",cls||"",text);b.type="button";b.addEventListener("click",handler);return b}
 async function api(path,options={}){
@@ -104,13 +104,15 @@ function renderProducts(){
   card.append(el("h3","",p.name));
   card.append(el("p","muted",p.description||"Operational workflow"));
   card.append(el("div","price","$"+Number(p.price_usd_monthly||0)+" USD / month"));
+  const included=allowedProductNames.has(p.name);
+  card.append(el("span","status",included?"Included in your plan":"Not included in your plan"));
   card.append(el("span","status",p.mode==="manual_workflow_only"?"Manual workflow only":"Integrated"));
   const req=el("div","");
   const names=(p.required_connectors||[]).map(k=>connectorLabels[k]||k);
   if(names.length){req.append(el("p","small muted","Required for automation:"));for(const name of names)req.append(el("span","chip",name))}
   else req.append(el("p","small muted","No external connector listed; work is still manual until a product-specific automation is implemented."));
   card.append(req);grid.append(card);
-  const opt=el("option","",p.name);opt.value=p.name;select.append(opt);
+  const opt=el("option","",p.name);opt.value=p.name;opt.disabled=!included;select.append(opt);
  }
  $("statProducts").textContent=products.length;
 }
@@ -156,19 +158,38 @@ async function changeItem(id,action){
 async function loadData(){
  if(!key){location.href="signup.html";return}
  const [catalog,connectorData]=await Promise.all([api("/api/products"),api("/api/connectors")]);
- products=catalog.products||[];connectors=connectorData.connectors||[];renderProducts();renderConnectors();
+ products=catalog.products||[];connectors=connectorData.connectors||[];
  try{
+  const me=await api("/api/me");
+  allowedProductNames=new Set(me.allowed_products||[]);
+  active=["active","trialing"].includes(String(me.subscription_status||"").toLowerCase());
+  renderProducts();renderConnectors();
+  if(!active){
+   $("statItems").textContent="—";$("statReview").textContent="—";$("statConnected").textContent="0";$("addItem").disabled=true;
+   $("items").replaceChildren(el("p","muted","Subscription is not active yet. Product operations unlock after billing confirms payment."));
+   $("audit").replaceChildren(el("p","muted","Audit history requires an active subscription."));
+   setNotice("Your account is registered, but its subscription is not active. Return to checkout or contact support.");
+   return;
+  }
+  if(allowedProductNames.size===0){
+   $("statItems").textContent="0";$("statReview").textContent="0";$("statConnected").textContent="0";$("addItem").disabled=true;
+   $("items").replaceChildren(el("p","muted","Your current plan does not include any of the ten standalone operations products. AI receptionist leads remain in Recovery Desk."));
+   $("audit").replaceChildren(el("p","muted","No standalone product audit activity for this plan."));
+   setNotice("Your AI Receptionist plan is active. The ten standalone operations tools require their own plan or a bundle.", "ok");
+   return;
+  }
   const [health,queue,integrations,audit]=await Promise.all([api("/api/recovery"),api("/api/items"),api("/api/integrations"),api("/api/audit")]);
-  active=true;items=queue.items||[];
+  items=queue.items||[];
   const counts={};for(const c of health.item_counts||[])counts[c.status]=c.count;
   $("statItems").textContent=items.length;
   $("statReview").textContent=counts.needs_review||0;
   $("statConnected").textContent=(integrations.integrations||[]).filter(x=>String(x.status).toLowerCase()==="connected").length;
   $("addItem").disabled=false;
   renderItems();renderAudit(audit.audit||[]);
-  setNotice("Account authenticated. Manual product workflows are available; external integrations are not yet connected.", "ok");
+  setNotice("Account authenticated. Included products are available in manual mode; external integrations are not yet connected.", "ok");
  }catch(e){
   active=false;$("statItems").textContent="—";$("statReview").textContent="—";$("statConnected").textContent="0";$("addItem").disabled=true;
+  renderProducts();renderConnectors();
   $("items").replaceChildren(el("p","muted",e.status===402?"Subscription is not active yet. Product operations unlock after the billing backend confirms an active subscription.":e.message));
   $("audit").replaceChildren(el("p","muted","Audit history requires an active subscription."));
   setNotice(e.status===402?"Your account is registered, but its subscription is not active. Return to checkout or contact support.":"Could not load account data: "+e.message);
@@ -176,7 +197,8 @@ async function loadData(){
 }
 $("itemForm").addEventListener("submit",async event=>{
  event.preventDefault();if(!active)return;
- const product=$("itemProduct").value,item=$("itemTitle").value.trim(),issue=$("itemIssue").value.trim();
+ const product=$("itemProduct").value;if(!allowedProductNames.has(product)){setNotice("This product is not included in your active plan.");return}
+ const item=$("itemTitle").value.trim(),issue=$("itemIssue").value.trim();
  try{await api("/api/items",{method:"POST",body:JSON.stringify({product,item,issue})});$("itemTitle").value="";$("itemIssue").value="";$("formMsg").textContent="Saved to the internal review queue.";await loadData()}
  catch(e){$("formMsg").textContent=e.message;setNotice(e.message)}
 });
