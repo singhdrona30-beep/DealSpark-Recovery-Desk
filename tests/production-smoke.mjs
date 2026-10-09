@@ -7,7 +7,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 try {
   await sleep(800);
   const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  const context = await browser.newContext({ serviceWorkers: "block" });
+  const page = await context.newPage();
 
   // Product 1: website AI receptionist; mock the live API so tests never create production leads.
   let chatLeadPayloads = [];
