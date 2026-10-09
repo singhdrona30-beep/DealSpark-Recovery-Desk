@@ -71,10 +71,10 @@ export async function onRequest({ request, env }) {
   const mainPhoneNormalized = normalizePhone(phone);
   const forwardingNumberNormalized = normalizePhone(forwardingNumber);
 
-  if (!/^\\d{8,15}$/.test(mainPhoneNormalized)) {
+  if (!/^\d{8,15}$/.test(mainPhoneNormalized)) {
     return respond({ error: "Enter the main business number with its country code, for example +14165550123." }, 400);
   }
-  if (forwardingNumber && !/^\\d{8,15}$/.test(forwardingNumberNormalized)) {
+  if (forwardingNumber && !/^\d{8,15}$/.test(forwardingNumberNormalized)) {
     return respond({ error: "Enter a valid dedicated inbound destination number, including its country code." }, 400);
   }
 
