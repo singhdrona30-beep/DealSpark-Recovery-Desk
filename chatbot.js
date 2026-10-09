@@ -11,7 +11,7 @@ function user(text){const el=document.createElement("div");el.className="msg use
 function buttons(items){quick.innerHTML="";items.forEach(x=>{const b=document.createElement("button");b.textContent=x;b.onclick=()=>handle(x);quick.appendChild(b)})}
 async function saveLead(){
  const lead={
-   id:crypto.randomUUID(),
+   id:(window.crypto&&typeof window.crypto.randomUUID==="function")?window.crypto.randomUUID():("lead-"+Date.now()+"-"+Math.random().toString(36).slice(2)),
    name:state.name,
    contact:state.contact,
    service:state.service,
@@ -83,6 +83,11 @@ function handle(raw){
      }else{
        say("I couldn't confirm your request reached the business. Please contact them directly or try again. I have not confirmed a booking.");
      }
+     buttons(["Start another request","Ask a question"]);
+     reset();
+   }).catch(()=>{
+     $("chatInput").disabled=false;
+     say("I couldn't confirm your request reached the business. Please contact them directly or try again. I have not confirmed a booking.");
      buttons(["Start another request","Ask a question"]);
      reset();
    });
