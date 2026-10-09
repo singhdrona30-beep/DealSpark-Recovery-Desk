@@ -70,8 +70,13 @@ async function sendVoiceLeadNotification(env, business, lead) {
   const stamp = now();
   const deliveryId = crypto.randomUUID();
   const recipient = safe(lead.notificationEmail) || (lead.isPhoneCall ? "" : safe(env.VOICE_NOTIFICATION_EMAIL));
-  if (!env.RESEND_API_KEY || !recipient) {
-    const errorCode = !env.RESEND_API_KEY ? "missing_resend_api_key" : "missing_business_notification_email";
+  const sender = safe(env.RESEND_FROM);
+  if (!env.RESEND_API_KEY || !recipient || !sender) {
+    const errorCode = !env.RESEND_API_KEY
+      ? "missing_resend_api_key"
+      : !recipient
+        ? "missing_business_notification_email"
+        : "missing_resend_from";
     await env.DB.prepare(
       "INSERT INTO notification_deliveries (id,business_id,lead_id,channel,recipient,status,error,attempts,created_at,updated_at) VALUES (?1,?2,?3,'email',?4,'failed',?5,0,?6,?6)"
     ).bind(deliveryId,business.id,lead.leadId,recipient,errorCode,stamp).run();
@@ -105,7 +110,7 @@ async function sendVoiceLeadNotification(env, business, lead) {
         "user-agent": "DealSparkLeadNotifier/1.0"
       },
       body: JSON.stringify({
-        from: "DealSpark Lead Alerts <onboarding@resend.dev>",
+        from: sender,
         to: [recipient],
         subject,
         text: lines.join("\n")

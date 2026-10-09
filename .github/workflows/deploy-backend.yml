@@ -39,6 +39,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: "72b0a6d76cd42aa06a1a54f7140c7696"
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM: ${{ secrets.RESEND_FROM }}
           VOICE_AGENT_TOKEN: ${{ secrets.VOICE_AGENT_TOKEN }}
           VOICE_NOTIFICATION_EMAIL: ${{ secrets.VOICE_NOTIFICATION_EMAIL || 'dealspark@agentmail.to' }}
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
@@ -55,6 +56,12 @@ jobs:
             echo "Resend API secret configured."
           else
             echo "::warning::RESEND_API_KEY is not configured; automatic lead emails are disabled."
+          fi
+          if [ -n "$RESEND_FROM" ]; then
+            printf '%s' "$RESEND_FROM" | npx wrangler secret put RESEND_FROM
+            echo "Verified sender address configured."
+          else
+            echo "::warning::RESEND_FROM is not configured; production lead notifications remain disabled until a sender on a verified domain is supplied."
           fi
           if [ -n "$VOICE_NOTIFICATION_EMAIL" ]; then
             printf '%s' "$VOICE_NOTIFICATION_EMAIL" | npx wrangler secret put VOICE_NOTIFICATION_EMAIL
