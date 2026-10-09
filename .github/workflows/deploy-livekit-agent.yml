@@ -4,7 +4,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
+  actions: read
 
 concurrency:
   group: dealspark-livekit-deploy-${{ github.ref_name }}
@@ -33,14 +35,21 @@ jobs:
           fi
 
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Deploy agent to LiveKit Cloud
+      - name: Create agent in LiveKit Cloud
         uses: livekit/deploy-action@v2.12.2
         env:
           LIVEKIT_URL: ${{ secrets.LIVEKIT_URL }}
           LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
           LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
           SECRET_LIST: ""
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           OPERATION: create
           WORKING_DIRECTORY: livekit-agent
+
+      - name: Report next step
+        if: always()
+        run: echo "Check the LiveKit action output and any generated livekit.toml pull request before running this workflow again."
