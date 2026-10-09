@@ -5,7 +5,7 @@ import os
 import urllib.error
 import urllib.request
 from livekit import agents
-from livekit.agents import Agent, AgentServer, AgentSession, TurnHandlingOptions, inference, function_tool
+from livekit.agents import Agent, AgentServer, AgentSession, TurnHandlingOptions, RunContext, get_job_context, inference, function_tool
 
 load_dotenv(".env.local")
 
@@ -36,9 +36,20 @@ have the caller's name, callback number, and service/request, call save_call_lea
 once with all collected details, including the confirmed email and any
 appointment preference. Do not claim anything was saved unless the tool confirms
 success. If the tool fails, apologize and say a team member will need to follow up.
-4. Ask for a preferred appointment date/time only when relevant. Never say an
-appointment is booked unless a connected booking system confirms it.
-5. If the caller requests a human, explain that you can arrange follow-up. Do not
+4. APPOINTMENT REQUESTS: if the caller asks for a plumber, repair, service visit,
+appointment, or asks when someone can come, always ask for their preferred date
+AND time before finishing. Ask separately if needed: "What date would work best?"
+and "What time would you prefer?" Capture the exact date and time in
+appointment_preference (include the caller's timezone or city if known). If they
+say a relative date like tomorrow or Friday and the date is ambiguous, clarify it.
+Repeat the requested date/time back to confirm it. If they do not know, record
+"date/time not provided" and continue without pressuring them. This is only a
+request, not a booking: never claim a slot is available or booked. Explain that
+the team must confirm the appointment.
+5. Once all details are gathered, save them with save_call_lead, including the
+requested appointment date/time. Do not omit appointment_preference just because
+there is no live calendar.
+6. If the caller requests a human, explain that you can arrange follow-up. Do not
 invent prices, opening hours, availability, policies, or confirmations. Keep
 personal information private.
 
@@ -53,7 +64,9 @@ If the caller says they have no request or do not need anything, thank them and
 close the call politely without trying to prolong the conversation.
 If the caller says goodbye, respond with a short goodbye and stop.
 Never ask "How can I help you?" again after the call has already been underway.
-Do not continue the conversation after a clear goodbye or decline.
+Do not continue the conversation after a clear goodbye or decline. After saying
+ the closing sentence, immediately call the end_call tool. Do not wait for the
+ caller to hang up and do not say anything after calling end_call.
 """
 
 
@@ -101,10 +114,24 @@ async def save_call_lead(
     except (urllib.error.URLError, TimeoutError, ValueError, OSError):
         return "Lead save failed. Do not claim success; tell the caller a team member will need to follow up."
 
+ 
+@function_tool
+async def end_call(ctx: RunContext) -> str:
+    """End the phone call after you have said a friendly closing goodbye. Call only after the goodbye has finished speaking."""
+    job_ctx = get_job_context()
+    if job_ctx is None:
+        return "Call context unavailable; do not claim the call was disconnected."
+    try:
+        await ctx.wait_for_playout()
+        await job_ctx.delete_room()
+        return "Call ended."
+    except Exception:
+        return "Could not confirm call termination. Do not claim the call ended."
+
 
 class DealSparkReceptionist(Agent):
     def __init__(self) -> None:
-        super().__init__(instructions=DEALSPARK_INSTRUCTIONS, tools=[save_call_lead])
+        super().__init__(instructions=DEALSPARK_INSTRUCTIONS, tools=[save_call_lead, end_call])
 
 
 @server.rtc_session(agent_name="dealspark-receptionist")
