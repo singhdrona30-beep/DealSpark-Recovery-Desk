@@ -78,7 +78,8 @@ jobs:
           # then create one explicit rule tied to the active phone's trunk.
           mapfile -t conflicting_rules < <(jq -r '
             .items[]?
-            | select((.sipDispatchRuleId // "") == "SDR_3LfzEeYd7rmQ"
+            | select((.name // "") == "dealspark-inbound"
+                  or (.sipDispatchRuleId // "") == "SDR_3LfzEeYd7rmQ"
                   or (.sipDispatchRuleId // "") == "SDR_E8XKvbVXEZTe")
             | .sipDispatchRuleId
           ' /tmp/dispatch-before.json | sort -u)
@@ -131,6 +132,7 @@ jobs:
           jq -e --arg id "$phone_id" --arg rule "$rule_id" '
             .items[]?
             | select(.id == $id)
+            | select((.status // "") == "PHONE_NUMBER_STATUS_ACTIVE")
             | select((.sipDispatchRuleIds // .sip_dispatch_rule_ids // []) | index($rule))
           ' /tmp/numbers-after.json
           echo "Dispatch rule and phone binding verified. A real test call is still required to confirm the agent answers."
