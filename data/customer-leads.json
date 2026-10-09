@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T14:37:05.376126+00:00",
+  "generated_at": "2026-10-09T14:37:45.641039+00:00",
   "source": "GitHub public repository signals",
   "leads": [
     {
@@ -214,12 +214,12 @@
     },
     {
       "industry": "plumbing",
-      "company_hint": "Om Enterprises",
-      "repository": "ommahadevlekawale11-dotcom/Om-Enterprises-",
-      "description": "Plumbing Contractors and Services ",
+      "company_hint": "All Weather Contractors",
+      "repository": "mamidyette/All-Weather-Contractors",
+      "description": "Plumbing open for business",
       "stars": 0,
-      "url": "https://github.com/ommahadevlekawale11-dotcom/Om-Enterprises-",
-      "owner_url": "https://github.com/ommahadevlekawale11-dotcom",
+      "url": "https://github.com/mamidyette/All-Weather-Contractors",
+      "owner_url": "https://github.com/mamidyette",
       "status": "review_required"
     },
     {
@@ -497,7 +497,7 @@
       "company_hint": "Edgartools",
       "repository": "dgunning/edgartools",
       "description": "Read and analyze SEC EDGAR filings in Python. 10-K, 8-K, XBRL financials, Form 3/4/5, 13F, ADV \u2014 clean API, well-typed, MIT-licensed.",
-      "stars": 2778,
+      "stars": 2780,
       "url": "https://github.com/dgunning/edgartools",
       "owner_url": "https://github.com/dgunning",
       "status": "review_required"
@@ -527,7 +527,7 @@
       "company_hint": "Bygonespoofer",
       "repository": "nitaybl/ByGoneSpoofer",
       "description": "ByGone Spoofer by @nitaybl: Python utility for Roblox (Byfron) ban assistance. Automates MAC spoofing, system cleaning, and Roblox reinstall. For personal, educational, and non-commercial use only.",
-      "stars": 80,
+      "stars": 81,
       "url": "https://github.com/nitaybl/ByGoneSpoofer",
       "owner_url": "https://github.com/nitaybl",
       "status": "review_required"
@@ -637,7 +637,7 @@
       "company_hint": "Apexo",
       "repository": "alexcorvi/apexo",
       "description": "A web/desktop application to manage your dental clinic practice.",
-      "stars": 132,
+      "stars": 133,
       "url": "https://github.com/alexcorvi/apexo",
       "owner_url": "https://github.com/alexcorvi",
       "status": "review_required"
