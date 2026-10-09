@@ -39,6 +39,14 @@ button,input{font:inherit}button{cursor:pointer;border:0;border-radius:10px;back
 </div>
 <p id="fongoStatus" class="muted" aria-live="polite">Workflow helper only: it does not place a call or send anything automatically. Open Fongo Works and dial manually in its supported app.</p>
 </section>
+
+<section class="panel span12"><h2>Free Internet Call Test (WebRTC)</h2>
+<p class="muted">This test uses your browser microphone and the other participant's browser. It is not a telephone number and cannot call mobile/landline numbers. No carrier is connected.</p>
+<div class="grid" style="gap:12px">
+<div class="span4"><label class="muted" for="rtcRoom">Room name (both browsers must use the same room)</label><input id="rtcRoom" value="dealspark-demo" maxlength="60" style="width:100%;margin-top:5px;background:#0b1221;border:1px solid #34425d;border-radius:10px;color:white;padding:11px"><div class="actions"><button id="rtcStart">Start microphone</button><button class="secondary" id="rtcStop">Stop</button></div><p id="rtcStatus" class="muted" aria-live="polite">Not connected. Signaling service still needs to be configured.</p></div>
+<div class="span8"><label class="muted">Architecture</label><p class="muted">Browser microphone → WebRTC peer connection → second browser. To make this work across the internet, we need a signaling service and STUN/TURN configuration. TURN relays may have usage costs; this page does not pretend a real call is active.</p><a href="https://developers.cloudflare.com/realtime/" target="_blank" rel="noopener" style="color:#a9ccff">Cloudflare Realtime documentation</a></div>
+</div>
+</section>
 <section class="panel span12"><h2>Live connection checklist</h2><div class="stats"><div class="stat"><strong>01</strong><small>Verify free number and account calling permissions</small></div><div class="stat"><strong>02</strong><small>Connect SIP/WebRTC or carrier API securely</small></div><div class="stat"><strong>03</strong><small>Test a real inbound call and owner notification</small></div></div><p class="muted">No passwords, API keys, or provider secrets belong in this public webpage. Keep them in server-side environment secrets.</p></section>
 </div><div class="footer">DealSpark Phone Lab · This is a workflow prototype, not a live telephone service. Calls, SMS, and AI usage are not enabled.</div>
 </main>
