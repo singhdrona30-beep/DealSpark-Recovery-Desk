@@ -10,6 +10,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: dealspark-voice-lead-diagnostic
+  cancel-in-progress: true
+
 jobs:
   smoke-test:
     runs-on: ubuntu-latest
@@ -57,7 +61,7 @@ jobs:
           echo "Response body: $body"
 
           # Remove only the synthetic diagnostic lead and its event records.
-          npx --yes wrangler@4.43.0 d1 execute dealspark --remote --command "DELETE FROM events WHERE lead_id IN (SELECT id FROM leads WHERE notes LIKE '%$marker%')" || true
+          timeout 30s npx --yes wrangler@4.43.0 d1 execute dealspark --remote --yes --command "DELETE FROM events WHERE lead_id IN (SELECT id FROM leads WHERE notes LIKE '%$marker%')" || true
           npx --yes wrangler@4.43.0 d1 execute dealspark --remote --command "DELETE FROM leads WHERE notes LIKE '%$marker%'" || true
 
           if [ "$curl_status" -ne 0 ]; then
