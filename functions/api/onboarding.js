@@ -103,3 +103,5 @@ export async function onRequest({ request, env }) {
 }
 
 // A saved configuration is not proof that a phone carrier or SIP route is connected.
+
+// Deployment check marker: this route saves settings only; routing must be verified separately.
