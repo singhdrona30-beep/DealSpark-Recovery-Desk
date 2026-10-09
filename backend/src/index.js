@@ -378,14 +378,6 @@ export default {
         ).bind(business.id).first();
         let businessConfig = {};
         try { businessConfig = configRow?.payload ? JSON.parse(configRow.payload) : {}; } catch { businessConfig = {}; }
-        if (isPhoneCall && configRow?.id) {
-          // A successfully captured inbound SIP call is evidence that this number reached the agent.
-          // Record that fact without claiming email or calendar integrations are verified.
-          businessConfig.phone_connection_status = "verified_by_inbound_call";
-          businessConfig.last_inbound_call_at = created;
-          await env.DB.prepare("UPDATE events SET payload = ?1, created_at = ?2 WHERE id = ?3")
-            .bind(JSON.stringify(businessConfig), created, configRow.id).run();
-        }
         const notificationEmail = safe(businessConfig.notification_email, 254);
 
         const notificationStatus = await sendVoiceLeadNotification(env, business, {
