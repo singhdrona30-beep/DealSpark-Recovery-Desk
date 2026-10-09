@@ -74,64 +74,31 @@ jobs:
           lk sip dispatch list --json > /tmp/livekit-dispatch-rules-before.json
           echo "Current dispatch rules returned by LiveKit:"
           cat /tmp/livekit-dispatch-rules-before.json
+          # Select only the rule whose actual config routes to the intended receptionist.
+          # A prior malformed rule with the same display name must not be reused.
           mapfile -t existing_rule_ids < <(jq -r '
-            .. | objects
+            .items[]?
             | select((.name // "") == "dealspark-inbound")
-            | (.sip_dispatch_rule_id // .sipDispatchRuleId // .id // empty)
+            | select((.rule.dispatchRuleIndividual.roomPrefix // "") == "dealspark-call-")
+            | select(any(.roomConfig.agents[]?; .agentName == "dealspark-receptionist"))
+            | .sipDispatchRuleId // empty
           ' /tmp/livekit-dispatch-rules-before.json | sort -u)
 
-          if [ "${#existing_rule_ids[@]}" -gt 1 ]; then
-            echo "::error::Multiple rules named dealspark-inbound exist. Stopping safely."
+          if [ "${#existing_rule_ids[@]}" -ne 1 ]; then
+            echo "::error::Expected exactly one correctly configured DealSpark receptionist rule; found ${#existing_rule_ids[@]}. Stopping safely."
             exit 1
           fi
-
-          if [ "${#existing_rule_ids[@]}" -eq 1 ]; then
-            rule_id="${existing_rule_ids[0]}"
-            echo "Reusing existing DealSpark dispatch rule."
-          else
-            cat > /tmp/dealspark-dispatch-rule.json <<'JSON'
-          {
-            "name": "dealspark-inbound",
-            "rule": {
-              "dispatchRuleIndividual": {
-                "roomPrefix": "dealspark-call-"
-              }
-            },
-            "roomConfig": {
-              "agents": [
-                {
-                  "agentName": "dealspark-receptionist"
-                }
-              ]
-            }
-          }
-          JSON
-            echo "Creating the DealSpark inbound dispatch rule."
-            lk sip dispatch create /tmp/dealspark-dispatch-rule.json
-
-            lk sip dispatch list --json > /tmp/livekit-dispatch-rules-after.json
-            mapfile -t created_rule_ids < <(jq -r '
-              .. | objects
-              | select((.name // "") == "dealspark-inbound")
-              | (.sip_dispatch_rule_id // .sipDispatchRuleId // .id // empty)
-            ' /tmp/livekit-dispatch-rules-after.json | sort -u)
-
-            if [ "${#created_rule_ids[@]}" -ne 1 ]; then
-              echo "::error::Could not uniquely verify the DealSpark dispatch rule. Number assignment was not attempted."
-              exit 1
-            fi
-            rule_id="${created_rule_ids[0]}"
-          fi
+          rule_id="${existing_rule_ids[0]}"
 
           echo "Assigning the verified rule to the single active number."
-          lk number update --number "$phone_number" --sip-dispatch-rule-id "$rule_id"
+          lk number update --id "$phone_id" --sip-dispatch-rule-id "$rule_id"
 
           echo "Verifying the number uses the DealSpark dispatch rule."
           lk number list --json > /tmp/livekit-numbers-after.json
-          jq -e --arg number "$phone_number" --arg rule "$rule_id" '
-            .. | objects
-            | select((.phone_number // .phoneNumber // "") == $number)
-            | select((.sip_dispatch_rule_id // .sipDispatchRuleId // "") == $rule)
+          jq -e --arg id "$phone_id" --arg rule "$rule_id" '
+            .items[]?
+            | select(.id == $id)
+            | select((.sipDispatchRuleIds // .sip_dispatch_rule_ids // []) | index($rule))
           ' /tmp/livekit-numbers-after.json
 
           echo "Dispatch rule assignment verified. A real call is still required to confirm the agent answers."
