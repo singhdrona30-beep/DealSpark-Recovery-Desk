@@ -9,6 +9,8 @@ try {
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ serviceWorkers: "block" });
   const page = await context.newPage();
+  page.on("pageerror", error => console.log("BROWSER_PAGE_ERROR", error.message));
+  page.on("console", message => { if (message.type() === "error") console.log("BROWSER_CONSOLE_ERROR", message.text()); });
 
   // Product 1: website AI receptionist; mock the live API so tests never create production leads.
   let chatLeadPayloads = [];
@@ -29,7 +31,8 @@ try {
   await page.locator("#chatForm button").click();
   await page.locator("#chatInput").fill("555-0199");
   await page.locator("#chatForm button").click();
-  await page.waitForFunction(() => document.getElementById("messages").innerText.includes("sent your request"));
+  await page.waitForFunction(() => { const t = document.getElementById("messages").innerText; return t.includes("sent your request") || t.includes("confirm your request"); });
+  if (!(await page.locator("#messages").innerText()).includes("sent your request")) throw new Error("Chatbot request did not confirm submission; API calls: " + chatLeadPayloads.length);
   const chatText = await page.locator("#messages").innerText();
   if (!/follow up|thank/i.test(chatText)) throw new Error("Chatbot lead capture confirmation failed");
   if (chatLeadPayloads.length !== 1 || chatLeadPayloads[0].status !== "New" || chatLeadPayloads[0].source !== "website-chatbot" || chatLeadPayloads[0].intent !== "quote") {
