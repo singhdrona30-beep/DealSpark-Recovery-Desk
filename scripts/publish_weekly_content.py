@@ -197,6 +197,7 @@ def main() -> None:
         ("Answering service ROI calculator", "tools/answering-service-roi-calculator.html", "Estimate potential return from capturing calls."),
         ("AI receptionist for small business", "faq/ai-receptionist-for-small-business.html", "Questions to consider before choosing a service."),
         ("AI receptionist vs. answering service", "faq/ai-receptionist-vs-answering-service.html", "Compare different approaches to call coverage."),
+        ("Free missed-call workflow review", "free-missed-call-audit.html", "Request a no-cost checklist of gaps in call handling and lead follow-up."),
     ]
     for item in published:
         links.append((item["title"], item["slug"], item["description"]))
