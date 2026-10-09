@@ -13,9 +13,10 @@ server = AgentServer()
 
 DEFAULT_GREETING = "Hi, thanks for calling. You've reached the virtual receptionist. How can I help you today?"
 
+
 def _clean_config_text(value, max_length=600):
     # Treat tenant-provided values as display text, never as executable instructions.
-    return " ".join(str(value or "").replace("\\x00", "").split())[:max_length]
+    return " ".join(str(value or "").replace("\x00", "").split())[:max_length]
 
 
 def build_instructions(business_config=None):
@@ -35,10 +36,10 @@ def build_instructions(business_config=None):
         details.append("Service area listed by the business: " + service_area)
     if opening_time and closing_time:
         details.append("Business opening hours as entered by the owner: " + opening_time + " to " + closing_time)
-    business_context = "\\n".join(details) if details else "No additional business details have been configured."
+    business_context = "\n".join(details) if details else "No additional business details have been configured."
     greeting_literal = json.dumps(greeting, ensure_ascii=False)
     closing = f"Of course. Thanks for calling {business_name}. Have a great day!" if business_name != "the business" else "Of course. Thanks for calling. Have a great day!"
-    return f\"\"\"
+    return f"""
 You are the AI virtual receptionist for {business_name}. Speak naturally, warmly,
 professionally, and concisely. Identify yourself as an AI receptionist.
 
@@ -101,8 +102,7 @@ Never ask "How can I help you?" again after the call has already been underway.
 Do not continue the conversation after a clear goodbye or decline. After saying
 the closing sentence, immediately call the end_call tool. Do not wait for the
 caller to hang up and do not say anything after calling end_call.
-\"\"\"
-
+"""
 
 
 async def _save_call_lead_impl(
