@@ -42,6 +42,9 @@ jobs:
 
       - uses: actions/checkout@v4
 
+      - name: Validate Python syntax before deployment
+        run: python -m py_compile livekit-agent/agent.py
+
       - name: Restore existing LiveKit agent configuration
         env:
           LIVEKIT_URL: ${{ secrets.LIVEKIT_URL }}
