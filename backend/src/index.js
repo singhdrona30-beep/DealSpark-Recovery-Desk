@@ -58,6 +58,51 @@ async function twilioSignatureValid(request, env, rawBody) {
   return expected === signature;
 }
 
+async function sendVoiceLeadNotification(env, business, lead) {
+  // A missing or rejected email integration must never undo a lead already saved to D1.
+  if (!env.RESEND_API_KEY || !env.VOICE_NOTIFICATION_EMAIL) return "not_configured";
+
+  const safe = (value) => String(value || "").trim();
+  const subject = `New DealSpark phone lead: ${safe(lead.name) || "Caller"}`;
+  const lines = [
+    "A new phone lead was captured by the DealSpark AI receptionist.",
+    "",
+    `Business: ${safe(business.name) || "DealSpark"}`,
+    `Lead ID: ${safe(lead.leadId)}`,
+    `Received: ${safe(lead.created)}`,
+    `Caller name: ${safe(lead.name) || "Not provided"}`,
+    `Callback phone: ${safe(lead.phone) || "Not provided"}`,
+    `Email: ${safe(lead.email) || "Not provided"}`,
+    `Service/request: ${safe(lead.service) || "Not provided"}`,
+    `Appointment preference: ${safe(lead.appointmentPreference) || "Not provided"}`,
+    `Notes: ${safe(lead.notes) || "None"}`,
+    "",
+    "Note: an appointment preference is a request, not a confirmed booking."
+  ];
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "authorization": `Bearer ${env.RESEND_API_KEY}`,
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        from: "DealSpark Lead Alerts <onboarding@resend.dev>",
+        to: [env.VOICE_NOTIFICATION_EMAIL],
+        subject,
+        text: lines.join("\n")
+      })
+    });
+    if (!response.ok) {
+      // Avoid logging secrets or full provider responses containing personal data.
+      return "failed";
+    }
+    return "sent";
+  } catch {
+    return "failed";
+  }
+}
+
 export default {
   async fetch(request, env) {
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
