@@ -101,3 +101,5 @@ export async function onRequest({ request, env }) {
     message: "Business settings saved. Phone routing is not connected or activated by this form."
   });
 }
+
+// A saved configuration is not proof that a phone carrier or SIP route is connected.
