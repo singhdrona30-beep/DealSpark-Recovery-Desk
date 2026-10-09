@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - "shop-preview/**"
+      - "index.html"
+      - "products.json"
       - ".github/workflows/shop-preview-check.yml"
   pull_request:
     paths:
@@ -56,7 +58,11 @@ jobs:
               except (TypeError, ValueError):
                   raise SystemExit(f"Product {i} has an invalid customer price")
               approved += 1
-          print(f"PASS: storefront HTML and catalog structure valid; {approved} approved product(s).")
+          root_html = Path("index.html").read_text(encoding="utf-8")
+          root_data = json.loads(Path("products.json").read_text(encoding="utf-8"))
+          assert root_html == html, "Root storefront and shop-preview must stay in sync"
+          assert root_data == data, "Root catalog and shop-preview catalog must stay in sync"
+          print(f"PASS: root and preview storefronts match; catalog structure valid; {approved} approved product(s).")
           if approved == 0:
               print("INFO: no products are published; this is intentional until cost, shipping and stock checks pass.")
           PY
