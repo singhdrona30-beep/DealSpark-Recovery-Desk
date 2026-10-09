@@ -139,6 +139,52 @@ export default {
         return withCors(json({ ok: true, id }));
       }
 
+      // Trusted LiveKit agent ingestion. This route is separate from the public site-key API.
+      if (path === "/api/voice-leads" && request.method === "POST") {
+        const auth = request.headers.get("authorization") || "";
+        if (!env.VOICE_AGENT_TOKEN || auth !== `Bearer ${env.VOICE_AGENT_TOKEN}`) {
+          return withCors(json({ error: "Unauthorized voice agent" }, 401));
+        }
+        const b = await body(request);
+        const businessId = String(b.business_id || "").trim();
+        if (!businessId) return withCors(json({ error: "business_id is required" }, 400));
+        const business = await env.DB.prepare(
+          "SELECT id, name FROM businesses WHERE id = ?1 LIMIT 1"
+        ).bind(businessId).first();
+        if (!business) return withCors(json({ error: "Unknown business" }, 404));
+
+        const safe = (value, max = 1000) => String(value || "").trim().slice(0, max);
+        const leadId = crypto.randomUUID();
+        const created = now();
+        const name = safe(b.name, 160);
+        const phone = safe(b.phone, 80);
+        const email = safe(b.email, 254);
+        const service = safe(b.service, 500);
+        const notes = safe(b.notes, 3000);
+        const appointmentPreference = safe(b.appointment_preference, 500);
+        const intent = safe(b.intent || "call", 80);
+        await env.DB.prepare(
+          `INSERT INTO leads
+           (id,business_id,name,phone,email,service,intent,status,source,notes,created_at,updated_at)
+           VALUES (?1,?2,?3,?4,?5,?6,?7,'New','livekit_voice',?8,?9,?9)`
+        ).bind(leadId,business.id,name,phone,email,service,intent,
+          [notes, appointmentPreference ? `Appointment preference: ${appointmentPreference}` : ""].filter(Boolean).join("\\n"),
+          created).run();
+
+        await env.DB.prepare(
+          "INSERT INTO events (id,business_id,lead_id,type,payload,created_at) VALUES (?1,?2,?3,'voice.lead.created',?4,?5)"
+        ).bind(crypto.randomUUID(),business.id,leadId,JSON.stringify({
+          source: "livekit_voice", name, phone, email, service, intent, appointment_preference: appointmentPreference
+        }),created).run();
+
+        // Queue a traceable notification record; delivery is only marked sent after a provider confirms it.
+        await env.DB.prepare(
+          "INSERT INTO notification_deliveries (id,business_id,lead_id,channel,recipient,status,error,attempts,created_at,updated_at) VALUES (?1,?2,?3,'email','', 'pending','Email connection/delivery worker not configured yet',0,?4,?4)"
+        ).bind(crypto.randomUUID(),business.id,leadId,created).run();
+
+        return withCors(json({ ok: true, lead_id: leadId, business_id: business.id, notification_status: "pending_configuration" }, 201));
+      }
+
       if (path.startsWith("/api/leads/") && request.method === "PATCH") {
         const business = await publicBusiness(env, request.headers.get("x-dealspark-site-key"));
         if (!business) return withCors(json({ error: "Invalid site key" }, 401));
