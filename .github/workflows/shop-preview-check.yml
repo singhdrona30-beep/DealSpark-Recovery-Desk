@@ -11,6 +11,8 @@ on:
   pull_request:
     paths:
       - "shop-preview/**"
+      - "index.html"
+      - "products.json"
       - ".github/workflows/shop-preview-check.yml"
   workflow_dispatch:
 
