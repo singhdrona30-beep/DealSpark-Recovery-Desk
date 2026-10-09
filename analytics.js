@@ -15,7 +15,7 @@
       var payload = JSON.stringify({
         event: eventName,
         session_id: sid,
-        page: location.pathname,
+        page: location.pathname + location.search,
         referrer: document.referrer || "",
         target: String(target || "").slice(0, 1000)
       });
