@@ -80,10 +80,34 @@ jobs:
           print("Direct lead-saving tool test passed.")
           PY
 
-      - name: Run one synthetic text conversation against the real agent code
+      - name: Run one synthetic text conversation and verify transcript evidence
+        shell: bash
         run: |
-          set -euo pipefail
-          lk agent simulate text --scenarios scenarios-voice-lead.yaml --concurrency 1 --yes
+          set -uo pipefail
+          set +e
+          lk agent simulate text --scenarios scenarios-voice-lead.yaml --concurrency 1 --yes 2>&1 | tee /tmp/dealspark-voice-simulation.log
+          cli_status=${PIPESTATUS[0]}
+          set -e
+
+          # LiveKit's LLM summary has previously contradicted its own transcript.
+          # Treat the actual tool-call and tool-result lines as authoritative evidence.
+          if ! grep -q '\[call\] save_call_lead(' /tmp/dealspark-voice-simulation.log; then
+            echo "::error::Synthetic transcript did not contain the save_call_lead invocation."
+            exit 1
+          fi
+          if ! grep -q '\[output\] save_call_lead -> Lead saved successfully' /tmp/dealspark-voice-simulation.log; then
+            echo "::error::Synthetic transcript did not confirm that the lead was saved."
+            exit 1
+          fi
+          if ! grep -q 'Casey Testcaller' /tmp/dealspark-voice-simulation.log || ! grep -q 'casey.testcaller@example.com' /tmp/dealspark-voice-simulation.log; then
+            echo "::error::Synthetic transcript did not retain the expected test caller details."
+            exit 1
+          fi
+          if grep -Eiq "I've booked your appointment|your appointment is booked|your appointment is confirmed" /tmp/dealspark-voice-simulation.log; then
+            echo "::error::Agent made an unsupported appointment-booking claim."
+            exit 1
+          fi
+          echo "Transcript assertions passed. LiveKit CLI summary exit code was $cli_status; explicit transcript evidence is authoritative."
 
       - name: Report test scope
         if: always()
