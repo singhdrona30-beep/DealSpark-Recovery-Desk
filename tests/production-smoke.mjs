@@ -166,6 +166,7 @@ try {
   await page.locator("#opsIssue").fill("Call back and record the outcome");
   await page.locator("#opsForm button[type=submit]").click();
   await page.waitForFunction(() => document.getElementById("opsMsg").textContent.includes("Work item saved"));
+  await page.waitForFunction(() => document.getElementById("opsItems").innerText().includes("Smoke test lead"));
   if (!(await page.locator("#opsItems").innerText()).includes("Smoke test lead")) throw new Error("Operations queue create/read flow failed");
   await page.locator('#opsItems button[data-ops-action="approve"]').first().click();
   await page.waitForFunction(() => document.getElementById("opsMsg").textContent.includes("No external system was changed"));
