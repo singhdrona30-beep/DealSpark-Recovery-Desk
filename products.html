@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DealSpark — 10-product Operations Hub</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+:root{color-scheme:light}
+main{max-width:1180px;margin:32px auto;padding:0 18px}
+.hero{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.muted{color:#667085;font-size:13px}
+.notice{padding:14px 16px;border-radius:12px;background:#fff7e8;border:1px solid #f3d39b;color:#784b08;margin:16px 0}
+.notice.ok{background:#ecfdf3;border-color:#a6f4c5;color:#067647}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0}
+.stat,.product,.panel{background:#fff;border:1px solid #e4e7ec;border-radius:14px;padding:16px}
+.stat span{display:block;color:#667085;font-size:13px}.stat strong{display:block;font-size:25px;margin-top:5px}
+.products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.product h3{margin:0 0 8px}.product .price{font-size:20px;font-weight:800}.status{display:inline-block;font-size:12px;border-radius:999px;background:#f2f4f7;color:#344054;padding:5px 8px;margin:8px 0}
+.chip{display:inline-block;border:1px solid #d0d5dd;border-radius:999px;padding:4px 8px;margin:3px 4px 0 0;font-size:12px}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+form{display:grid;gap:10px}input,textarea,select{box-sizing:border-box;width:100%;padding:11px 12px;border:1px solid #d0d5dd;border-radius:9px;font:inherit}textarea{min-height:90px}
+button,.linkbutton{padding:10px 13px;border:0;border-radius:9px;background:#172033;color:#fff;font:inherit;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+button.secondary,.linkbutton.secondary{background:#f2f4f7;color:#344054}
+button:disabled{opacity:.45;cursor:not-allowed}
+.item{border:1px solid #e4e7ec;border-radius:10px;padding:12px;margin:9px 0}
+.item h4{margin:0 0 6px}.item p{margin:4px 0}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.small{font-size:12px}.error{color:#b42318}.oktext{color:#067647}
+@media(max-width:900px){.products{grid-template-columns:repeat(2,minmax(0,1fr))}.layout{grid-template-columns:1fr}}
+@media(max-width:600px){.products,.stats{grid-template-columns:1fr 1fr}.hero{align-items:flex-start}}
+</style>
+</head>
+<body>
+<main>
+<header class="hero">
+  <div><p class="eyebrow">DealSpark</p><h1>10-product Operations Hub</h1><p class="muted">Business data, review queues and operational stats in one place.</p></div>
+  <div><a class="linkbutton secondary" href="dashboard.html">Recovery Desk</a> <a class="linkbutton secondary" href="index.html">Product home</a></div>
+</header>
+<div id="notice" class="notice">Checking account and product services…</div>
+<section class="stats">
+  <div class="stat"><span>Products</span><strong id="statProducts">10</strong></div>
+  <div class="stat"><span>Work items</span><strong id="statItems">—</strong></div>
+  <div class="stat"><span>Needs review</span><strong id="statReview">—</strong></div>
+  <div class="stat"><span>Connected providers</span><strong id="statConnected">—</strong></div>
+</section>
+<section class="panel">
+  <h2>Product catalog</h2>
+  <p class="muted">These products currently support a manual review workflow. External accounting, inventory, calendar, HR, review and dispatch actions remain disabled until the relevant provider is authorized and tested.</p>
+  <div id="products" class="products"><p class="muted">Loading products…</p></div>
+</section>
+<div class="layout">
+  <section class="panel">
+    <h2>Add a work item</h2>
+    <p class="muted">Record a real task for your team. Saving it does not send a message or change a third-party system.</p>
+    <form id="itemForm">
+      <label>Product<select id="itemProduct" required></select></label>
+      <label>Item / customer / reference<input id="itemTitle" maxlength="200" required placeholder="e.g. Invoice 1842 or service request 771"></label>
+      <label>Issue / details<textarea id="itemIssue" maxlength="2000" required placeholder="What needs attention and what should a teammate review?"></textarea></label>
+      <button id="addItem" type="submit">Add to review queue</button>
+    </form>
+    <p id="formMsg" class="muted" aria-live="polite"></p>
+  </section>
+  <section class="panel">
+    <h2>Provider connections</h2>
+    <p class="muted">Status is shown honestly. “Authorization required” means a provider OAuth connection is not yet complete.</p>
+    <div id="connectors"><p class="muted">Loading providers…</p></div>
+  </section>
+</div>
+<div class="layout">
+  <section class="panel">
+    <h2>Operations queue</h2>
+    <p class="muted">Approve or dismiss internal review items. Approval does not execute an external action.</p>
+    <div id="items"><p class="muted">Loading work items…</p></div>
+  </section>
+  <section class="panel">
+    <h2>Recent audit activity</h2>
+    <p class="muted">Internal changes recorded for this workspace.</p>
+    <div id="audit"><p class="muted">Loading audit log…</p></div>
+  </section>
+</div>
+</main>
+<script>
+const API="https://dealspark-saas.singhdrona30.workers.dev";
+const key=localStorage.getItem("dealspark_dashboard_key");
+const $=id=>document.getElementById(id);
+const productNames=["BillGuard","StockWatch","StaffDesk","ReviewShield","OpsVault","LeadFlow","QuotePilot","ScheduleFlow","DispatchDesk","AssetCare"];
+const connectorLabels={stripe:"Stripe",square:"Square",shopify:"Shopify",quickbooks:"QuickBooks Online",xero:"Xero",google_business_profile:"Google Business Profile",microsoft365:"Microsoft 365",googledrive:"Google Drive"};
+let products=[],connectors=[],items=[],active=false;
+function el(tag,cls,text){const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=String(text);return n}
+function button(text,cls,handler){const b=el("button",cls||"",text);b.type="button";b.addEventListener("click",handler);return b}
+async function api(path,options={}){
+ const headers={"x-dealspark-key":key||"",...(options.headers||{})};
+ if(options.body)headers["content-type"]="application/json";
+ const response=await fetch(API+path,{...options,headers});
+ let data={};try{data=await response.json()}catch{}
+ if(!response.ok){const err=new Error(data.error||("Request failed ("+response.status+")"));err.status=response.status;err.data=data;throw err}
+ return data;
+}
+function setNotice(message,kind){const n=$("notice");n.textContent=message;n.className="notice"+(kind==="ok"?" ok":"")}
+function renderProducts(){
+ const grid=$("products"),select=$("itemProduct");grid.replaceChildren();select.replaceChildren();
+ for(const p of products){
+  const card=el("article","product");
+  card.append(el("h3","",p.name));
+  card.append(el("p","muted",p.description||"Operational workflow"));
+  card.append(el("div","price","$"+Number(p.price_usd_monthly||0)+" USD / month"));
+  card.append(el("span","status",p.mode==="manual_workflow_only"?"Manual workflow only":"Integrated"));
+  const req=el("div","");
+  const names=(p.required_connectors||[]).map(k=>connectorLabels[k]||k);
+  if(names.length){req.append(el("p","small muted","Required for automation:"));for(const name of names)req.append(el("span","chip",name))}
+  else req.append(el("p","small muted","No external connector listed; work is still manual until a product-specific automation is implemented."));
+  card.append(req);grid.append(card);
+  const opt=el("option","",p.name);opt.value=p.name;select.append(opt);
+ }
+ $("statProducts").textContent=products.length;
+}
+function renderConnectors(){
+ const root=$("connectors");root.replaceChildren();
+ for(const c of connectors){
+  const row=el("div","item");row.append(el("h4","",c.name));
+  const status=c.status==="read_only_verified"?"Read-only verified; write access not enabled":c.status==="oauth_required"?"Authorization required":String(c.status||"Not connected");
+  row.append(el("span","status",status));
+  row.append(el("p","muted small",c.scope||""));
+  root.append(row);
+ }
+}
+function renderItems(){
+ const root=$("items");root.replaceChildren();
+ if(!items.length){root.append(el("p","muted","No work items yet. Add a real task above to start the queue."));return}
+ for(const item of items){
+  const row=el("article","item");row.append(el("h4","",item.item));
+  row.append(el("p","muted small",item.product+" · "+item.status+" · "+(item.source||"manual")));
+  row.append(el("p","",item.issue));
+  if(active&&item.status==="needs_review"){
+   const actions=el("div","actions");
+   actions.append(button("Approve internally","",()=>changeItem(item.id,"approve")));
+   actions.append(button("Dismiss","secondary",()=>changeItem(item.id,"dismiss")));
+   row.append(actions);
+  }
+  root.append(row);
+ }
+}
+function renderAudit(rows){
+ const root=$("audit");root.replaceChildren();
+ if(!rows.length){root.append(el("p","muted","No audit entries yet."));return}
+ for(const a of rows.slice(0,15)){
+  const row=el("div","item");row.append(el("h4","",a.action+" · "+a.entity_type));
+  row.append(el("p","muted small",a.created_at||""));
+  root.append(row);
+ }
+}
+async function changeItem(id,action){
+ try{await api("/api/items/"+encodeURIComponent(id)+"/"+action,{method:"POST"});await loadData();setNotice(action==="approve"?"Item marked approved internally. No external system was changed.":"Item dismissed.", "ok")}
+ catch(e){setNotice(e.message);if(e.status===402)active=false}
+}
+async function loadData(){
+ if(!key){location.href="signup.html";return}
+ const [catalog,connectorData]=await Promise.all([api("/api/products"),api("/api/connectors")]);
+ products=catalog.products||[];connectors=connectorData.connectors||[];renderProducts();renderConnectors();
+ try{
+  const [health,queue,integrations,audit]=await Promise.all([api("/api/recovery"),api("/api/items"),api("/api/integrations"),api("/api/audit")]);
+  active=true;items=queue.items||[];
+  const counts={};for(const c of health.item_counts||[])counts[c.status]=c.count;
+  $("statItems").textContent=items.length;
+  $("statReview").textContent=counts.needs_review||0;
+  $("statConnected").textContent=(integrations.integrations||[]).filter(x=>String(x.status).toLowerCase()==="connected").length;
+  $("addItem").disabled=false;
+  renderItems();renderAudit(audit.audit||[]);
+  setNotice("Account authenticated. Manual product workflows are available; external integrations are not yet connected.", "ok");
+ }catch(e){
+  active=false;$("statItems").textContent="—";$("statReview").textContent="—";$("statConnected").textContent="0";$("addItem").disabled=true;
+  $("items").replaceChildren(el("p","muted",e.status===402?"Subscription is not active yet. Product operations unlock after the billing backend confirms an active subscription.":e.message));
+  $("audit").replaceChildren(el("p","muted","Audit history requires an active subscription."));
+  setNotice(e.status===402?"Your account is registered, but its subscription is not active. Return to checkout or contact support.":"Could not load account data: "+e.message);
+ }
+}
+$("itemForm").addEventListener("submit",async event=>{
+ event.preventDefault();if(!active)return;
+ const product=$("itemProduct").value,item=$("itemTitle").value.trim(),issue=$("itemIssue").value.trim();
+ try{await api("/api/items",{method:"POST",body:JSON.stringify({product,item,issue})});$("itemTitle").value="";$("itemIssue").value="";$("formMsg").textContent="Saved to the internal review queue.";await loadData()}
+ catch(e){$("formMsg").textContent=e.message;setNotice(e.message)}
+});
+loadData().catch(e=>setNotice("Could not load product services: "+e.message));
+</script>
+</body></html>
