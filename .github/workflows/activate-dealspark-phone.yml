@@ -54,7 +54,9 @@ jobs:
           cat /tmp/numbers.json
           mapfile -t numbers < <(jq -r '
             .items[]?
-            | select((.status == "active") or (.status == "PHONE_NUMBER_STATUS_ACTIVE") or (.status == 1))
+            # Use the known provisioned DealSpark number even if LiveKit reports
+            # OFFLINE while its dispatch binding is missing.
+            | select((.id // .phoneNumberId // .phone_number_id // "") == "PN_PPN_mNHDqgXbUB8Q")
             | select((.e164Format // .phoneNumber // .phone_number // "") != "")
             | [(.id // .phoneNumberId // .phone_number_id // ""),
                (.e164Format // .phoneNumber // .phone_number // ""),
@@ -62,12 +64,12 @@ jobs:
             | join("|")
           ' /tmp/numbers.json | sort -u)
           if [ "${#numbers[@]}" -ne 1 ]; then
-            echo "::error::Expected exactly one active LiveKit phone number; found ${#numbers[@]}."
+            echo "::error::Expected exactly one provisioned DealSpark phone number; found ${#numbers[@]}."
             exit 1
           fi
           IFS='|' read -r phone_id phone_number attached_rule_ids <<< "${numbers[0]}"
           test -n "$phone_id" && test -n "$phone_number"
-          echo "Active phone retained: $phone_number ($phone_id)"
+          echo "Provisioned phone selected for routing: $phone_number ($phone_id)"
 
           lk sip dispatch list --json > /tmp/dispatch-before.json
           cat /tmp/dispatch-before.json
