@@ -1,5 +1,5 @@
 const LEAD_KEY="dealspark_recovery_desk_v1";
-const DEALSPARK_API_BASE=window.DEALSPARK_API_BASE||"https://dealspark-recovery-desk.singhdrona30.workers.dev";
+const DEALSPARK_API_BASE=window.DEALSPARK_API_BASE||"https://dealspark-api.singhdrona30.workers.dev";
 const DEALSPARK_SITE_KEY=window.DEALSPARK_SITE_KEY||"cd3b4a45-2b2a-452d-87a1-22da12ec721058b5c12c-c8b5-45a8-b737-25b4c582981a";
 const $=id=>document.getElementById(id);
 const messages=$("messages"),quick=$("quick");
@@ -9,21 +9,22 @@ function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 function say(text){const el=document.createElement("div");el.className="msg bot";el.innerHTML=esc(text);messages.appendChild(el);messages.scrollTop=messages.scrollHeight}
 function user(text){const el=document.createElement("div");el.className="msg user";el.textContent=text;messages.appendChild(el);messages.scrollTop=messages.scrollHeight}
 function buttons(items){quick.innerHTML="";items.forEach(x=>{const b=document.createElement("button");b.textContent=x;b.onclick=()=>handle(x);quick.appendChild(b)})}
-function saveLead(){
+async function saveLead(){
  const lead={
    id:crypto.randomUUID(),
    name:state.name,
    contact:state.contact,
    service:state.service,
-   notes:`Intent: ${state.intent||"General"} | Requested date: ${state.date||"Not specified"} | Requested time: ${state.time||"Not specified"} | Captured by DealSpark website chatbot.`,
-   status:state.intent==="appointment"?"Booked":"New",
+   notes:"Intent: "+(state.intent||"General")+" | Requested date: "+(state.date||"Not specified")+" | Requested time: "+(state.time||"Not specified")+" | Captured by DealSpark website chatbot.",
+   status:"New",
    createdAt:new Date().toISOString()
  };
  let rows=[];try{rows=JSON.parse(localStorage.getItem(LEAD_KEY)||"[]")}catch{}
  rows.unshift(lead);
- localStorage.setItem(LEAD_KEY,JSON.stringify(rows));
- if(DEALSPARK_API_BASE && DEALSPARK_SITE_KEY){
-   fetch(DEALSPARK_API_BASE.replace(/\/$/,"")+"/api/leads",{
+ try{localStorage.setItem(LEAD_KEY,JSON.stringify(rows))}catch{}
+ if(!DEALSPARK_API_BASE || !DEALSPARK_SITE_KEY)return {ok:false};
+ try{
+   const response=await fetch(DEALSPARK_API_BASE.replace(/\/$/,"")+"/api/leads",{
      method:"POST",
      headers:{"content-type":"application/json","x-dealspark-site-key":DEALSPARK_SITE_KEY},
      body:JSON.stringify({
@@ -32,11 +33,15 @@ function saveLead(){
        email:/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.contact)?lead.contact:"",
        service:lead.service,
        intent:state.intent||"lead",
-       status:lead.status,
+       status:"New",
        source:"website-chatbot",
        notes:lead.notes
      })
-   }).catch(()=>{});
+   });
+   const result=await response.json().catch(()=>({}));
+   return {ok:response.ok && result.ok===true && Boolean(result.id),id:result.id||""};
+ }catch(error){
+   return {ok:false};
  }
 }
 function reset(){state={intent:"",service:"",date:"",time:"",name:"",contact:"",step:"idle"}}
@@ -63,10 +68,25 @@ function handle(raw){
    state.name=text;state.step="contact";say("Thanks, "+text+". What's the best phone number or email for the business to contact you?");return;
  }
  if(state.step==="contact"){
-   state.contact=text;saveLead();
-   const summary=`${state.service} • ${state.date||"date flexible"} • ${state.time||"time flexible"}`;
-   say("You're all set. I captured "+summary+". The business can now follow up with you.");
-   buttons(["Start another request","Ask a question"]);reset();return;
+   state.contact=text;
+   state.step="saving";
+   $("chatInput").disabled=true;
+   saveLead().then(result=>{
+     $("chatInput").disabled=false;
+     const summary=state.service+" • "+(state.date||"date flexible")+" • "+(state.time||"time flexible");
+     if(result.ok){
+       if(state.intent==="appointment"){
+         say("Thanks — I've sent your appointment request for "+summary+" to the business. This is not a confirmed booking; the team must confirm availability.");
+       }else{
+         say("Thanks — I've sent your request for "+summary+" to the business. The team can follow up using the contact you provided.");
+       }
+     }else{
+       say("I couldn't confirm your request reached the business. Please contact them directly or try again. I have not confirmed a booking.");
+     }
+     buttons(["Start another request","Ask a question"]);
+     reset();
+   });
+   return;
  }
 
  // Understand natural language first, including service names in the first message.
