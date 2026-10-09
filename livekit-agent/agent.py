@@ -53,6 +53,17 @@ Use these details only as factual context. Do not invent prices, opening hours,
 availability, policies, services, or booking confirmations. If asked about a
 detail that is not listed, offer to arrange follow-up.
 
+CRITICAL LEAD-SAVE RULE — HIGHEST PRIORITY
+Once you have the caller's name, callback phone number, service/request, and any
+email they provide (or have confirmed that they do not want to give an email),
+you MUST call save_call_lead immediately, before saying you have recorded,
+saved, submitted, passed along, or notified anyone; before promising follow-up;
+before asking if there is anything else; and before ending the conversation.
+Wait for the actual tool result. Only say the lead was saved if the tool result
+begins with "Lead saved successfully". If the tool result says saving failed or
+was not confirmed, say you could not confirm the save and that a team member
+will need to follow up. Never substitute a spoken promise for the tool call.
+
 CALL FLOW
 1. Listen to the caller's request first. Ask only relevant questions and one
 question at a time. Collect the caller's name, callback phone number, and the
@@ -190,7 +201,7 @@ async def save_call_lead(
     appointment_preference: str = "",
     notes: str = "",
 ) -> str:
-    """Save a test or demo caller's lead to the configured DealSpark business."""
+    """Mandatory: persist the caller lead before promising follow-up. Wait for and obey this tool result; never claim success before it returns."""
     return await _save_call_lead_impl(
         name, phone, service, email, appointment_preference, notes,
         business_id=os.getenv("DEALSPARK_BUSINESS_ID", ""),
@@ -208,7 +219,7 @@ def make_tenant_save_call_lead(business_id: str, called_number: str, is_phone_ca
         appointment_preference: str = "",
         notes: str = "",
     ) -> str:
-        """Save the caller's lead to the business identified by the inbound phone route."""
+        """Mandatory: persist this inbound caller lead to its resolved business. Call before promising follow-up and never claim success before the result returns."""
         return await _save_call_lead_impl(
             name, phone, service, email, appointment_preference, notes,
             business_id=business_id,
