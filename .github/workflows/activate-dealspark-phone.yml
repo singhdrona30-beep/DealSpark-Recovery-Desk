@@ -55,7 +55,7 @@ jobs:
             | [(.id // .phoneNumberId // .phone_number_id // ""),
                (.e164Format // .phoneNumber // .phone_number // ""),
                ((.sipDispatchRuleIds // .sip_dispatch_rule_ids // []) | join(","))]
-            | @tsv
+            | join("|")
           ' /tmp/livekit-numbers.json | sort -u)
 
           if [ "${#numbers[@]}" -ne 1 ]; then
@@ -63,7 +63,7 @@ jobs:
             exit 1
           fi
 
-          IFS=$'\\t' read -r phone_id phone_number attached_rule_ids <<< "${numbers[0]}"
+          IFS='|' read -r phone_id phone_number attached_rule_ids <<< "${numbers[0]}"
           if [ -z "$phone_id" ] || [ -z "$phone_number" ]; then
             echo "::error::Could not reliably identify the active phone number. Stopping safely."
             exit 1
@@ -72,6 +72,8 @@ jobs:
 
           # Reuse the rule if it already exists; avoid duplicate rules on reruns.
           lk sip dispatch list --json > /tmp/livekit-dispatch-rules-before.json
+          echo "Current dispatch rules returned by LiveKit:"
+          cat /tmp/livekit-dispatch-rules-before.json
           mapfile -t existing_rule_ids < <(jq -r '
             .. | objects
             | select((.name // "") == "dealspark-inbound")
