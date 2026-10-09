@@ -116,7 +116,21 @@ async def save_call_lead(
                 return "Lead saved successfully, but the email notification failed. Do not say an email was sent."
             return "Lead saved successfully, but email notification is not configured yet. Do not say an email was sent."
         return "Lead save was not confirmed. Do not claim success."
-    except (urllib.error.URLError, TimeoutError, ValueError, OSError):
+    except urllib.error.HTTPError as exc:
+        # Log only the HTTP status and a bounded, sanitized response body; never log auth headers or tokens.
+        try:
+            body = exc.read(1000).decode("utf-8", errors="replace")
+            try:
+                parsed = json.loads(body)
+                safe_detail = str(parsed.get("error") or parsed.get("message") or parsed.get("detail") or "HTTP request rejected")
+            except (ValueError, AttributeError):
+                safe_detail = "HTTP request rejected"
+        except Exception:
+            safe_detail = "HTTP request rejected"
+        print(f"VOICE_LEAD_SAVE_HTTP_ERROR status={exc.code} detail={safe_detail[:180]}")
+        return "Lead save failed. Do not claim success; tell the caller a team member will need to follow up."
+    except (urllib.error.URLError, TimeoutError, ValueError, OSError) as exc:
+        print(f"VOICE_LEAD_SAVE_NETWORK_ERROR type={type(exc).__name__} detail={str(exc)[:180]}")
         return "Lead save failed. Do not claim success; tell the caller a team member will need to follow up."
 
  
