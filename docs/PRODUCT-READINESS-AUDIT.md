@@ -11,7 +11,7 @@ Scope: GitHub repository, Cloudflare Pages/Workers configuration, D1 lead and no
 
 - LiveKit agent deployment workflow: recent deployment completed successfully.
 - Real test calls: D1 contains saved voice leads, including caller details and service requests.
-- Notification tracking: D1 recorded a failed email delivery with error `resend_http_403`; no successful delivery has yet been verified after the User-Agent change.
+- Notification tracking: D1 recorded three failed email attempts with error `resend_http_403`, including after the User-Agent change. Resend API logs show the exact cause: the account is in testing mode and can only send to its own verified account email (`singhdrona@yahoo.ca`); sending to `dealspark@agentmail.to` is rejected until a domain is verified and the `from` address uses that domain. This is an account restriction, not a request-header problem. No successful production notification has been verified.
 - Backend deployment: GitHub Actions deployed the `dealspark-api` Worker successfully for commit `2a5f942`.
 - Voice simulation test: the transcript contains `[call] save_call_lead(...)` and a successful lead-save tool result, but the LiveKit CLI's LLM summary incorrectly reported that no tool call occurred. The workflow was updated to verify transcript evidence directly.
 - Business onboarding: settings can be saved, but the form does not create or verify a phone carrier route. It must never mark phone service active merely because settings were saved.
@@ -19,6 +19,7 @@ Scope: GitHub repository, Cloudflare Pages/Workers configuration, D1 lead and no
 - Product action API: `functions/api/items/[id]/[action].js` explicitly returns `external_action_executed:false`. Approving an item creates an internal action-queue record; it does not itself pay a bill, change inventory, schedule a worker, send a review request, or update a third-party platform.
 - Customer acquisition workflow: `customer-engine.yml` searches public GitHub repositories and drafts outreach. That is not equivalent to finding verified local businesses or sending emails; the send step is intentionally gated until a real provider integration is configured.
 - Deployment pipeline: Cloudflare Pages had been skipping API updates because its path filter was misconfigured. The filter now explicitly lists the `functions/` routes, and the updated onboarding function deployment completed successfully for commit `e3787e0`. The Pages health route responds with `ok:true` and `database:connected`; the protected onboarding endpoint returns HTTP 401 when no business key is supplied, as expected.
+- UI smoke test: the expanded production smoke suite passed on commit `378a3ac`. It verifies the chat/recovery pages, all ten individual product demo pages, the phone demo disclosure, suite tabs, and onboarding safeguards. It is a UI smoke test, not proof that each external business integration works.
 
 ## Product-by-product readiness
 
