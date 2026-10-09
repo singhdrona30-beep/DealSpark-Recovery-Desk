@@ -82,10 +82,8 @@ jobs:
                   or (.sipDispatchRuleId // "") == "SDR_E8XKvbVXEZTe")
             | .sipDispatchRuleId
           ' /tmp/dispatch-before.json | sort -u)
-          if [ "${#conflicting_rules[@]}" -lt 1 ]; then
-            echo "::error::Expected existing conflicting dispatch rules were not found; stopping safely."
-            exit 1
-          fi
+          # The previous failed repair may already have removed the old rules.
+          # Continue when none remain; the goal is to create the correct rule now.
           for old_rule in "${conflicting_rules[@]}"; do
             echo "Removing conflicting dispatch rule: $old_rule"
             lk sip dispatch delete "$old_rule"
