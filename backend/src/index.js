@@ -71,12 +71,14 @@ async function sendVoiceLeadNotification(env, business, lead) {
   const deliveryId = crypto.randomUUID();
   const recipient = safe(lead.notificationEmail) || (lead.isPhoneCall ? "" : safe(env.VOICE_NOTIFICATION_EMAIL));
   const sender = safe(env.RESEND_FROM);
-  if (!env.RESEND_API_KEY || !recipient || !sender) {
-    const errorCode = !env.RESEND_API_KEY
-      ? "missing_resend_api_key"
-      : !recipient
-        ? "missing_business_notification_email"
-        : "missing_resend_from";
+  const useAgentMail = Boolean(env.AGENTMAIL_API_KEY && env.AGENTMAIL_INBOX);
+  const useResend = Boolean(env.RESEND_API_KEY && sender);
+  if (!recipient || (!useAgentMail && !useResend)) {
+    const errorCode = !recipient
+      ? "missing_business_notification_email"
+      : (!env.AGENTMAIL_API_KEY && !env.RESEND_API_KEY)
+        ? "missing_notification_provider_credentials"
+        : "missing_notification_sender_configuration";
     await env.DB.prepare(
       "INSERT INTO notification_deliveries (id,business_id,lead_id,channel,recipient,status,error,attempts,created_at,updated_at) VALUES (?1,?2,?3,'email',?4,'failed',?5,0,?6,?6)"
     ).bind(deliveryId,business.id,lead.leadId,recipient,errorCode,stamp).run();
@@ -101,41 +103,71 @@ async function sendVoiceLeadNotification(env, business, lead) {
   ];
   let status = "failed";
   let errorCode = "network_error";
-  try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "authorization": `Bearer ${env.RESEND_API_KEY}`,
-        "content-type": "application/json",
-        "user-agent": "DealSparkLeadNotifier/1.0"
-      },
-      body: JSON.stringify({
-        from: sender,
-        to: [recipient],
-        subject,
-        text: lines.join("\n")
-      })
-    });
-    if (response.ok) {
-      status = "sent";
-      errorCode = "";
-    } else {
-      // Classify known provider restrictions without storing raw response bodies or personal data.
+  const attemptAgentMail = async () => {
+    try {
+      const response = await fetch(
+        `https://api.agentmail.to/v0/inboxes/${encodeURIComponent(safe(env.AGENTMAIL_INBOX))}/messages/send`,
+        {
+          method: "POST",
+          headers: {
+            "authorization": `Bearer ${env.AGENTMAIL_API_KEY}`,
+            "content-type": "application/json",
+            "user-agent": "DealSparkLeadNotifier/1.0"
+          },
+          body: JSON.stringify({
+            to: [recipient],
+            subject,
+            text: lines.join("\\n"),
+            labels: ["dealspark-lead"]
+          })
+        }
+      );
+      return { ok: response.ok, error: response.ok ? "" : `agentmail_http_${response.status}` };
+    } catch {
+      return { ok: false, error: "agentmail_network_error" };
+    }
+  };
+  const attemptResend = async () => {
+    try {
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "authorization": `Bearer ${env.RESEND_API_KEY}`,
+          "content-type": "application/json",
+          "user-agent": "DealSparkLeadNotifier/1.0"
+        },
+        body: JSON.stringify({ from: sender, to: [recipient], subject, text: lines.join("\\n") })
+      });
+      if (response.ok) return { ok: true, error: "" };
       let providerMessage = "";
       try {
         const providerError = await response.clone().json();
         providerMessage = String(providerError?.message || "").toLowerCase();
       } catch {}
       if (response.status === 403 && providerMessage.includes("testing emails to your own email address")) {
-        errorCode = "resend_test_mode_recipient_restriction";
-      } else if (response.status === 403 && providerMessage.includes("verify a domain")) {
-        errorCode = "resend_domain_verification_required";
-      } else {
-        errorCode = `resend_http_${response.status}`;
+        return { ok: false, error: "resend_test_mode_recipient_restriction" };
       }
+      if (response.status === 403 && providerMessage.includes("verify a domain")) {
+        return { ok: false, error: "resend_domain_verification_required" };
+      }
+      return { ok: false, error: `resend_http_${response.status}` };
+    } catch {
+      return { ok: false, error: "resend_network_error" };
     }
-  } catch {
-    errorCode = "network_error";
+  };
+
+  let result = useAgentMail ? await attemptAgentMail() : { ok: false, error: "agentmail_not_configured" };
+  if (!result.ok && useResend) {
+    const fallback = await attemptResend();
+    if (fallback.ok) result = fallback;
+    else if (!useAgentMail || result.error === "agentmail_not_configured") result = fallback;
+    else result = { ok: false, error: `${result.error};${fallback.error}`.slice(0, 120) };
+  }
+  if (result.ok) {
+    status = "sent";
+    errorCode = "";
+  } else {
+    errorCode = result.error || "notification_delivery_failed";
   }
   await env.DB.prepare(
     "INSERT INTO notification_deliveries (id,business_id,lead_id,channel,recipient,status,error,attempts,created_at,updated_at) VALUES (?1,?2,?3,'email',?4,?5,?6,1,?7,?7)"
