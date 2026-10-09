@@ -41,11 +41,13 @@ button,input{font:inherit}button{cursor:pointer;border:0;border-radius:10px;back
 </section>
 
 <section class="panel span12"><h2>Free Internet Call Test (WebRTC)</h2>
-<p class="muted">This test uses your browser microphone and the other participant's browser. It is not a telephone number and cannot call mobile/landline numbers. No carrier is connected.</p>
+<p class="muted">Browser-to-browser audio over the internet. This is not a phone number and cannot dial mobile/landline numbers. Use two devices or two browsers, allow microphone access, and share your Peer ID with the other participant.</p>
 <div class="grid" style="gap:12px">
-<div class="span4"><label class="muted" for="rtcRoom">Room name (both browsers must use the same room)</label><input id="rtcRoom" value="dealspark-demo" maxlength="60" style="width:100%;margin-top:5px;background:#0b1221;border:1px solid #34425d;border-radius:10px;color:white;padding:11px"><div class="actions"><button id="rtcStart">Start microphone</button><button class="secondary" id="rtcStop">Stop</button></div><p id="rtcStatus" class="muted" aria-live="polite">Not connected. Signaling service still needs to be configured.</p></div>
-<div class="span8"><label class="muted">Architecture</label><p class="muted">Browser microphone → WebRTC peer connection → second browser. To make this work across the internet, we need a signaling service and STUN/TURN configuration. TURN relays may have usage costs; this page does not pretend a real call is active.</p><a href="https://developers.cloudflare.com/realtime/" target="_blank" rel="noopener" style="color:#a9ccff">Cloudflare Realtime documentation</a></div>
+<div class="span4"><div class="stat"><small>Your Peer ID</small><strong id="rtcPeerId" style="font-size:15px;overflow-wrap:anywhere">Starting…</strong></div><div class="actions"><button id="rtcCopyId" class="secondary" disabled>Copy my ID</button><button id="rtcStart">Start / reconnect</button></div></div>
+<div class="span4"><label class="muted" for="rtcTarget">Other person's Peer ID</label><input id="rtcTarget" placeholder="Paste their Peer ID" maxlength="120" style="width:100%;margin-top:5px;background:#0b1221;border:1px solid #34425d;border-radius:10px;color:white;padding:11px"><div class="actions"><button id="rtcCall">Call browser</button><button class="secondary" id="rtcEnd">End call</button></div></div>
+<div class="span4"><p id="rtcStatus" class="muted" aria-live="polite">Connecting to the public PeerJS signaling service…</p><audio id="rtcRemoteAudio" autoplay controls style="width:100%"></audio></div>
 </div>
+<p class="muted">This uses the public PeerJS signaling service and browser WebRTC. It is suitable for a demo, not a guaranteed production service. Some networks require a TURN relay, which can have costs. Do not use this to contact emergency services.</p>
 </section>
 <section class="panel span12"><h2>Live connection checklist</h2><div class="stats"><div class="stat"><strong>01</strong><small>Verify free number and account calling permissions</small></div><div class="stat"><strong>02</strong><small>Connect SIP/WebRTC or carrier API securely</small></div><div class="stat"><strong>03</strong><small>Test a real inbound call and owner notification</small></div></div><p class="muted">No passwords, API keys, or provider secrets belong in this public webpage. Keep them in server-side environment secrets.</p></section>
 </div><div class="footer">DealSpark Phone Lab · This is a workflow prototype, not a live telephone service. Calls, SMS, and AI usage are not enabled.</div>
@@ -59,6 +61,34 @@ document.getElementById('speak').addEventListener('click',()=>{const status=docu
 document.getElementById('stop').addEventListener('click',()=>{if('speechSynthesis'in window)speechSynthesis.cancel();document.getElementById('voiceStatus').textContent='Playback stopped.'});
 document.getElementById('saveLead').addEventListener('click',()=>{const n=document.getElementById('leadname').value.trim(),need=document.getElementById('leadneed').value.trim(),s=document.getElementById('leadStatus');if(!n||!need){s.textContent='Enter a name and need first.';return}leadCount++;document.getElementById('leads').textContent=leadCount;s.textContent='Demo lead captured in this page session.';log('Demo lead captured: '+n+' — '+need);document.getElementById('leadname').value='';document.getElementById('leadneed').value=''});
 document.getElementById('clear').addEventListener('click',()=>{entries=[];renderLog();leadCount=0;document.getElementById('leads').textContent='0';document.getElementById('leadStatus').textContent='Demo log cleared.'});
+let rtcPeer=null,rtcCallObj=null,rtcLocalStream=null;
+const rtcStatus=document.getElementById('rtcStatus'),rtcPeerId=document.getElementById('rtcPeerId'),rtcRemote=document.getElementById('rtcRemoteAudio');
+function rtcSetStatus(s){rtcStatus.textContent=s;log('WebRTC: '+s)}
+function rtcEndCall(){if(rtcCallObj){try{rtcCallObj.close()}catch(e){}rtcCallObj=null}rtcRemote.srcObject=null;if(rtcLocalStream){rtcLocalStream.getTracks().forEach(t=>t.stop());rtcLocalStream=null}rtcSetStatus('Call ended.')}
+async function rtcStart(){
+ if(!window.Peer){rtcSetStatus('PeerJS library did not load. Check your internet connection and reload.');return}
+ try{
+  if(rtcPeer){try{rtcPeer.destroy()}catch(e){}rtcPeer=null}
+  rtcPeerId.textContent='Connecting…';document.getElementById('rtcCopyId').disabled=true;
+  rtcPeer=new Peer();
+  rtcPeer.on('open',id=>{rtcPeerId.textContent=id;document.getElementById('rtcCopyId').disabled=false;rtcSetStatus('Ready. Share your Peer ID with the other person, then call their ID.');});
+  rtcPeer.on('call',async call=>{
+   try{rtcSetStatus('Incoming browser call — requesting microphone…');rtcLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});rtcCallObj=call;call.answer(rtcLocalStream);call.on('stream',stream=>{rtcRemote.srcObject=stream;rtcSetStatus('Connected: live browser-to-browser audio.');});call.on('close',rtcEndCall);call.on('error',e=>rtcSetStatus('Call error: '+e.message));}
+   catch(e){rtcSetStatus('Microphone permission failed: '+e.message);try{call.close()}catch(_){}}
+  });
+  rtcPeer.on('error',e=>rtcSetStatus('Peer connection error: '+e.type+'. Try Start / reconnect.'));rtcPeer.on('disconnected',()=>rtcSetStatus('Signaling disconnected. Try Start / reconnect.'));
+ }catch(e){rtcSetStatus('Could not start browser calling: '+e.message)}
+}
+document.getElementById('rtcStart').addEventListener('click',rtcStart);
+document.getElementById('rtcCopyId').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(rtcPeerId.textContent);rtcSetStatus('Peer ID copied. Share it with the other participant.')}catch(e){rtcSetStatus('Copy blocked. Select the ID and copy it manually.')}});
+document.getElementById('rtcCall').addEventListener('click',async()=>{
+ const target=document.getElementById('rtcTarget').value.trim();if(!rtcPeer||!rtcPeer.open){rtcSetStatus('Start / reconnect first and wait for your Peer ID.');return}if(!target){rtcSetStatus('Enter the other person’s Peer ID first.');return}
+ try{rtcSetStatus('Requesting microphone…');rtcLocalStream=await navigator.mediaDevices.getUserMedia({audio:true,video:false});rtcCallObj=rtcPeer.call(target,rtcLocalStream);if(!rtcCallObj){rtcSetStatus('Could not create call. Check the Peer ID.');return}rtcCallObj.on('stream',stream=>{rtcRemote.srcObject=stream;rtcSetStatus('Connected: live browser-to-browser audio.');});rtcCallObj.on('close',rtcEndCall);rtcCallObj.on('error',e=>rtcSetStatus('Call error: '+e.message));rtcSetStatus('Calling browser… allow microphone access on both sides.');}
+ catch(e){rtcSetStatus('Microphone permission failed: '+e.message)}
+});
+document.getElementById('rtcEnd').addEventListener('click',rtcEndCall);
+const peerScript=document.createElement('script');peerScript.src='https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js';peerScript.onload=()=>rtcSetStatus('PeerJS loaded. Starting browser call service…');peerScript.onerror=()=>rtcSetStatus('PeerJS library failed to load.');document.head.appendChild(peerScript);
+
 async function copyField(id,success){const el=document.getElementById(id),status=document.getElementById('fongoStatus');const value=el.value.trim();if(!value){status.textContent='Enter text first, then copy it.';return}try{await navigator.clipboard.writeText(value);status.textContent=success;log(success)}catch(e){el.focus();el.select();status.textContent='Clipboard permission blocked. The text is selected; press Ctrl+C to copy.'}}
 document.getElementById('copyNumber').addEventListener('click',()=>copyField('fongoNumber','Prospect number copied for manual dialing in Fongo.'));
 document.getElementById('copyScript').addEventListener('click',()=>copyField('fongoScript','Call script copied for manual use.'));
