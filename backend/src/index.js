@@ -166,6 +166,52 @@ export default {
         return withCors(json({ ok: true, service: "dealspark-api", time: now() }));
       }
 
+      // Resolve the inbound phone number to the tenant's saved receptionist settings.
+      // This endpoint is available only to the trusted LiveKit agent, never to the public website.
+      if (path === "/api/voice-config" && request.method === "GET") {
+        const auth = request.headers.get("authorization") || "";
+        if (!env.VOICE_AGENT_TOKEN || auth !== `Bearer ${env.VOICE_AGENT_TOKEN}`) {
+          return withCors(json({ error: "Unauthorized voice agent" }, 401));
+        }
+        const safe = (value, max = 1000) => String(value || "").trim().slice(0, max);
+        const calledNumber = safe(url.searchParams.get("called_number"), 40);
+        const normalizedCalledNumber = normalizePhone(calledNumber);
+        if (!normalizedCalledNumber) {
+          return withCors(json({ error: "Inbound dialed number is required" }, 422));
+        }
+        const routes = await env.DB.prepare(
+          "SELECT DISTINCT b.id, b.name, b.timezone " +
+          "FROM businesses b JOIN events e ON e.business_id = b.id AND e.type = 'onboarding_config' " +
+          "WHERE json_extract(e.payload, '$.forwarding_number_normalized') = ?1 " +
+          "OR json_extract(e.payload, '$.main_phone_normalized') = ?1 LIMIT 3"
+        ).bind(normalizedCalledNumber).all();
+        const matches = routes.results || [];
+        if (matches.length > 1) {
+          return withCors(json({ error: "Phone number matches multiple businesses; configuration was not returned" }, 409));
+        }
+        if (matches.length !== 1) {
+          return withCors(json({ error: "No receptionist configuration is assigned to this dialed number" }, 404));
+        }
+        const business = matches[0];
+        const row = await env.DB.prepare(
+          "SELECT payload FROM events WHERE business_id = ?1 AND type = 'onboarding_config' ORDER BY created_at DESC LIMIT 1"
+        ).bind(business.id).first();
+        let saved = {};
+        try { saved = row?.payload ? JSON.parse(row.payload) : {}; } catch { saved = {}; }
+        return withCors(json({
+          ok: true,
+          business: { id: business.id, name: safe(business.name, 160), timezone: safe(business.timezone, 80) },
+          config: {
+            greeting: safe(saved.greeting, 600),
+            services: safe(saved.services, 2000),
+            service_area: safe(saved.service_area, 300),
+            opening_time: safe(saved.opening_time, 10),
+            closing_time: safe(saved.closing_time, 10)
+          },
+          phone_connection_status: safe(saved.phone_connection_status, 40) || "not_connected"
+        }));
+      }
+
       // Anonymous first-party traffic events; never store IPs, names, emails, or form contents.
       if (path === "/analytics" && request.method === "POST") {
         const b = await body(request);
