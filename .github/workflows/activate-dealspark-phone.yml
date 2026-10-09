@@ -26,16 +26,19 @@ jobs:
             fi
           done
 
-      - name: Install LiveKit CLI (work around dispatch-create regression)
+      - name: Install LiveKit CLIs
         run: |
           set -euo pipefail
+          curl -sSL https://get.livekit.io/cli | bash
+          command -v lk
           mkdir -p /tmp/livekit-cli
-          curl -fsSL https://github.com/livekit/livekit-cli/releases/download/v2.4.9/lk_2.4.9_linux_amd64.tar.gz -o /tmp/lk.tar.gz
-          tar -xzf /tmp/lk.tar.gz -C /tmp/livekit-cli
-          lk_path="$(find /tmp/livekit-cli -type f -name lk -print -quit)"
-          test -n "$lk_path"
-          install "$lk_path" /usr/local/bin/lk
+          curl -fsSL https://github.com/livekit/livekit-cli/releases/download/v2.4.9/lk_2.4.9_linux_amd64.tar.gz -o /tmp/lk-legacy.tar.gz
+          tar -xzf /tmp/lk-legacy.tar.gz -C /tmp/livekit-cli
+          legacy_path="$(find /tmp/livekit-cli -type f -name lk -print -quit)"
+          test -n "$legacy_path"
+          install "$legacy_path" /usr/local/bin/lk-legacy
           lk --version
+          lk-legacy --version
 
       - name: Repair inbound routing without releasing the phone number
         env:
@@ -94,7 +97,7 @@ jobs:
           }' > /tmp/dealspark-dispatch-rule.json
 
           echo "Creating a clean dispatch rule for the active phone trunk."
-          lk sip dispatch create /tmp/dealspark-dispatch-rule.json
+          lk-legacy sip dispatch create /tmp/dealspark-dispatch-rule.json
 
           lk sip dispatch list --json > /tmp/dispatch-created.json
           mapfile -t created_rules < <(jq -r --arg trunk "$phone_id" '
