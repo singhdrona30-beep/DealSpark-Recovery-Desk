@@ -22,6 +22,12 @@ async function body(request) {
 
 function now() { return new Date().toISOString(); }
 
+function normalizePhone(value) {
+  let digits = String(value || "").replace(/\D/g, "");
+  if (digits.length === 10) digits = "1" + digits;
+  return digits;
+}
+
 async function publicBusiness(env, siteKey) {
   if (!siteKey) return null;
   return env.DB.prepare(
@@ -63,11 +69,12 @@ async function sendVoiceLeadNotification(env, business, lead) {
   const safe = (value) => String(value || "").trim();
   const stamp = now();
   const deliveryId = crypto.randomUUID();
-  const recipient = safe(env.VOICE_NOTIFICATION_EMAIL);
+  const recipient = safe(lead.notificationEmail) || (lead.isPhoneCall ? "" : safe(env.VOICE_NOTIFICATION_EMAIL));
   if (!env.RESEND_API_KEY || !recipient) {
+    const errorCode = !env.RESEND_API_KEY ? "missing_resend_api_key" : "missing_business_notification_email";
     await env.DB.prepare(
       "INSERT INTO notification_deliveries (id,business_id,lead_id,channel,recipient,status,error,attempts,created_at,updated_at) VALUES (?1,?2,?3,'email',?4,'failed',?5,0,?6,?6)"
-    ).bind(deliveryId,business.id,lead.leadId,recipient,"missing_resend_configuration",stamp).run();
+    ).bind(deliveryId,business.id,lead.leadId,recipient,errorCode,stamp).run();
     return "not_configured";
   }
 
@@ -208,21 +215,47 @@ export default {
           return withCors(json({ error: "Unauthorized voice agent" }, 401));
         }
         const b = await body(request);
-        const businessId = String(b.business_id || "").trim();
-        // Use the explicit business when it exists. For the single shared demo receptionist,
-        // recover from a stale/mismatched business ID by routing to the canonical demo business
-        // instead of silently dropping the caller's lead.
-        let business = businessId ? await env.DB.prepare(
-          "SELECT id, name FROM businesses WHERE id = ?1 LIMIT 1"
-        ).bind(businessId).first() : null;
-        if (!business) {
+        const safe = (value, max = 1000) => String(value || "").trim().slice(0, max);
+        const businessId = safe(b.business_id, 100);
+        const calledNumber = safe(b.called_number, 40);
+        const normalizedCalledNumber = normalizePhone(calledNumber);
+        const isPhoneCall = b.is_phone_call === true || String(b.is_phone_call || "").toLowerCase() === "true";
+        let business = null;
+
+        // Real SIP calls must be resolved by the number actually dialed. Never fall back
+        // to the demo tenant for a phone call, because that would leak one business's leads
+        // into another business's workspace.
+        if (isPhoneCall && !normalizedCalledNumber) {
+          return withCors(json({ error: "Inbound call did not include the dialed number; lead was not assigned to a business" }, 422));
+        }
+        if (normalizedCalledNumber) {
+          const routes = await env.DB.prepare(
+            "SELECT DISTINCT b.id, b.name " +
+            "FROM businesses b JOIN events e ON e.business_id = b.id AND e.type = 'onboarding_config' " +
+            "WHERE json_extract(e.payload, '$.forwarding_number_normalized') = ?1 " +
+            "OR json_extract(e.payload, '$.main_phone_normalized') = ?1 LIMIT 3"
+          ).bind(normalizedCalledNumber).all();
+          const matches = routes.results || [];
+          if (matches.length > 1) {
+            return withCors(json({ error: "Phone number matches multiple businesses; lead was not saved to avoid cross-business data leakage" }, 409));
+          }
+          if (matches.length === 1) business = matches[0];
+          if (!business) {
+            return withCors(json({ error: "No DealSpark business is configured for this dialed number; lead was not saved" }, 404));
+          }
+        } else if (!isPhoneCall && businessId) {
+          business = await env.DB.prepare(
+            "SELECT id, name FROM businesses WHERE id = ?1 LIMIT 1"
+          ).bind(businessId).first();
+        }
+
+        // Non-phone synthetic tests may use the configured demo tenant. Phone calls never do.
+        if (!business && !isPhoneCall && !normalizedCalledNumber) {
           business = await env.DB.prepare(
             "SELECT id, name FROM businesses WHERE name = 'DealSpark Demo' ORDER BY created_at ASC LIMIT 1"
           ).first();
         }
         if (!business) return withCors(json({ error: "No configured business is available for voice lead capture" }, 503));
-
-        const safe = (value, max = 1000) => String(value || "").trim().slice(0, max);
         const leadId = crypto.randomUUID();
         const created = now();
         const name = safe(b.name, 160);
@@ -246,8 +279,16 @@ export default {
           source: "livekit_voice", name, phone, email, service, intent, appointment_preference: appointmentPreference
         }),created).run();
 
+        const configRow = await env.DB.prepare(
+          "SELECT payload FROM events WHERE business_id = ?1 AND type = 'onboarding_config' ORDER BY created_at DESC LIMIT 1"
+        ).bind(business.id).first();
+        let businessConfig = {};
+        try { businessConfig = configRow?.payload ? JSON.parse(configRow.payload) : {}; } catch { businessConfig = {}; }
+        const notificationEmail = safe(businessConfig.notification_email, 254);
+
         const notificationStatus = await sendVoiceLeadNotification(env, business, {
-          leadId, name, phone, email, service, notes, appointmentPreference, created
+          leadId, name, phone, email, service, notes, appointmentPreference, created,
+          notificationEmail, isPhoneCall
         });
 
         return withCors(json({
