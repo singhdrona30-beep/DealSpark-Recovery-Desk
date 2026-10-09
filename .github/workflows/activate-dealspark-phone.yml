@@ -26,10 +26,16 @@ jobs:
             fi
           done
 
-      - name: Install LiveKit CLI
+      - name: Install LiveKit CLI (work around dispatch-create regression)
         run: |
-          curl -sSL https://get.livekit.io/cli | bash
-          command -v lk
+          set -euo pipefail
+          mkdir -p /tmp/livekit-cli
+          curl -fsSL https://github.com/livekit/livekit-cli/releases/download/v2.4.9/lk_2.4.9_linux_amd64.tar.gz -o /tmp/lk.tar.gz
+          tar -xzf /tmp/lk.tar.gz -C /tmp/livekit-cli
+          lk_path="$(find /tmp/livekit-cli -type f -name lk -print -quit)"
+          test -n "$lk_path"
+          install "$lk_path" /usr/local/bin/lk
+          lk --version
 
       - name: Repair inbound routing without releasing the phone number
         env:
@@ -111,7 +117,7 @@ jobs:
 
           echo "Verifying receptionist rule and number assignment."
           lk sip dispatch list --json > /tmp/dispatch-after.json
-          jq -e --arg id "$good_rule_id" '
+          jq -e --arg id "$rule_id" '
             .items[]
             | select(.sipDispatchRuleId == $id)
             | select(.rule.dispatchRuleIndividual.roomPrefix == "dealspark-call-")
@@ -119,7 +125,7 @@ jobs:
           ' /tmp/dispatch-after.json
 
           lk number list --json > /tmp/numbers-after.json
-          jq -e --arg id "$phone_id" --arg rule "$good_rule_id" '
+          jq -e --arg id "$phone_id" --arg rule "$rule_id" '
             .items[]?
             | select(.id == $id)
             | select((.sipDispatchRuleIds // .sip_dispatch_rule_ids // []) | index($rule))
