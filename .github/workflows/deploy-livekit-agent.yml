@@ -66,8 +66,8 @@ jobs:
           LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
           VOICE_AGENT_TOKEN: ${{ secrets.VOICE_AGENT_TOKEN }}
           DEALSPARK_BUSINESS_ID: ${{ secrets.DEALSPARK_BUSINESS_ID }}
-          DEALSPARK_API_URL: ${{ vars.DEALSPARK_API_URL }}
-          SECRET_LIST: "VOICE_AGENT_TOKEN,DEALSPARK_BUSINESS_ID,DEALSPARK_API_URL"
+          DEALSPARK_API_URL: https://dealspark-api.singhdrona30.workers.dev
+          SECRET_LIST: "VOICE_AGENT_TOKEN=${{ secrets.VOICE_AGENT_TOKEN }},DEALSPARK_BUSINESS_ID=${{ secrets.DEALSPARK_BUSINESS_ID }},DEALSPARK_API_URL=https://dealspark-api.singhdrona30.workers.dev"
         with:
           OPERATION: deploy
           WORKING_DIRECTORY: livekit-agent
