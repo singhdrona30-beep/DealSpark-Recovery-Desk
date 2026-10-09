@@ -6,7 +6,7 @@ const headers = {
 };
 
 function normalizePhone(value) {
-  let digits = String(value ?? "").replace(/\\D/g, "");
+  let digits = String(value ?? "").replace(/\D/g, "");
   if (digits.length === 10) digits = "1" + digits; // North American local format.
   return digits;
 }
