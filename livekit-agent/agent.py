@@ -290,7 +290,7 @@ async def dealspark_receptionist(ctx: agents.JobContext):
 
     session = AgentSession(
         stt=inference.STT(model="deepgram/nova-3", language="en"),
-        llm=inference.LLM(model="google/gemma-4-31b-it"),
+        llm=inference.LLM(model="openai/gpt-4.1-mini", extra_kwargs={"temperature": 0.1}),
         tts=inference.TTS(model="cartesia/sonic-3"),
         turn_handling=TurnHandlingOptions(
             turn_detection=inference.TurnDetector(),
