@@ -30,6 +30,11 @@ export async function onRequestPost({request,env}){
   const now=new Date().toISOString();
   const status=event.type==="invoice.payment_failed"?"past_due":event.type==="customer.subscription.deleted"?"canceled":event.type==="customer.subscription.updated"?(obj.status||"active"):"active";
   if(event.type==="checkout.session.completed"){
+    // A completed Checkout page is not always a paid subscription (e.g. asynchronous or incomplete payment).
+    // Keep the workspace locked until Stripe confirms payment; invoice/subscription events update it later.
+    if(!["paid","no_payment_required"].includes(String(obj.payment_status||""))){
+      return new Response(JSON.stringify({received:true,provisioned:false,reason:"payment_not_confirmed"}),{headers:{"content-type":"application/json"}});
+    }
     if(!email||!plan)return new Response(JSON.stringify({received:true,provisioned:false,reason:"missing email or recognized DealSpark plan"}),{headers:{"content-type":"application/json"}});
     const existing=await env.DB.prepare("SELECT u.business_id,b.name,s.id AS subscription_id FROM users u JOIN businesses b ON b.id=u.business_id LEFT JOIN subscriptions s ON s.business_id=u.business_id WHERE lower(u.email)=? LIMIT 1").bind(email).first();
     let businessId=existing?.business_id||"";
