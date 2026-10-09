@@ -33,3 +33,24 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: "72b0a6d76cd42aa06a1a54f7140c7696"
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
         run: npx wrangler deploy
+
+      - name: Configure voice lead email notifications
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: "72b0a6d76cd42aa06a1a54f7140c7696"
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          VOICE_NOTIFICATION_EMAIL: ${{ secrets.VOICE_NOTIFICATION_EMAIL }}
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
+        run: |
+          if [ -n "$RESEND_API_KEY" ]; then
+            printf '%s' "$RESEND_API_KEY" | npx wrangler secret put RESEND_API_KEY
+            echo "Resend API secret configured."
+          else
+            echo "::warning::RESEND_API_KEY is not configured; automatic lead emails are disabled."
+          fi
+          if [ -n "$VOICE_NOTIFICATION_EMAIL" ]; then
+            printf '%s' "$VOICE_NOTIFICATION_EMAIL" | npx wrangler secret put VOICE_NOTIFICATION_EMAIL
+            echo "Voice notification recipient configured."
+          else
+            echo "::warning::VOICE_NOTIFICATION_EMAIL is not configured; automatic lead emails are disabled."
+          fi
