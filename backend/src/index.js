@@ -60,9 +60,17 @@ async function twilioSignatureValid(request, env, rawBody) {
 
 async function sendVoiceLeadNotification(env, business, lead) {
   // A missing or rejected email integration must never undo a lead already saved to D1.
-  if (!env.RESEND_API_KEY || !env.VOICE_NOTIFICATION_EMAIL) return "not_configured";
-
   const safe = (value) => String(value || "").trim();
+  const stamp = now();
+  const deliveryId = crypto.randomUUID();
+  const recipient = safe(env.VOICE_NOTIFICATION_EMAIL);
+  if (!env.RESEND_API_KEY || !recipient) {
+    await env.DB.prepare(
+      "INSERT INTO notification_deliveries (id,business_id,lead_id,channel,recipient,status,error,attempts,created_at,updated_at) VALUES (?1,?2,?3,'email',?4,'failed',?5,0,?6,?6)"
+    ).bind(deliveryId,business.id,lead.leadId,recipient,"missing_resend_configuration",stamp).run();
+    return "not_configured";
+  }
+
   const subject = `New DealSpark phone lead: ${safe(lead.name) || "Caller"}`;
   const lines = [
     "A new phone lead was captured by the DealSpark AI receptionist.",
@@ -79,6 +87,8 @@ async function sendVoiceLeadNotification(env, business, lead) {
     "",
     "Note: an appointment preference is a request, not a confirmed booking."
   ];
+  let status = "failed";
+  let errorCode = "network_error";
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -88,19 +98,25 @@ async function sendVoiceLeadNotification(env, business, lead) {
       },
       body: JSON.stringify({
         from: "DealSpark Lead Alerts <onboarding@resend.dev>",
-        to: [env.VOICE_NOTIFICATION_EMAIL],
+        to: [recipient],
         subject,
         text: lines.join("\n")
       })
     });
-    if (!response.ok) {
-      // Avoid logging secrets or full provider responses containing personal data.
-      return "failed";
+    if (response.ok) {
+      status = "sent";
+      errorCode = "";
+    } else {
+      // Persist only the HTTP status; never store provider response bodies or personal data.
+      errorCode = `resend_http_${response.status}`;
     }
-    return "sent";
   } catch {
-    return "failed";
+    errorCode = "network_error";
   }
+  await env.DB.prepare(
+    "INSERT INTO notification_deliveries (id,business_id,lead_id,channel,recipient,status,error,attempts,created_at,updated_at) VALUES (?1,?2,?3,'email',?4,?5,?6,1,?7,?7)"
+  ).bind(deliveryId,business.id,lead.leadId,recipient,status,errorCode,stamp).run();
+  return status;
 }
 
 export default {
