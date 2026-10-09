@@ -33,7 +33,11 @@
     send("page_view", location.pathname);
     document.addEventListener("click", function (event) {
       var link = event.target && event.target.closest ? event.target.closest("a") : null;
-      if (!link) return;
+      if (!link) {
+        var button = event.target && event.target.closest ? event.target.closest("button") : null;
+        if (button && /run.*demo/i.test(button.textContent || "")) send("demo_click", location.pathname + "#demo");
+        return;
+      }
       var href = link.href || "";
       if (/signup\.html|buy\.stripe\.com|checkout\.stripe\.com|mailto:|^tel:/i.test(href) || link.dataset.dealsparkLead === "true") {
         send("lead_click", href);
@@ -41,6 +45,12 @@
         send("demo_click", href);
       }
     }, { passive: true });
+    document.addEventListener("submit", function (event) {
+      var form = event.target;
+      if (!form || form.id !== "signup") return;
+      var select = form.querySelector('[name="plan"]');
+      send("lead_click", "signup_submit:" + (select ? select.value : ""));
+    }, true);
   } catch (error) {
     // Analytics must never break the customer-facing page.
   }
