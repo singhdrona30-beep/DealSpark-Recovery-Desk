@@ -99,6 +99,19 @@ jobs:
           jq -e '.ok == true and .business_id == "65e080fb-8e38-4785-9193-a9a0898556f8" and .notification_status == "not_configured"' /tmp/route-response.json
           echo "Known demo DID routes to the demo tenant without using the global business ID."
 
+          config_code="$(curl -sS -o /tmp/voice-config-response.json -w "%{http_code}" \
+            -G "$DEALSPARK_API_URL/api/voice-config" \
+            -H "authorization: Bearer $VOICE_AGENT_TOKEN" \
+            -H "user-agent: DealSparkVoiceAgent/1.0" \
+            --data-urlencode "called_number=+12402314013")"
+          if [ "$config_code" != "200" ]; then
+            echo "::error::Tenant voice configuration lookup returned HTTP $config_code."
+            cat /tmp/voice-config-response.json
+            exit 1
+          fi
+          jq -e '.ok == true and .business.id == "65e080fb-8e38-4785-9193-a9a0898556f8" and (.config | type == "object")' /tmp/voice-config-response.json
+          echo "Authenticated voice configuration resolves the same tenant as the lead route."
+
           missing_number='{"business_id":"","called_number":"","is_phone_call":true,"name":"No Route QA","phone":"202-555-0146","service":"Missing route rejection test","notes":"ROUTE_TEST_ONLY_DO_NOT_CONTACT"}'
           missing_code="$(curl -sS -o /tmp/missing-route-response.json -w "%{http_code}" \
             -X POST "$DEALSPARK_API_URL/api/voice-leads" \
