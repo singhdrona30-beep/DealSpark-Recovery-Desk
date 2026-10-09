@@ -103,7 +103,7 @@ function renderProducts(){
   const card=el("article","product");
   card.append(el("h3","",p.name));
   card.append(el("p","muted",p.description||"Operational workflow"));
-  card.append(el("div","price","$"+Number(p.price_usd_monthly||0)+" USD / month"));
+  card.append(el("div","price","Demo only — not for sale"));
   const included=allowedProductNames.has(p.name);
   card.append(el("span","status",included?"Included in your plan":"Not included in your plan"));
   card.append(el("span","status",p.mode==="manual_workflow_only"?"Manual workflow only":"Integrated"));
