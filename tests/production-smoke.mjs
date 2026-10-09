@@ -137,8 +137,8 @@ try {
   // Onboarding form: make sure every field is sent, including fields whose names clash with window globals.
   let onboardingPayload = null;
   await page.route("https://dealspark-test-api.pages.dev/api/onboarding", async route => {
+    if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: corsHeaders });
     if (route.request().method() === "GET") {
-      if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: corsHeaders });
       return route.fulfill({
         status: 200,
         contentType: "application/json",
