@@ -45,7 +45,7 @@ jobs:
                   a = dict(attrs)
                   if tag == "meta" and a.get("name") == "description" and a.get("content"): self.description = True
                   if tag == "link" and a.get("rel") == "canonical" and a.get("href"): self.canonical = True
-          pages = list(Path(".").glob("*-script.html")) + list(Path(".").glob("*-checklist.html")) + list(Path(".").glob("*-template.html")) + list(Path(".").glob("*-comparison.html")) + [Path("resources.html")]
+          pages = list(Path(".").glob("*-script.html")) + list(Path(".").glob("*-checklist.html")) + list(Path(".").glob("*-template.html")) + list(Path(".").glob("*-comparison.html")) + list(Path(".").glob("*-costs.html")) + [Path("resources.html")]
           failures = []
           for page in pages:
               if not page.exists(): continue
