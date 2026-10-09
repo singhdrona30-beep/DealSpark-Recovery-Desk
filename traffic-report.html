@@ -24,6 +24,7 @@ a{color:#2457d6}.status{padding:12px;border-radius:10px;background:#eef4ff;margi
   <div class="card">Lead clicks<div class="num" id="leads">—</div></div>
   <div class="card">Unique sessions<div class="num" id="sessions">—</div></div>
 </div>
+<div class="card"><h2>Campaign activity</h2><p class="muted">Attribution from UTM-tagged links in the latest 30 tracked events.</p><table><thead><tr><th>Source / medium</th><th>Campaign</th><th>Events</th><th>Lead clicks</th></tr></thead><tbody id="campaignRows"><tr><td colspan="4">Loading…</td></tr></tbody></table></div>
 <div class="card"><h2>Recent activity</h2><table><thead><tr><th>Time</th><th>Event</th><th>Page</th></tr></thead><tbody id="rows"><tr><td colspan="3">Loading…</td></tr></tbody></table></div>
 <p class="muted"><a href="./">Return to DealSpark</a> · Refreshes every 60 seconds.</p>
 <script>
@@ -42,6 +43,35 @@ a{color:#2457d6}.status{padding:12px;border-radius:10px;background:#eef4ff;margi
     const rows=Array.isArray(d.recent)?d.recent:[];
     el("rows").replaceChildren();
     if(!rows.length){const tr=document.createElement("tr");tr.innerHTML='<td colspan="3">No tracked activity yet. Share the site to begin measuring real visits.</td>';el("rows").appendChild(tr);}
+    const campaigns=new Map();
+    for(const x of rows){
+      try{
+        const u=new URL(String(x.page||""),location.origin);
+        const campaign=u.searchParams.get("utm_campaign");
+        if(!campaign) continue;
+        const source=u.searchParams.get("utm_source")||"(unknown)";
+        const medium=u.searchParams.get("utm_medium")||"(unknown)";
+        const key=[source,medium,campaign].join("|");
+        const item=campaigns.get(key)||{source,medium,campaign,events:0,leadClicks:0};
+        item.events+=1;
+        if(x.event==="lead_click") item.leadClicks+=1;
+        campaigns.set(key,item);
+      }catch(_){}
+    }
+    const campaignBody=el("campaignRows");
+    campaignBody.replaceChildren();
+    const campaignItems=[...campaigns.values()].sort((a,b)=>b.leadClicks-a.leadClicks||b.events-a.events);
+    if(!campaignItems.length){
+      const tr=document.createElement("tr");tr.innerHTML='<td colspan="4">No UTM-tagged visits recorded yet. Scheduled posts will appear here only after people click through.</td>';campaignBody.appendChild(tr);
+    }else{
+      for(const item of campaignItems){
+        const tr=document.createElement("tr");
+        for(const value of [item.source+" / "+item.medium,item.campaign,item.events,item.leadClicks]){
+          const td=document.createElement("td");td.textContent=String(value);tr.appendChild(td);
+        }
+        campaignBody.appendChild(tr);
+      }
+    }
     for(const x of rows){
       const tr=document.createElement("tr");
       for(const value of [x.ts?new Date(x.ts).toLocaleString():"",x.event||"",x.page||""]){
