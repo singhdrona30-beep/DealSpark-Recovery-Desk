@@ -5,14 +5,14 @@ Scope: GitHub repository, Cloudflare Pages/Workers configuration, D1 lead and no
 
 ## Executive decision
 
-**Do not sell DealSpark as a fully live, unattended business phone and automation service yet.** The core voice agent has saved real test-call leads, but email notifications failed with Resend HTTP 403, business phone routing is not automatically provisioned, the payment webhook secret is blank in the Cloudflare Pages project configuration, and most non-voice product actions are recorded in an internal queue rather than executed against external business systems.
+**Do not sell DealSpark as a fully live, unattended business phone and automation service yet.** The core voice agent has saved real test-call leads, but customer email notifications remain blocked by Resend testing-mode restrictions, per-customer phone destinations are not automatically provisioned, live subscription activation has not been verified with a checkout, and most non-voice product actions are recorded in an internal queue rather than executed against external business systems.
 
 ## Verified state
 
 - LiveKit agent deployment workflow: recent deployment completed successfully.
 - Real test calls before the tenant-routing change: D1 contains saved voice leads, including caller details and service requests. After the routing change, the LiveKit agent was redeployed successfully and its synthetic conversation/tool test passed. A new CI check now tests the configured demo dialed number against the routing API and verifies that calls without a dialed number are rejected safely; this check is currently running.
-- Notification tracking: D1 recorded seven failed email attempts with error `resend_http_403`, including after the User-Agent change. Resend API logs show the exact cause: the account is in testing mode and can only send to its own verified account email (`singhdrona@yahoo.ca`); sending to `dealspark@agentmail.to` is rejected until a domain is verified and the `from` address uses that domain. This is an account restriction, not a request-header problem. No successful production notification has been verified.
-- Backend deployment: GitHub Actions deployed the `dealspark-api` Worker successfully for commit `2a5f942`.
+- Notification tracking: D1 recorded seven failed email attempts with error `resend_http_403`, including after the User-Agent change. Resend API logs show the exact cause: the account is in testing mode and can only send to its own verified account address; sending notifications to a business inbox is rejected until a domain is verified and the `from` address uses that domain. This is an account restriction, not a request-header problem. No successful production notification has been verified.
+- Backend deployment: GitHub Actions deployed the `dealspark-api` Worker successfully with tenant-safe phone routing and notification error classification.
 - Voice simulation test: the transcript contains `[call] save_call_lead(...)` and a successful lead-save tool result, but the LiveKit CLI's LLM summary incorrectly reported that no tool call occurred. The workflow was updated to verify transcript evidence directly.
 - Business onboarding: settings can be saved, but the form does not create or verify a phone carrier route. It must never mark phone service active merely because settings were saved. The configuration now stores normalized main and destination numbers. The voice backend resolves SIP calls by the number actually dialed and the saved business route; it rejects missing or ambiguous routes instead of sending the lead to the demo business. The current shared demo number is `+1 240-231-4013`, mapped to the demo tenant only; it must not be reused for customer tenants.
 - Stripe webhook: the live account had a webhook endpoint whose signing secret was not configured in Pages. A new live endpoint was created for the same URL, its signing secret was added to Cloudflare Pages, and the updated Pages function deployed successfully; the old endpoint was disabled. The Pages API hides secret values on read-back, so the environment value cannot be independently displayed. No paid checkout was run because that would create a real subscription charge. D1 currently shows one `starter/setup` subscription and zero active subscriptions, so payment activation still needs a controlled end-to-end checkout test before customers are accepted.
@@ -20,7 +20,7 @@ Scope: GitHub repository, Cloudflare Pages/Workers configuration, D1 lead and no
 - Product-suite plan access: the product-state API originally mapped only the legacy `starter/growth/pro/business` plans, so individual product and bundle subscriptions could be blocked from the suite. A plan-to-feature map for all current individual products and bundles has now been added and deployed. The public Product Suite's DealSpark Complete savings text was also corrected to match the published price list ($130/month savings).
 - Customer acquisition workflow: `customer-engine.yml` searches public GitHub repositories and drafts outreach. That is not equivalent to finding verified local businesses or sending emails; the send step is intentionally gated until a real provider integration is configured.
 - Deployment pipeline: Cloudflare Pages had been skipping API updates because its path filter was misconfigured. The filter now explicitly lists the `functions/` routes, and the updated onboarding function deployment completed successfully for commit `d2880ce`. The Pages health route responds with `ok:true` and `database:connected`; the protected onboarding endpoint returns HTTP 401 when no business key is supplied, as expected.
-- UI smoke test: the expanded production smoke suite passed on commits `378a3ac` and `0a0ef5a`. It verifies the chat/recovery pages, all ten individual product demo pages, the phone demo disclosure, suite tabs, and onboarding safeguards. A further test now exercises the authenticated dashboard operations queue create/approve flow against mocked API responses; the latest run is in progress. These are UI/API workflow tests, not proof that external business integrations work.
+- UI smoke test: earlier production smoke runs passed for the chat/recovery pages, all ten individual product demo pages, the phone demo disclosure, suite tabs, and onboarding safeguards. The expanded regression suite now also exercises chatbot submission, non-booking appointment requests, dashboard queue create/approve, and onboarding form submission with mocked APIs; the latest run is pending. These are UI/API workflow tests, not proof that external business integrations work.
 
 ## Product-by-product readiness
 
@@ -30,7 +30,7 @@ Scope: GitHub repository, Cloudflare Pages/Workers configuration, D1 lead and no
 | Lead notifications | Resend request previously failed with HTTP 403; retry after code change still required | **Blocked** |
 | Business phone onboarding | Saves business data and preferred connection method; does not configure carrier routing | **Not connected** |
 | Recovery Desk | D1-backed lead APIs and status workflow exist; end-to-end tenant isolation and production browser testing still required | **Partial; verify before sale** |
-| Website/chat lead capture | Public API routes and chatbot UI exist; run production end-to-end test and verify tenant routing | **Unverified in production** |
+| Website/chat lead capture | Chatbot now targets the active Worker, waits for API confirmation, and does not mark appointment requests as booked; browser regression test is pending | **Code fixed; test pending** |
 | QuoteFlow / QuotePilot | Quote requests can be queued; external quoting/CRM action is not implemented as a verified integration | **Demo / internal workflow** |
 | Reactivate | Win-back opportunities can be queued; no verified consent-aware SMS/email campaign execution | **Demo / internal workflow** |
 | ScheduleFlow | Scheduling demo and appointment data structures exist; live calendar availability and booking authorization are not verified | **Demo / internal workflow** |
@@ -69,10 +69,10 @@ Official pricing reference: https://livekit.com/pricing
 
 ## Release gates before accepting paying phone customers
 
-- [ ] Confirm the updated Pages onboarding function is deployed and returns `phone_connection_status: not_connected` until a route is actually tested.
+- [x] Updated Pages onboarding function is deployed; it does not claim phone activation merely because settings are saved.
 - [ ] Verify a real inbound call reaches the correct tenant-specific agent through the proposed customer-number path.
 - [ ] Confirm the lead is saved with the correct business ID and that notification delivery succeeds; test and log failure handling.
-- [ ] Verify Stripe test checkout, signature verification, subscription provisioning, renewal, and cancellation after setting the correct webhook secret in Cloudflare.
+- [ ] Verify Stripe test checkout, signature verification, subscription provisioning, renewal, and cancellation with a controlled test-mode checkout.
 - [ ] Add tenant-specific phone route provisioning, status checks, and rollback instructions.
 - [ ] Replace misleading demo-only statuses with explicit demo labels; keep external actions disabled until their provider integrations are implemented and tested.
 - [ ] Run browser tests against the deployed website and Pages API, not only local static files.
