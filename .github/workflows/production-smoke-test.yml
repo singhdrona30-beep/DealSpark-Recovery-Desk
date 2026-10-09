@@ -8,6 +8,10 @@ on:
       - "chatbot.js"
       - "chatbot.css"
       - "lead-recovery.html"
+      - "phone-agent.html"
+      - "product-suite.html"
+      - "onboarding.html"
+      - "tests/production-smoke.mjs"
       - ".github/workflows/production-smoke-test.yml"
   workflow_dispatch:
 
