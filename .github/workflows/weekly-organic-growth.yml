@@ -68,6 +68,13 @@ jobs:
           git add '*.html' scripts/publish_weekly_content.py
           git diff --cached --quiet || git commit -m "Publish weekly DealSpark business guide"
           git push
+      - name: Capture changed pages for IndexNow
+        run: |
+          if [ "$(git rev-parse HEAD)" != "$GITHUB_SHA" ]; then
+            git diff --name-only "$GITHUB_SHA" HEAD -- '*.html' > /tmp/dealspark-changed-html.txt
+          else
+            : > /tmp/dealspark-changed-html.txt
+          fi
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Inject analytics and rebuild the public sitemap
@@ -124,3 +131,50 @@ jobs:
       - name: Deploy public website
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Notify search engines via IndexNow
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, urllib.request, xml.etree.ElementTree as ET
+          base = "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/"
+          key = "9d3e6b8a1f4c7d205e9a6b3c8f1d4a72"
+          key_location = base + key + ".txt"
+          state = pathlib.Path("indexnow-initialized.txt")
+          sitemap = ET.parse("sitemap.xml").getroot()
+          if state.read_text(encoding="utf-8").strip() == "pending":
+              urls = [node.text for node in sitemap.findall("{http://www.sitemaps.org/schemas/sitemap/0.9}url/{http://www.sitemaps.org/schemas/sitemap/0.9}loc") if node.text]
+          else:
+              paths = pathlib.Path("/tmp/dealspark-changed-html.txt").read_text(encoding="utf-8").splitlines()
+              urls = []
+              excluded = {"signup.html", "dashboard.html", "sales-agent.html", "chatbot.html", "lead-radar.html", "onboarding.html", "thank-you.html", "traffic-report.html"}
+              for path in paths:
+                  path = path.strip()
+                  if not path.endswith(".html") or path in excluded or path.startswith("global/") or path.endswith("-demo.html"):
+                      continue
+                  if path.startswith("ops-lab/") and path != "ops-lab/index.html":
+                      continue
+                  if path == "index.html":
+                      urls.append(base)
+                  elif path.endswith("/index.html"):
+                      urls.append(base + path[:-len("index.html")])
+                  else:
+                      urls.append(base + path)
+          urls = sorted(set(urls))
+          if urls:
+              payload = {"host":"singhdrona30-beep.github.io","key":key,"keyLocation":key_location,"urlList":urls}
+              request = urllib.request.Request("https://api.indexnow.org/indexnow",data=json.dumps(payload).encode("utf-8"),headers={"Content-Type":"application/json; charset=utf-8"},method="POST")
+              with urllib.request.urlopen(request,timeout=30) as response:
+                  print(f"IndexNow HTTP {response.status}; submitted {len(urls)} URLs.")
+                  if response.status not in (200,202):
+                      raise RuntimeError(f"IndexNow returned HTTP {response.status}")
+              if state.read_text(encoding="utf-8").strip() == "pending":
+                  state.write_text("submitted\n",encoding="utf-8")
+          else:
+              print("No changed public HTML URLs to submit.")
+          PY
+      - name: Save IndexNow submission state
+        run: |
+          git config user.name "DealSpark Automation"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add indexnow-initialized.txt
+          git diff --cached --quiet || git commit -m "Record initial IndexNow submission"
+          git push
