@@ -19,6 +19,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Capture changed HTML for IndexNow
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          if [ "$EVENT_NAME" = "push" ] && [ -n "$BEFORE_SHA" ] && [ "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ]; then
+            git diff --name-only "$BEFORE_SHA" "$GITHUB_SHA" -- '*.html' > /tmp/dealspark-changed-html.txt
+          else
+            : > /tmp/dealspark-changed-html.txt
+          fi
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Inject analytics and build complete sitemap
@@ -87,3 +97,36 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Notify IndexNow about changed public pages
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, urllib.request
+          base = "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/"
+          key = "9d3e6b8a1f4c7d205e9a6b3c8f1d4a72"
+          key_location = base + key + ".txt"
+          paths = pathlib.Path("/tmp/dealspark-changed-html.txt").read_text(encoding="utf-8").splitlines()
+          excluded = {"signup.html", "dashboard.html", "sales-agent.html", "chatbot.html", "lead-radar.html", "onboarding.html", "thank-you.html", "traffic-report.html"}
+          urls = []
+          for path in paths:
+              path = path.strip()
+              if not path.endswith(".html") or path in excluded or path.startswith("global/") or path.endswith("-demo.html"):
+                  continue
+              if path.startswith("ops-lab/") and path != "ops-lab/index.html":
+                  continue
+              if path == "index.html":
+                  urls.append(base)
+              elif path.endswith("/index.html"):
+                  urls.append(base + path[:-len("index.html")])
+              else:
+                  urls.append(base + path)
+          urls = sorted(set(urls))
+          if not urls:
+              print("No changed public HTML URLs to submit.")
+          else:
+              payload = {"host":"singhdrona30-beep.github.io","key":key,"keyLocation":key_location,"urlList":urls}
+              request = urllib.request.Request("https://api.indexnow.org/indexnow",data=json.dumps(payload).encode("utf-8"),headers={"Content-Type":"application/json; charset=utf-8"},method="POST")
+              with urllib.request.urlopen(request,timeout=30) as response:
+                  print(f"IndexNow HTTP {response.status}; submitted {len(urls)} changed URLs.")
+                  if response.status not in (200,202):
+                      raise RuntimeError(f"IndexNow returned HTTP {response.status}")
+          PY
