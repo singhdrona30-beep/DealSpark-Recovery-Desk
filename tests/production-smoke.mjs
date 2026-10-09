@@ -9,7 +9,17 @@ try {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
 
-  // Product 1: website AI receptionist
+  // Product 1: website AI receptionist; mock the live API so tests never create production leads.
+  let chatLeadPayloads = [];
+  const chatCorsHeaders = { "access-control-allow-origin": "*", "access-control-allow-methods": "GET,POST,OPTIONS", "access-control-allow-headers": "content-type,x-dealspark-site-key" };
+  await page.route("https://dealspark-api.singhdrona30.workers.dev/**", async route => {
+    if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: chatCorsHeaders });
+    if (route.request().method() === "POST" && route.request().url().endsWith("/api/leads")) {
+      chatLeadPayloads.push(route.request().postDataJSON());
+      return route.fulfill({ status: 200, contentType: "application/json", headers: chatCorsHeaders, body: JSON.stringify({ ok: true, id: "smoke-chat-lead-" + chatLeadPayloads.length }) });
+    }
+    return route.fallback();
+  });
   await page.goto("http://127.0.0.1:8787/chatbot.html", { waitUntil: "networkidle" });
   if (await page.locator("#messages .msg").count() < 1) throw new Error("Chatbot greeting failed");
   await page.locator("#chatInput").fill("I need a plumber");
@@ -18,9 +28,29 @@ try {
   await page.locator("#chatForm button").click();
   await page.locator("#chatInput").fill("555-0199");
   await page.locator("#chatForm button").click();
-  await page.waitForTimeout(800);
+  await page.waitForFunction(() => document.getElementById("messages").innerText.includes("sent your request"));
   const chatText = await page.locator("#messages").innerText();
-  if (!/captured|follow up|saved|received|thank/i.test(chatText)) throw new Error("Chatbot lead capture flow failed");
+  if (!/follow up|thank/i.test(chatText)) throw new Error("Chatbot lead capture confirmation failed");
+  if (chatLeadPayloads.length !== 1 || chatLeadPayloads[0].status !== "New" || chatLeadPayloads[0].source !== "website-chatbot" || chatLeadPayloads[0].intent !== "quote") {
+    throw new Error("Chatbot did not submit a new, unbooked lead to the active API");
+  }
+
+  await page.getByRole("button", { name: "Start another request" }).click();
+  await page.getByRole("button", { name: "Book an appointment" }).click();
+  await page.locator("#chatInput").fill("plumber");
+  await page.locator("#chatForm button").click();
+  await page.locator("#chatInput").fill("tomorrow");
+  await page.locator("#chatForm button").click();
+  await page.locator("#chatInput").fill("2 PM");
+  await page.locator("#chatForm button").click();
+  await page.locator("#chatInput").fill("Appointment Test Customer");
+  await page.locator("#chatForm button").click();
+  await page.locator("#chatInput").fill("555-0101");
+  await page.locator("#chatForm button").click();
+  await page.waitForFunction(() => document.getElementById("messages").innerText.includes("not a confirmed booking"));
+  if (chatLeadPayloads.length !== 2 || chatLeadPayloads[1].status !== "New" || chatLeadPayloads[1].intent !== "appointment") {
+    throw new Error("Chatbot incorrectly treated an appointment request as a confirmed booking");
+  }
 
   // Product 2: AI Lead Recovery Engine
   await page.goto("http://127.0.0.1:8787/lead-recovery.html", { waitUntil: "networkidle" });
