@@ -1,4 +1,4 @@
-name: Check DealSpark LiveKit Agent Status
+name: Check DealSpark LiveKit Agent Configuration
 
 on:
   workflow_dispatch:
@@ -7,10 +7,12 @@ permissions:
   contents: read
 
 jobs:
-  status:
+  validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Check required secrets are configured
+      - uses: actions/checkout@v4
+
+      - name: Check required GitHub secrets are configured
         env:
           LIVEKIT_URL: ${{ secrets.LIVEKIT_URL }}
           LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
@@ -21,20 +23,25 @@ jobs:
             if [ -z "${!key}" ]; then
               echo "::error::Missing GitHub Actions secret: $key"
               missing=1
+            else
+              echo "Configured: $key"
             fi
           done
           if [ "$missing" -ne 0 ]; then
-            echo "Add the missing secrets under Settings > Secrets and variables > Actions."
+            echo "::error::Add the missing values under Settings > Secrets and variables > Actions."
             exit 1
           fi
+          case "$LIVEKIT_URL" in
+            wss://*|https://*) echo "LiveKit URL format looks valid." ;;
+            *) echo "::error::LIVEKIT_URL should start with wss:// or https://"; exit 1 ;;
+          esac
 
-      - uses: actions/checkout@v4
+      - name: Check agent files exist
+        run: |
+          test -f livekit-agent/agent.py
+          test -f livekit-agent/requirements.txt
+          test -f livekit-agent/Dockerfile
+          echo "Required agent files are present."
 
-      - name: Check LiveKit Cloud agent status
-        uses: livekit/deploy-action@v2.12.2
-        env:
-          LIVEKIT_URL: ${{ secrets.LIVEKIT_URL }}
-          LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
-          LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
-        with:
-          OPERATION: status
+      - name: Build agent container without starting a call
+        run: docker build -t dealspark-livekit-agent:validation livekit-agent
