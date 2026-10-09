@@ -41,7 +41,7 @@ jobs:
                   continue
               html = page.read_text(encoding="utf-8")
               html = re.sub(
-                  r'<script\b[^>]*>.*?dealspark-analytics\.singhdrona30\.workers\.dev.*?</script>',
+                  r'<script\b[^>]*>(?:(?!</script>).)*?dealspark-analytics\.singhdrona30\.workers\.dev(?:(?!</script>).)*?</script>',
                   "",
                   html,
                   flags=re.IGNORECASE | re.DOTALL
