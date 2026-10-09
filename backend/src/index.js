@@ -192,11 +192,18 @@ export default {
         }
         const b = await body(request);
         const businessId = String(b.business_id || "").trim();
-        if (!businessId) return withCors(json({ error: "business_id is required" }, 400));
-        const business = await env.DB.prepare(
+        // Use the explicit business when it exists. For the single shared demo receptionist,
+        // recover from a stale/mismatched business ID by routing to the canonical demo business
+        // instead of silently dropping the caller's lead.
+        let business = businessId ? await env.DB.prepare(
           "SELECT id, name FROM businesses WHERE id = ?1 LIMIT 1"
-        ).bind(businessId).first();
-        if (!business) return withCors(json({ error: "Unknown business" }, 404));
+        ).bind(businessId).first() : null;
+        if (!business) {
+          business = await env.DB.prepare(
+            "SELECT id, name FROM businesses WHERE name = 'DealSpark Demo' ORDER BY created_at ASC LIMIT 1"
+          ).first();
+        }
+        if (!business) return withCors(json({ error: "No configured business is available for voice lead capture" }, 503));
 
         const safe = (value, max = 1000) => String(value || "").trim().slice(0, max);
         const leadId = crypto.randomUUID();
