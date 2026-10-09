@@ -1,3 +1,2 @@
 User-agent: *
-Allow: /
-Sitemap: https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/sitemap.xml
+Disallow: /
