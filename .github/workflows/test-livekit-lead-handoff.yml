@@ -1,0 +1,67 @@
+name: DealSpark LiveKit voice lead handoff simulation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "livekit-agent/**"
+      - ".github/workflows/test-livekit-lead-handoff.yml"
+      - "livekit-agent/scenarios-voice-lead.yaml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dealspark-livekit-lead-handoff-test
+  cancel-in-progress: false
+
+jobs:
+  simulate-lead-handoff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: livekit-agent
+    env:
+      LIVEKIT_URL: ${{ secrets.LIVEKIT_URL }}
+      LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
+      LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
+      VOICE_AGENT_TOKEN: ${{ secrets.VOICE_AGENT_TOKEN }}
+      DEALSPARK_BUSINESS_ID: ${{ secrets.DEALSPARK_BUSINESS_ID }}
+      DEALSPARK_API_URL: https://dealspark-api.singhdrona30.workers.dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate required credentials without printing values
+        shell: bash
+        run: |
+          set -euo pipefail
+          for key in LIVEKIT_URL LIVEKIT_API_KEY LIVEKIT_API_SECRET VOICE_AGENT_TOKEN DEALSPARK_BUSINESS_ID; do
+            if [ -z "${!key}" ]; then
+              echo "::error::Missing required GitHub Actions secret: $key"
+              exit 1
+            fi
+          done
+          echo "All required credentials are present."
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install LiveKit CLI
+        run: |
+          curl -sSL https://get.livekit.io/cli | bash
+          lk --version
+
+      - name: Run one synthetic text conversation against the real agent code
+        run: |
+          set -euo pipefail
+          lk agent simulate text --scenarios scenarios-voice-lead.yaml --concurrency 1
+
+      - name: Report test scope
+        if: always()
+        run: |
+          echo "This test uses a synthetic text caller and does not place a phone/SIP call."
+          echo "A passing simulation verifies conversation/tool behavior; it does not replace a final real-phone audio test."
