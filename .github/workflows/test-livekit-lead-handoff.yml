@@ -58,7 +58,7 @@ jobs:
       - name: Run one synthetic text conversation against the real agent code
         run: |
           set -euo pipefail
-          lk agent simulate text --scenarios scenarios-voice-lead.yaml --concurrency 1
+          lk agent simulate text --scenarios scenarios-voice-lead.yaml --concurrency 1 --yes
 
       - name: Report test scope
         if: always()
