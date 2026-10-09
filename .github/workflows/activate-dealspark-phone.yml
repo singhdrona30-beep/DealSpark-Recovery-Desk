@@ -87,7 +87,7 @@ jobs:
               exit 1
             fi
             echo "Removing only the malformed dispatch rule $attached_rule_ids; the phone number itself will not be released."
-            lk sip dispatch delete --id "$attached_rule_ids"
+            lk sip dispatch delete "$attached_rule_ids"
           fi
 
           lk number update --id "$phone_id" --sip-dispatch-rule-id "$good_rule_id"
