@@ -1,39 +1,46 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DealSpark Recovery Desk</title><link rel="stylesheet" href="styles.css">
-<style>.accountbar{display:flex;justify-content:space-between;gap:12px;align-items:center}.status{padding:10px 12px;border-radius:10px;background:#f4f7fb}.lead{border:1px solid #e2e7ef;border-radius:12px;padding:14px;margin:10px 0}.lead b{display:block}.muted{color:#697386;font-size:13px}@media(max-width:650px){.accountbar{align-items:flex-start;flex-direction:column}}</style></head>
+<style>.accountbar{display:flex;justify-content:space-between;gap:12px;align-items:center}.status{padding:10px 12px;border-radius:10px;background:#f4f7fb}.lead{border:1px solid #e2e7ef;border-radius:12px;padding:14px;margin:10px 0}.lead b{display:block}.muted{color:#697386;font-size:13px}.ops-form{display:grid;gap:10px}.ops-form input,.ops-form textarea,.ops-form select{width:100%;box-sizing:border-box;padding:10px;border:1px solid #d0d5dd;border-radius:9px;font:inherit}.ops-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.ops-actions button{padding:7px 10px}@media(max-width:650px){.accountbar{align-items:flex-start;flex-direction:column}}</style></head>
 <body><main class="shell">
 <header class="hero"><div><p class="eyebrow">DealSpark</p><h1>Recovery Desk</h1><p id="bizName">Loading account…</p></div><div><a href="product-suite.html" class="secondary" style="padding:11px;border-radius:10px;text-decoration:none">Product Suite</a> <a href="index.html" class="secondary" style="padding:11px;border-radius:10px;text-decoration:none">Product home</a> <button id="logout" class="secondary">Log out</button></div></header>
 <section class="metrics"><div><span>Open</span><strong id="openCount">0</strong></div><div><span>Qualified</span><strong id="qualifiedCount">0</strong></div><div><span>Booked</span><strong id="bookedCount">0</strong></div><div><span>Won</span><strong id="wonCount">0</strong></div></section>
 <section class="card"><div id="activation" class="status">Checking activation…</div><div id="renewal" class="status">Checking renewal…</div><div class="accountbar"><div><h2>Customer leads</h2><p class="muted">Live D1-backed leads for this business.</p></div><div id="sub" class="status">Loading subscription…</div></div><div id="leads"><p class="muted">Loading…</p></div></section>
+<section class="card" id="opsSection" style="display:none"><h2>Operations queue</h2><p class="muted">Record work items for your subscribed product(s). Approving an item adds it to DealSpark's internal action queue for manual follow-up; it does not change an external accounting, inventory, calendar, HR or dispatch system.</p><form id="opsForm" class="ops-form"><select id="opsProduct" required aria-label="Product"></select><input id="opsItem" placeholder="Item or customer reference" maxlength="200" required><textarea id="opsIssue" placeholder="What needs attention? Include enough detail for a teammate to act." maxlength="2000" required></textarea><button type="submit">Add to operations queue</button></form><div id="opsMsg" class="muted"></div><div id="opsItems"><p class="muted">Loading operations queue…</p></div></section>
 <section class="card"><h2>Add opportunity</h2><form id="leadForm"><input id="name" placeholder="Customer name" required><input id="contact" placeholder="Phone or email" required><input id="service" placeholder="Service needed" required><textarea id="notes" placeholder="What happened?"></textarea><button type="submit">Add to recovery desk</button></form><div id="formMsg" class="muted"></div></section>
 </main>
 <script>
 const API="https://dealspark-test-api.pages.dev";
 const key=localStorage.getItem("dealspark_dashboard_key");
 const headers={"x-dealspark-key":key};
+const sessionToken=localStorage.getItem("ds_token")||"";
+let activeOpsProducts=[];
 const standalonePlans={
  ai_virtual_receptionist:{name:"AI Virtual Receptionist",demo:"chatbot.html"},
- leadflow:{name:"LeadFlow",demo:"ops-lab/leadflow-demo.html"},
- quotepilot:{name:"QuotePilot",demo:"ops-lab/quotepilot-demo.html"},
- scheduleflow:{name:"ScheduleFlow",demo:"ops-lab/scheduleflow-demo.html"},
- dispatchdesk:{name:"DispatchDesk",demo:"ops-lab/dispatchdesk-demo.html"},
- assetcare:{name:"AssetCare",demo:"ops-lab/assetcare-demo.html"},
- billguard:{name:"BillGuard",demo:"ops-lab/billguard-demo.html"},
- stockwatch:{name:"StockWatch",demo:"ops-lab/stockwatch-demo.html"},
- staffdesk:{name:"StaffDesk",demo:"ops-lab/staffdesk-demo.html"},
- reviewshield:{name:"ReviewShield",demo:"ops-lab/reviewshield-demo.html"},
- opsvault:{name:"OpsVault",demo:"ops-lab/opsvault-demo.html"},
- bundle_front_office:{name:"Front Office Bundle",demo:"index.html#pricing"},
- bundle_service_operations:{name:"Service Operations Bundle",demo:"index.html#pricing"},
- bundle_business_control:{name:"Business Control Bundle",demo:"index.html#pricing"},
- bundle_complete:{name:"DealSpark Complete",demo:"index.html#pricing"}
+ leadflow:{name:"LeadFlow",demo:"ops-lab/leadflow-demo.html",products:["LeadFlow"]},
+ quotepilot:{name:"QuotePilot",demo:"ops-lab/quotepilot-demo.html",products:["QuotePilot"]},
+ scheduleflow:{name:"ScheduleFlow",demo:"ops-lab/scheduleflow-demo.html",products:["ScheduleFlow"]},
+ dispatchdesk:{name:"DispatchDesk",demo:"ops-lab/dispatchdesk-demo.html",products:["DispatchDesk"]},
+ assetcare:{name:"AssetCare",demo:"ops-lab/assetcare-demo.html",products:["AssetCare"]},
+ billguard:{name:"BillGuard",demo:"ops-lab/billguard-demo.html",products:["BillGuard"]},
+ stockwatch:{name:"StockWatch",demo:"ops-lab/stockwatch-demo.html",products:["StockWatch"]},
+ staffdesk:{name:"StaffDesk",demo:"ops-lab/staffdesk-demo.html",products:["StaffDesk"]},
+ reviewshield:{name:"ReviewShield",demo:"ops-lab/reviewshield-demo.html",products:["ReviewShield"]},
+ opsvault:{name:"OpsVault",demo:"ops-lab/opsvault-demo.html",products:["OpsVault"]},
+ bundle_front_office:{name:"Front Office Bundle",demo:"index.html#pricing",products:["LeadFlow","ScheduleFlow"]},
+ bundle_service_operations:{name:"Service Operations Bundle",demo:"index.html#pricing",products:["QuotePilot","DispatchDesk","AssetCare","StockWatch"]},
+ bundle_business_control:{name:"Business Control Bundle",demo:"index.html#pricing",products:["BillGuard","StaffDesk","ReviewShield","OpsVault"]},
+ bundle_complete:{name:"DealSpark Complete",demo:"index.html#pricing",products:["LeadFlow","QuotePilot","ScheduleFlow","DispatchDesk","AssetCare","BillGuard","StockWatch","StaffDesk","ReviewShield","OpsVault"]}
 };
 if(!key) location.href="signup.html";
 async function load(){
  const r=await fetch(API+"/api/account",{headers}); const d=await r.json();
  if(!r.ok){localStorage.removeItem("dealspark_dashboard_key");location.href="signup.html";return}
  document.getElementById("bizName").textContent=d.business.name+" • "+d.business.phone;
- document.getElementById("sub").textContent=(d.subscription?.plan||"starter").toUpperCase()+" • "+(d.effective_status||d.subscription?.status||"setup"); const end=d.renewal_date?new Date(d.renewal_date):null; const days=d.days_until_renewal; const locked=d.locked; const currentPlan=String(d.subscription?.plan||"starter").toLowerCase();const standalone=standalonePlans[currentPlan];document.getElementById("activation").innerHTML=locked?"<b>🔒 DealSpark is locked.</b> Renew your subscription to restore access.":standalone?("<b>✓ Subscription active</b> "+standalone.name+" is recorded. This legacy Recovery Desk does not host that standalone workflow yet; the public demo uses sample data and production setup requires onboarding. <a href=\""+standalone.demo+"\">Open product demo →</a> <a href=\"onboarding.html\">Complete onboarding →</a>"):"<b>✓ Subscription active</b> <a href=\"onboarding.html\">Business setup & phone configuration →</a>"; document.getElementById("renewal").textContent=locked?"Payment required: renew your DealSpark subscription to unlock your apps.":(end&&days!==null?(days<=7?"Renewal reminder: your DealSpark subscription renews in "+days+" day(s) ("+end.toLocaleDateString()+").":"Renewal: "+days+" days remaining • "+end.toLocaleDateString()):"Renewal date will appear after Stripe activation."); document.getElementById("leadForm").style.display=(locked||standalone)?"none":"grid";
+ document.getElementById("sub").textContent=(d.subscription?.plan||"starter").toUpperCase()+" • "+(d.effective_status||d.subscription?.status||"setup"); const end=d.renewal_date?new Date(d.renewal_date):null; const days=d.days_until_renewal; const locked=d.locked; const currentPlan=String(d.subscription?.plan||"starter").toLowerCase();const standalone=standalonePlans[currentPlan];document.getElementById("activation").innerHTML=locked?"<b>🔒 DealSpark is locked.</b> Renew your subscription to restore access.":standalone?("<b>✓ Subscription active</b> "+standalone.name+" is recorded. "+(standalone.products?.length?"Your internal operations queue is available below; external business-system integrations are not connected yet.":"Complete business and phone onboarding before relying on live call handling.")+" <a href=\""+standalone.demo+"\">Open product demo →</a> <a href=\"onboarding.html\">Business setup →</a>"):"<b>✓ Subscription active</b> <a href=\"onboarding.html\">Business setup & phone configuration →</a>"; document.getElementById("renewal").textContent=locked?"Payment required: renew your DealSpark subscription to unlock your apps.":(end&&days!==null?(days<=7?"Renewal reminder: your DealSpark subscription renews in "+days+" day(s) ("+end.toLocaleDateString()+").":"Renewal: "+days+" days remaining • "+end.toLocaleDateString()):"Renewal date will appear after Stripe activation."); document.getElementById("leadForm").style.display=(locked||standalone)?"none":"grid";
+ activeOpsProducts=(!locked&&standalone&&standalone.products)?standalone.products:[];
+ const opsSection=document.getElementById("opsSection");
+ opsSection.style.display=activeOpsProducts.length?"block":"none";
+ if(activeOpsProducts.length){document.getElementById("opsProduct").innerHTML=activeOpsProducts.map(p=>'<option value="'+esc(p)+'">'+esc(p)+'</option>').join("");loadOpsItems();}
  const leads=d.leads||[]; document.getElementById("openCount").textContent=leads.filter(x=>x.status==="New"||x.status==="Follow-up").length;
  document.getElementById("qualifiedCount").textContent=leads.filter(x=>x.status==="Qualified").length;
  document.getElementById("bookedCount").textContent=leads.filter(x=>x.status==="Booked").length;
@@ -41,6 +48,31 @@ async function load(){
  document.getElementById("leads").innerHTML=standalone?"<p class=\"muted\">This standalone product is not hosted in the legacy Recovery Desk yet. Use the product demo above and complete onboarding to discuss production setup.</p>":leads.length?leads.map(x=>'<div class="lead"><b>'+esc(x.name||"Unnamed lead")+'</b><span>'+esc(x.service||"General inquiry")+' • '+esc(x.status||"New")+'</span><div class="muted">'+esc(x.phone||x.email||"No contact")+' • '+new Date(x.created_at).toLocaleString()+'</div></div>').join(""):'<p class="muted">No leads yet. Add your first opportunity below.</p>';
 }
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]||c))}
+async function loadOpsItems(){
+ const box=document.getElementById("opsItems");
+ if(!sessionToken){box.innerHTML='<p class="muted">Secure workspace session missing. Log out and sign in again to use this queue.</p>';return}
+ const r=await fetch(API+"/api/items",{headers:{"authorization":"Bearer "+sessionToken}});
+ const d=await r.json();
+ if(!r.ok){box.innerHTML='<p class="muted">'+esc(d.error||"Could not load operations queue.")+'</p>';return}
+ const items=(d.items||[]).filter(x=>activeOpsProducts.includes(x.product));
+ box.innerHTML=items.length?items.map(x=>'<div class="lead"><b>'+esc(x.product)+' · '+esc(x.item)+'</b><span>'+esc(x.status||"needs_review")+'</span><div class="muted">'+esc(x.issue)+' · '+new Date(x.created_at).toLocaleString()+'</div>'+(x.status==="needs_review"?'<div class="ops-actions"><button type="button" data-ops-action="approve" data-ops-id="'+esc(x.id)+'">Approve for manual follow-up</button><button type="button" data-ops-action="dismiss" data-ops-id="'+esc(x.id)+'">Dismiss</button></div>':'')+'</div>').join(""):'<p class="muted">No work items yet for your subscribed products.</p>';
+}
+document.getElementById("opsForm").addEventListener("submit",async e=>{
+ e.preventDefault();const msg=document.getElementById("opsMsg"),product=document.getElementById("opsProduct").value,item=document.getElementById("opsItem").value.trim(),issue=document.getElementById("opsIssue").value.trim();
+ msg.textContent="Saving work item…";
+ const r=await fetch(API+"/api/items",{method:"POST",headers:{"authorization":"Bearer "+sessionToken,"content-type":"application/json"},body:JSON.stringify({product,item,issue})});
+ const d=await r.json();msg.textContent=r.ok?"Work item saved to DealSpark. It has not changed an external system.":(d.error||"Could not save work item.");
+ if(r.ok){e.target.reset();document.getElementById("opsProduct").value=product;await loadOpsItems()}
+});
+document.getElementById("opsItems").addEventListener("click",async e=>{
+ const button=e.target.closest("button[data-ops-action]");if(!button)return;
+ const action=button.dataset.opsAction,id=button.dataset.opsId,msg=document.getElementById("opsMsg");
+ msg.textContent=action==="approve"?"Approving…":"Dismissing…";
+ const r=await fetch(API+"/api/items/"+encodeURIComponent(id)+"/"+action,{method:"POST",headers:{"authorization":"Bearer "+sessionToken}});
+ const d=await r.json();
+ msg.textContent=r.ok?(action==="approve"?"Approved and queued for manual follow-up. No external system was changed.":"Work item dismissed."):(d.error||"Action failed.");
+ await loadOpsItems();
+});
 document.getElementById("leadForm").addEventListener("submit",async e=>{e.preventDefault();const f=e.target,m=document.getElementById("formMsg");m.textContent="Saving…";const r=await fetch(API+"/api/leads",{method:"POST",headers:{...headers,"content-type":"application/json"},body:JSON.stringify({name:f.name.value,phone:f.contact.value,service:f.service.value,notes:f.notes.value,source:"dashboard"})});m.textContent=r.ok?"Lead added.":"Could not save lead.";if(r.ok){f.reset();load()}});
 document.getElementById("logout").onclick=()=>{localStorage.removeItem("dealspark_dashboard_key");localStorage.removeItem("dealspark_business_id");location.href="signup.html"};
 load();
