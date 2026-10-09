@@ -1,0 +1,65 @@
+name: DealSpark Weekly Organic Growth
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "20 13 * * 1"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dealspark-weekly-content
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout public website
+        uses: actions/checkout@v4
+      - name: Publish one reviewed guide and refresh resource hub
+        run: python3 scripts/publish_weekly_content.py
+      - name: Validate generated pages
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re, sys
+          class Check(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.title = False
+                  self.h1 = 0
+                  self.description = False
+                  self.canonical = False
+              def handle_starttag(self, tag, attrs):
+                  a = dict(attrs)
+                  if tag == "title": self.title = True
+                  if tag == "h1": self.h1 += 1
+                  if tag == "meta" and a.get("name") == "description" and a.get("content"): self.description = True
+                  if tag == "link" and a.get("rel") == "canonical" and a.get("href"): self.canonical = True
+          pages = list(Path(".").glob("*-script.html")) + list(Path(".").glob("*-checklist.html")) + list(Path(".").glob("*-template.html")) + list(Path(".").glob("*-comparison.html")) + [Path("resources.html")]
+          failures = []
+          for page in pages:
+              if not page.exists(): continue
+              html = page.read_text(encoding="utf-8")
+              check = Check()
+              check.feed(html)
+              if "<!doctype html>" not in html.lower() or "<html" not in html.lower(): failures.append(f"{page}: missing HTML shell")
+              if not check.description: failures.append(f"{page}: missing meta description")
+              if not check.canonical: failures.append(f"{page}: missing canonical")
+              if not re.search(r'href="(?:index\.html#pricing|chatbot\.html|resources\.html|index\.html#resources)', html): failures.append(f"{page}: missing useful internal CTA")
+          if failures:
+              print("\n".join(failures))
+              sys.exit(1)
+          print(f"Validated {len(pages)} candidate resource files.")
+          PY
+      - name: Commit new resource if changed
+        run: |
+          git config user.name "DealSpark Automation"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add '*.html' scripts/publish_weekly_content.py
+          git diff --cached --quiet || git commit -m "Publish weekly DealSpark business guide"
+          git push
