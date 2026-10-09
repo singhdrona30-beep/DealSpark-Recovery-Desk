@@ -3,6 +3,7 @@
 
 This intentionally publishes from an editorial queue rather than generating thin,
 unverified pages from search snippets. Each run publishes at most one new page.
+The weekly job refreshes the resource hub and leaves a clear audit trail in Git history.
 """
 from __future__ import annotations
 import html
