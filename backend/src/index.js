@@ -177,9 +177,16 @@ export default {
           source: "livekit_voice", name, phone, email, service, intent, appointment_preference: appointmentPreference
         }),created).run();
 
-        // Email delivery remains disabled until a business OAuth connection and delivery worker are configured.
+        const notificationStatus = await sendVoiceLeadNotification(env, business, {
+          leadId, name, phone, email, service, notes, appointmentPreference, created
+        });
 
-        return withCors(json({ ok: true, lead_id: leadId, business_id: business.id, notification_status: "not_configured" }, 201));
+        return withCors(json({
+          ok: true,
+          lead_id: leadId,
+          business_id: business.id,
+          notification_status: notificationStatus
+        }, 201));
       }
 
       if (path.startsWith("/api/leads/") && request.method === "PATCH") {
