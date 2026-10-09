@@ -47,13 +47,14 @@ jobs:
           lk number list --json > /tmp/livekit-numbers.json
           cat /tmp/livekit-numbers.json
 
-          # Never guess which number to change. Continue only when exactly one active
-          # number is returned by the LiveKit project.
+          # LiveKit CLI currently returns camelCase phone-number fields.
           mapfile -t numbers < <(jq -r '
-            .. | objects
-            | select((has("phone_number") or has("phoneNumber")) and (has("id") or has("phone_number_id") or has("phoneNumberId")))
+            .items[]?
             | select((.status == "active") or (.status == "PHONE_NUMBER_STATUS_ACTIVE") or (.status == 1))
-            | [(.id // .phone_number_id // .phoneNumberId), (.phone_number // .phoneNumber)]
+            | select((.e164Format // .phoneNumber // .phone_number // "") != "")
+            | [(.id // .phoneNumberId // .phone_number_id // ""),
+               (.e164Format // .phoneNumber // .phone_number // ""),
+               ((.sipDispatchRuleIds // .sip_dispatch_rule_ids // []) | join(","))]
             | @tsv
           ' /tmp/livekit-numbers.json | sort -u)
 
@@ -62,11 +63,12 @@ jobs:
             exit 1
           fi
 
-          IFS=$'\t' read -r phone_id phone_number <<< "${numbers[0]}"
+          IFS=$'\\t' read -r phone_id phone_number attached_rule_ids <<< "${numbers[0]}"
           if [ -z "$phone_id" ] || [ -z "$phone_number" ]; then
             echo "::error::Could not reliably identify the active phone number. Stopping safely."
             exit 1
           fi
+          echo "Verified active phone number: $phone_number"
 
           # Reuse the rule if it already exists; avoid duplicate rules on reruns.
           lk sip dispatch list --json > /tmp/livekit-dispatch-rules-before.json
