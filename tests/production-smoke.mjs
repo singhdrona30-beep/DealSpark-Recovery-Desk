@@ -192,6 +192,7 @@ try {
   const onboardingPage = await page.goto("http://127.0.0.1:8787/onboarding.html", { waitUntil: "domcontentloaded" });
   if (!onboardingPage?.ok()) throw new Error("Onboarding page failed to load for form test");
   await page.locator("#status").waitFor({ state: "visible" });
+  await page.waitForFunction(() => document.getElementById("status").textContent.includes("Payment active"));
   await page.locator("#name").fill("Smoke Test HVAC");
   await page.locator("#phone").fill("+14165550123");
   await page.locator("#area").fill("Toronto");
