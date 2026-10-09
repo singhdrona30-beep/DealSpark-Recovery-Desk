@@ -4,7 +4,7 @@ scenarios:
     instructions: |
       You are a prospective customer calling DealSpark to ask for help with a plumbing leak.
       Your name is Casey Testcaller.
-      Your callback phone number is 202-555-0147.
+      Your callback phone number is 202-555-0149.
       Your email is casey.testcaller@example.com.
       OPENING LINE: "Hi, I need help with a leaking kitchen sink."
       Give the information naturally, one answer at a time as the receptionist asks.
@@ -14,9 +14,12 @@ scenarios:
     agent_expectations: >
       The receptionist identifies itself as an AI receptionist, gathers the caller's name,
       callback number, plumbing service request, and email address, and calls the lead-saving
-      tool. It must not claim the lead was saved unless the tool confirms success. It must
-      not claim an appointment is booked. A successful tool result confirming lead saved is
-      required; a tool failure or a claim of success without tool confirmation is a fail.
+      tool. It must not claim an appointment is booked. The transcript's [call] save_call_lead
+      line and following [output] are authoritative. If the tool output begins with "Lead saved
+      successfully", the save succeeded; do not mark it as a failure just because the agent
+      confirms the save after that tool result. Email notification failure does not mean the lead
+      itself failed to save. Fail only if the tool is not called, the tool output says saving
+      failed, or the agent claims success before the tool result.
     tags:
       feature: voice_lead_capture
       test_type: synthetic
