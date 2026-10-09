@@ -14,14 +14,16 @@ try {
 
   // Product 1: website AI receptionist; mock the live API so tests never create production leads.
   let chatLeadPayloads = [];
-  const chatCorsHeaders = { "access-control-allow-origin": "*", "access-control-allow-methods": "GET,POST,OPTIONS", "access-control-allow-headers": "content-type,x-dealspark-site-key" };
-  await page.route("https://dealspark-api.singhdrona30.workers.dev/**", async route => {
-    if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: chatCorsHeaders });
-    if (route.request().method() === "POST" && route.request().url().endsWith("/api/leads")) {
+  await page.addInitScript(() => {
+    window.DEALSPARK_API_BASE = location.origin + "/mock-api";
+    window.DEALSPARK_SITE_KEY = "smoke-test-key";
+  });
+  await page.route("http://127.0.0.1:8787/mock-api/api/leads", async route => {
+    if (route.request().method() === "POST") {
       chatLeadPayloads.push(route.request().postDataJSON());
-      return route.fulfill({ status: 200, contentType: "application/json", headers: chatCorsHeaders, body: JSON.stringify({ ok: true, id: "smoke-chat-lead-" + chatLeadPayloads.length }) });
+      return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true, id: "smoke-chat-lead-" + chatLeadPayloads.length }) });
     }
-    return route.fallback();
+    return route.fulfill({ status: 405, contentType: "application/json", body: JSON.stringify({ error: "Method not allowed" }) });
   });
   await page.goto("http://127.0.0.1:8787/chatbot.html", { waitUntil: "networkidle" });
   if (await page.locator("#messages .msg").count() < 1) throw new Error("Chatbot greeting failed");
