@@ -100,7 +100,7 @@ async def save_call_lead(
         req = urllib.request.Request(
             api_url + "/api/voice-leads",
             data=payload,
-            headers={"content-type": "application/json", "authorization": "Bearer " + token},
+            headers={"content-type": "application/json", "authorization": "Bearer " + token, "user-agent": "DealSparkVoiceAgent/1.0"},
             method="POST",
         )
         with urllib.request.urlopen(req, timeout=12) as response:
