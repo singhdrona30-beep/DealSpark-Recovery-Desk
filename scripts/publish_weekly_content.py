@@ -81,6 +81,74 @@ CONTENT = [
             ["What should we compare first?", "Start with call types, human handoff, integration requirements, total cost and what happens during failures."],
             ["How do we estimate value?", "Use your own call volume, average job value and observed conversion rates. Treat calculators as estimates, not guaranteed revenue."]
         ]
+    },
+    {
+        "slug": "hvac-after-hours-call-script.html",
+        "title": "HVAC After-Hours Call Script and Intake Checklist",
+        "description": "A practical after-hours HVAC call script to capture service details, contact preferences and escalation needs without promising unconfirmed dispatch.",
+        "intro": "When HVAC technicians are on jobs or the office is closed, callers still need a clear next step. Use this script to capture the information a dispatcher or office manager needs to follow up accurately.",
+        "sections": [
+            {"heading": "A simple opening", "paragraph": "Thanks for calling [Business]. Our office is currently closed, but I can record a service request for the team to review. May I ask your name, the service address and the best way to contact you?"},
+            {"heading": "Ask only what the team needs", "items": ["Is this a new service request or an existing appointment?", "What equipment or service area is involved, if known?", "What is the main issue in the caller's own words?", "Is there a preferred callback window?", "Has the caller already spoken with a technician or dispatcher?"]},
+            {"heading": "Set expectations honestly", "paragraph": "Thank you. I have recorded your request for the team to review. This is not a confirmed appointment or dispatch. A staff member will check availability and follow up using the contact method you provided."},
+            {"heading": "Escalation and safety", "paragraph": "Use the business's approved safety and escalation instructions. Do not attempt technical diagnosis, promise an arrival time, or tell callers that a technician has been dispatched unless that has been confirmed. Route urgent or potentially dangerous situations to the appropriate human or emergency pathway."}
+        ],
+        "faqs": [
+            ["Should the script promise 24/7 service?", "Only if a real person or confirmed service process is available 24/7. Otherwise say the request will be reviewed and provide a realistic callback expectation."],
+            ["Should an AI diagnose an HVAC issue?", "No. It can record the caller's description and route the request to qualified staff."],
+            ["What should be tested first?", "Test after-hours routing, fallback numbers, callback notifications, urgent escalation and appointment confirmation."]
+        ]
+    },
+    {
+        "slug": "plumbing-call-intake-checklist.html",
+        "title": "Plumbing Call Intake Checklist for Service Teams",
+        "description": "A plumbing call intake checklist for capturing job details, service addresses, callback preferences and safe escalation for urgent requests.",
+        "intro": "A useful plumbing intake process collects enough information for the team to respond without pretending a technician, price or arrival time is already confirmed.",
+        "sections": [
+            {"heading": "Capture the core details", "items": ["Caller name and preferred callback method.", "Exact service address and any access instructions the customer chooses to share.", "Short description of the plumbing issue in the caller's words.", "Whether the caller is an existing customer or has an open job.", "Preferred timing and any constraints the dispatcher should know."]},
+            {"heading": "Use a clear intake script", "paragraph": "Thanks for contacting [Business]. I can record the details for our team. What address needs service, what is happening, and what is the best way and time for someone to contact you? The team will review availability and confirm the next step."},
+            {"heading": "Define urgent escalation", "paragraph": "Document the business's approved escalation rules and who is on call. Do not improvise technical advice or claim that a plumber is on the way. If a caller describes immediate danger, follow the business's approved emergency instructions and direct them to appropriate emergency help when needed."},
+            {"heading": "Close the loop", "items": ["Send the request to the correct dispatcher or service queue.", "Record who owns the next action and when it is due.", "Notify the caller only with a truthful status.", "Mark the job booked only after the customer and team confirm it.", "Review unanswered and overdue requests each workday."]}
+        ],
+        "faqs": [
+            ["Should every request be marked as an emergency?", "No. Use the company's written urgency rules and escalate uncertain cases to a responsible person."],
+            ["Can a call assistant quote a repair price?", "Only if the business has approved a clear pricing rule and the request fits it. Otherwise capture the details for a human estimate."],
+            ["What is the most important handoff detail?", "The service address, issue summary, callback method and a named owner for the next action."]
+        ]
+    },
+    {
+        "slug": "ai-receptionist-implementation-checklist.html",
+        "title": "AI Receptionist Implementation Checklist for Small Businesses",
+        "description": "A step-by-step checklist for preparing scripts, call routing, privacy rules, escalation paths and testing before an AI receptionist goes live.",
+        "intro": "A reliable rollout starts with the business's real call patterns and clear boundaries. Use this checklist before connecting a live phone number, calendar or customer system.",
+        "sections": [
+            {"heading": "Before configuration", "items": ["List the five most common call types.", "Write approved answers for hours, service areas and next steps.", "Choose what details may be collected and where they will be stored.", "Define who receives urgent calls and what happens when they do not answer.", "Confirm which integrations are actually supported and authorized."]},
+            {"heading": "Before switching on live calls", "items": ["Test normal questions and unclear requests.", "Test transfer failures and unavailable staff.", "Test a request outside the service area.", "Confirm appointment requests are not described as booked until confirmed.", "Review privacy notices, recording rules and data retention."]},
+            {"heading": "During the pilot", "paragraph": "Start with a limited call type or after-hours window. Review call summaries, missed handoffs, caller confusion and staff workload. Keep a clear way for a person to take over. Expand only after the workflow meets the business's own quality criteria."},
+            {"heading": "Track results that matter", "paragraph": "Measure answered calls, useful requests captured, human handoffs completed, callbacks made, appointments confirmed and jobs won. Do not count demo interactions or unconfirmed bookings as revenue."}
+        ],
+        "faqs": [
+            ["Can we connect the phone line immediately?", "Only after the provider, routing, authorization and fallback path are configured and tested."],
+            ["What should the team tell customers?", "Be transparent about automated handling where required, explain what happens next and offer an appropriate human path."],
+            ["How long should a pilot last?", "Long enough to test representative call patterns and review actual outcomes; set a clear success criterion before starting."]
+        ]
+    },
+    {
+        "slug": "small-business-call-answering-costs.html",
+        "title": "Small-Business Call Answering Costs: What to Compare",
+        "description": "Compare call-answering cost factors including staffing, usage, setup, integrations and missed-call follow-up before choosing a service.",
+        "intro": "The lowest monthly price is not always the lowest total cost. Compare what each option covers, what happens when usage rises and whether your team still needs to manage follow-up manually.",
+        "sections": [
+            {"heading": "Compare the full cost", "items": ["Monthly subscription or staffing cost.", "Setup, onboarding and integration fees.", "Per-minute, per-call or usage overages.", "Calendar, phone-system or CRM charges.", "Support, cancellation and contract terms."]},
+            {"heading": "Compare what is actually included", "paragraph": "Check business-hours coverage, after-hours handling, call transfers, message delivery, appointment requests, human escalation, call summaries and reporting. Ask vendors to demonstrate the features you need rather than relying on a generic product list."},
+            {"heading": "Estimate your own break-even point", "paragraph": "Use your real monthly call volume, share of missed calls, average job value and observed close rate. Compare the cost with the additional jobs you can actually serve. A calculator provides an estimate; it cannot guarantee that every captured call becomes a customer."},
+            {"heading": "Questions to ask before buying", "items": ["What happens when the system cannot answer?", "Who checks and follows up on captured requests?", "Are bookings confirmed against a live calendar?", "Can the service be tested before the contract starts?", "How do you export data or cancel the service?"]}
+        ],
+        "faqs": [
+            ["Is AI always cheaper than a human answering service?", "Not always. Total cost depends on usage, setup, call complexity, support and the need for human escalation."],
+            ["What is the most common hidden cost?", "Integration, usage overages and the staff time needed to review and follow up on captured requests."],
+            ["How should we compare ROI?", "Use observed conversion and job-margin data, not a vendor's best-case assumptions."]
+        ]
     }
 ]
 
