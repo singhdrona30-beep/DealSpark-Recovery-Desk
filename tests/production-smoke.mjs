@@ -88,9 +88,11 @@ try {
     localStorage.setItem("dealspark_dashboard_key", "smoke-test-public-key");
     localStorage.setItem("ds_token", "smoke-test-session-token");
   });
+  const corsHeaders = { "access-control-allow-origin": "*", "access-control-allow-methods": "GET,POST,OPTIONS", "access-control-allow-headers": "x-dealspark-key,authorization,content-type" };
   await page.route("https://dealspark-test-api.pages.dev/api/account", route => route.fulfill({
     status: 200,
     contentType: "application/json",
+    headers: corsHeaders,
     body: JSON.stringify({
       business: { name: "Smoke Test Business", phone: "+14165550123" },
       subscription: { plan: "leadflow", status: "active", current_period_end: null },
@@ -101,18 +103,22 @@ try {
   }));
   await page.route("https://dealspark-test-api.pages.dev/api/items", async route => {
     if (route.request().method() === "GET") {
-      return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true, items: mockItems }) });
+      return route.fulfill({ status: 200, contentType: "application/json", headers: corsHeaders, body: JSON.stringify({ ok: true, items: mockItems }) });
     }
     const body = route.request().postDataJSON();
     const item = { id: "created-item", product: body.product, item: body.item, issue: body.issue, status: "needs_review", created_at: new Date().toISOString() };
     mockItems.unshift(item);
-    return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true, id: item.id }) });
+    return route.fulfill({ status: 200, contentType: "application/json", headers: corsHeaders, body: JSON.stringify({ ok: true, id: item.id }) });
   });
   await page.route(/https:\/\/dealspark-test-api\.pages\.dev\/api\/items\/[^/]+\/(approve|dismiss)$/, async route => {
     const action = route.request().url().endsWith("/approve") ? "approve" : "dismiss";
     const id = route.request().url().split("/").slice(-2)[0];
     mockItems = mockItems.map(item => item.id === id ? { ...item, status: action === "approve" ? "approved" : "dismissed" } : item);
-    return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true, id, status: action === "approve" ? "approved" : "dismissed", external_action_executed: false }) });
+    return route.fulfill({ status: 200, contentType: "application/json", headers: corsHeaders, body: JSON.stringify({ ok: true, id, status: action === "approve" ? "approved" : "dismissed", external_action_executed: false }) });
+  });
+  await page.route("https://dealspark-test-api.pages.dev/**", async route => {
+    if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: corsHeaders });
+    return route.fallback();
   });
   const dashboardResponse = await page.goto("http://127.0.0.1:8787/dashboard.html", { waitUntil: "domcontentloaded" });
   if (!dashboardResponse?.ok()) throw new Error("Dashboard failed to load");
@@ -132,9 +138,11 @@ try {
   let onboardingPayload = null;
   await page.route("https://dealspark-test-api.pages.dev/api/onboarding", async route => {
     if (route.request().method() === "GET") {
+      if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: corsHeaders });
       return route.fulfill({
         status: 200,
         contentType: "application/json",
+        headers: corsHeaders,
         body: JSON.stringify({
           business: { name: "Smoke Test Business", phone: "+14165550123" },
           subscription: { plan: "ai_virtual_receptionist", status: "active", current_period_end: null },
@@ -147,6 +155,7 @@ try {
     return route.fulfill({
       status: 200,
       contentType: "application/json",
+      headers: corsHeaders,
       body: JSON.stringify({ ok: true, configuration_saved: true, activated: false, phone_connection_status: "not_connected" })
     });
   });
