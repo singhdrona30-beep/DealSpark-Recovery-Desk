@@ -5,6 +5,12 @@ const headers = {
   "access-control-allow-methods": "GET,POST,OPTIONS"
 };
 
+function normalizePhone(value) {
+  let digits = String(value ?? "").replace(/\\D/g, "");
+  if (digits.length === 10) digits = "1" + digits; // North American local format.
+  return digits;
+}
+
 function respond(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers });
 }
@@ -61,6 +67,7 @@ export async function onRequest({ request, env }) {
   if (!allowedMethods.has(method)) return respond({ error: "Choose a valid phone connection method" }, 400);
 
   const now = new Date().toISOString();
+  const forwardingNumber = clean(input.forwarding_number, 40);
   const config = {
     service_area: clean(input.service_area, 300),
     notification_email: email,
@@ -68,7 +75,9 @@ export async function onRequest({ request, env }) {
     opening_time: clean(input.opening_time || "08:00", 10),
     closing_time: clean(input.closing_time || "18:00", 10),
     greeting: clean(input.greeting || "Hi, thanks for calling. You've reached the virtual receptionist. How can I help you today?", 1000),
-    forwarding_number: clean(input.forwarding_number, 40),
+    forwarding_number: forwardingNumber,
+    main_phone_normalized: normalizePhone(phone),
+    forwarding_number_normalized: normalizePhone(forwardingNumber),
     phone_connection_method: method,
     current_carrier: clean(input.current_carrier, 160),
     phone_connection_status: "not_connected",
