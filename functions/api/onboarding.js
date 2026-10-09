@@ -77,6 +77,9 @@ export async function onRequest({ request, env }) {
   if (forwardingNumber && !/^\d{8,15}$/.test(forwardingNumberNormalized)) {
     return respond({ error: "Enter a valid dedicated inbound destination number, including its country code." }, 400);
   }
+  if (method === "call_forwarding" && forwardingNumberNormalized && forwardingNumberNormalized === mainPhoneNormalized) {
+    return respond({ error: "The forwarding destination must be different from the main business number to avoid a call-forwarding loop." }, 400);
+  }
 
   // Prevent one dialed number from being assigned to multiple businesses.
   // Compare normalized raw values too, so older configurations with malformed
