@@ -216,7 +216,7 @@ try {
   await page.locator("#carrier").fill("Smoke Test Carrier");
   await page.locator("#setup button[type=submit]").click();
   await page.waitForFunction(() => document.getElementById("msg").textContent.includes("Business information saved"));
-  if (!onboardingPayload || onboardingPayload.business_name !== "Smoke Test HVAC" || onboardingPayload.opening_time !== "07:00" || onboardingPayload.closing_time !== "19:00" || onboardingPayload.phone_connection_method !== "call_forwarding" || onboardingPayload.current_carrier !== "Smoke Test Carrier") {
+  if (!onboardingPayload || onboardingPayload.business_name !== "Smoke Test HVAC" || onboardingPayload.opening_time !== "07:00" || onboardingPayload.closing_time !== "19:00" || onboardingPayload.phone_connection_method !== "call_forwarding" || onboardingPayload.current_carrier !== "Smoke Test Carrier" || onboardingPayload.main_phone_normalized !== "14165550123" || onboardingPayload.forwarding_number_normalized !== "12402314013") {
     throw new Error("Onboarding did not submit all business and phone-routing fields correctly");
   }
   if (onboardingPayload.activated === true) throw new Error("Onboarding must not claim phone routing is activated");
