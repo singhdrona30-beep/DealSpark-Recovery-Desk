@@ -125,6 +125,7 @@ try {
   if (!(await page.locator("#opsItems").innerText()).includes("Smoke test lead")) throw new Error("Operations queue create/read flow failed");
   await page.locator('#opsItems button[data-ops-action="approve"]').first().click();
   await page.waitForFunction(() => document.getElementById("opsMsg").textContent.includes("No external system was changed"));
+  await page.waitForFunction(() => document.getElementById("opsItems").innerText().includes("approved"));
   if (!(await page.locator("#opsItems").innerText()).includes("approved")) throw new Error("Operations queue approval flow failed");
 
   await browser.close();
