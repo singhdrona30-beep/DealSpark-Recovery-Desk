@@ -68,6 +68,37 @@ export async function onRequest({ request, env }) {
 
   const now = new Date().toISOString();
   const forwardingNumber = clean(input.forwarding_number, 40);
+  const mainPhoneNormalized = normalizePhone(phone);
+  const forwardingNumberNormalized = normalizePhone(forwardingNumber);
+
+  if (!/^\\d{8,15}$/.test(mainPhoneNormalized)) {
+    return respond({ error: "Enter the main business number with its country code, for example +14165550123." }, 400);
+  }
+  if (forwardingNumber && !/^\\d{8,15}$/.test(forwardingNumberNormalized)) {
+    return respond({ error: "Enter a valid dedicated inbound destination number, including its country code." }, 400);
+  }
+
+  // Prevent one dialed number from being assigned to multiple businesses.
+  // Compare normalized raw values too, so older configurations with malformed
+  // cached normalized fields cannot create ambiguous or cross-tenant routing.
+  const existingRoutes = await env.DB.prepare(
+    "SELECT b.id, b.phone, e.payload FROM businesses b LEFT JOIN events e ON e.business_id=b.id AND e.type='onboarding_config' WHERE b.id<>?1"
+  ).bind(business.id).all();
+  const proposedNumbers = new Set([mainPhoneNormalized, forwardingNumberNormalized].filter(Boolean));
+  for (const row of existingRoutes.results || []) {
+    let existingConfig = {};
+    try { existingConfig = row.payload ? JSON.parse(row.payload) : {}; } catch { existingConfig = {}; }
+    const existingNumbers = [
+      normalizePhone(row.phone),
+      normalizePhone(existingConfig.forwarding_number || "")
+    ].filter(Boolean);
+    if (existingNumbers.some(number => proposedNumbers.has(number))) {
+      return respond({
+        error: "That phone number is already assigned to another DealSpark business. Use a unique inbound destination so calls cannot be routed to the wrong account."
+      }, 409);
+    }
+  }
+
   const config = {
     service_area: clean(input.service_area, 300),
     notification_email: email,
@@ -76,8 +107,8 @@ export async function onRequest({ request, env }) {
     closing_time: clean(input.closing_time || "18:00", 10),
     greeting: clean(input.greeting || "Hi, thanks for calling. You've reached the virtual receptionist. How can I help you today?", 1000),
     forwarding_number: forwardingNumber,
-    main_phone_normalized: normalizePhone(phone),
-    forwarding_number_normalized: normalizePhone(forwardingNumber),
+    main_phone_normalized: mainPhoneNormalized,
+    forwarding_number_normalized: forwardingNumberNormalized,
     phone_connection_method: method,
     current_carrier: clean(input.current_carrier, 160),
     phone_connection_status: "not_connected",
