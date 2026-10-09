@@ -32,12 +32,12 @@ jobs:
               "signup.html", "dashboard.html", "sales-agent.html", "chatbot.html",
               "lead-radar.html", "onboarding.html", "thank-you.html",
               "ops-lab/connector-status.html", "ops-lab/integrations-demo.html",
-              "ops-lab/top10-integrations.html"
+              "ops-lab/top10-integrations.html", "traffic-report.html"
           }
           # Add one tracker to every public HTML page; remove old broken inline trackers first.
           for page in Path(".").rglob("*.html"):
               rel = page.as_posix()
-              if rel.startswith((".git/", "node_modules/")):
+              if rel.startswith((".git/", "node_modules/")) or rel == "traffic-report.html":
                   continue
               html = page.read_text(encoding="utf-8")
               html = re.sub(
