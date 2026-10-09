@@ -1,10 +1,12 @@
 import { chromium } from "playwright";
 import { spawn } from "node:child_process";
+import { normalizePhone } from "../functions/api/onboarding.js";
 
 const server = spawn("python3", ["-m", "http.server", "8787"], { stdio: "ignore" });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 try {
+  if (normalizePhone("+1 (416) 555-0123") !== "14165550123" || normalizePhone("416-555-0123") !== "14165550123" || normalizePhone("+44 20 7946 0958") !== "442079460958") throw new Error("Phone number normalization failed");
   await sleep(800);
   const browser = await chromium.launch({ headless: true });
   const context = await browser.newContext({ serviceWorkers: "block" });
@@ -216,7 +218,7 @@ try {
   await page.locator("#carrier").fill("Smoke Test Carrier");
   await page.locator("#setup button[type=submit]").click();
   await page.waitForFunction(() => document.getElementById("msg").textContent.includes("Business information saved"));
-  if (!onboardingPayload || onboardingPayload.business_name !== "Smoke Test HVAC" || onboardingPayload.opening_time !== "07:00" || onboardingPayload.closing_time !== "19:00" || onboardingPayload.phone_connection_method !== "call_forwarding" || onboardingPayload.current_carrier !== "Smoke Test Carrier" || onboardingPayload.main_phone_normalized !== "14165550123" || onboardingPayload.forwarding_number_normalized !== "12402314013") {
+  if (!onboardingPayload || onboardingPayload.business_name !== "Smoke Test HVAC" || onboardingPayload.opening_time !== "07:00" || onboardingPayload.closing_time !== "19:00" || onboardingPayload.phone_connection_method !== "call_forwarding" || onboardingPayload.current_carrier !== "Smoke Test Carrier") {
     throw new Error("Onboarding did not submit all business and phone-routing fields correctly");
   }
   if (onboardingPayload.activated === true) throw new Error("Onboarding must not claim phone routing is activated");
