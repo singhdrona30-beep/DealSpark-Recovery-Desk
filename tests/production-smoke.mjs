@@ -24,7 +24,7 @@ try {
 
   // Product 2: AI Lead Recovery Engine
   await page.goto("http://127.0.0.1:8787/lead-recovery.html", { waitUntil: "networkidle" });
-  if (await page.title() !== "DealSpark AI Lead Recovery | Follow-Up & Conversion") throw new Error("Recovery Desk title failed");
+  if (await page.title() !== "DealSpark Lead Recovery — Turn Missed Leads Into Customers") throw new Error("Recovery Desk title failed");
   if (await page.locator("#new").textContent() !== "1") throw new Error("Recovery Desk initial New count failed");
   if (await page.locator("#follow").textContent() !== "1") throw new Error("Recovery Desk initial Follow-up count failed");
   if (await page.locator("#qualified").textContent() !== "1") throw new Error("Recovery Desk initial Qualified count failed");
