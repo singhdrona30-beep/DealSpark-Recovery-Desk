@@ -28,6 +28,7 @@ try {
   await page.goto("http://127.0.0.1:8787/chatbot.html", { waitUntil: "networkidle" });
   if (await page.locator("#messages .msg").count() < 1) throw new Error("Chatbot greeting failed");
   await page.locator("#chatInput").fill("I need a plumber");
+  await page.locator("#chatForm button").click();
   await page.getByRole("button", { name: "Get a quote" }).click();
   await page.locator("#chatInput").fill("Test Customer");
   await page.locator("#chatForm button").click();
