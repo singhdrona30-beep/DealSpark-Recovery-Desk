@@ -33,9 +33,10 @@ try {
   await page.locator("#chatForm button").click();
   await page.locator("#chatInput").fill("555-0199");
   await page.locator("#chatForm button").click();
-  await page.waitForFunction(() => { const t = document.getElementById("messages").innerText; return t.includes("sent your request") || t.includes("confirm your request"); });
-  if (!(await page.locator("#messages").innerText()).includes("sent your request")) throw new Error("Chatbot request did not confirm submission; API calls: " + chatLeadPayloads.length);
+  await page.waitForTimeout(1000);
   const chatText = await page.locator("#messages").innerText();
+  if (!chatText.includes("sent your request") && !chatText.includes("confirm your request")) throw new Error("Chatbot did not finish submission. Messages: " + chatText + " inputDisabled: " + await page.locator("#chatInput").isDisabled() + " API calls: " + chatLeadPayloads.length);
+  if (!chatText.includes("sent your request")) throw new Error("Chatbot submission failed. Messages: " + chatText + " API calls: " + chatLeadPayloads.length);
   if (!/follow up|thank/i.test(chatText)) throw new Error("Chatbot lead capture confirmation failed");
   if (chatLeadPayloads.length !== 1 || chatLeadPayloads[0].status !== "New" || chatLeadPayloads[0].source !== "website-chatbot" || chatLeadPayloads[0].intent !== "quote") {
     throw new Error("Chatbot did not submit a new, unbooked lead to the active API");
