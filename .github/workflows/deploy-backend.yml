@@ -39,7 +39,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: "72b0a6d76cd42aa06a1a54f7140c7696"
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          VOICE_NOTIFICATION_EMAIL: ${{ secrets.VOICE_NOTIFICATION_EMAIL }}
+          VOICE_NOTIFICATION_EMAIL: ${{ secrets.VOICE_NOTIFICATION_EMAIL || 'dealspark@agentmail.to' }}
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' }}
         run: |
           if [ -n "$RESEND_API_KEY" ]; then
