@@ -73,7 +73,7 @@ function toast(message){const t=$('toast');t.textContent=message;t.classList.add
 function nextDue(s,repeat){const d=parseDate(s);if(repeat==='weekly')d.setDate(d.getDate()+7);else if(repeat==='biweekly')d.setDate(d.getDate()+14);else if(repeat==='yearly')d.setFullYear(d.getFullYear()+1);else if(repeat==='monthly'){const day=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+1);const last=new Date(d.getFullYear(),d.getMonth()+1,0).getDate();d.setDate(Math.min(day,last))}return iso(d)}
 function render(){
  const rows=read(), now=today(), monthStart=new Date(now.getFullYear(),now.getMonth(),1), nextMonth=new Date(now.getFullYear(),now.getMonth()+1,1), weekEnd=new Date(now);weekEnd.setDate(weekEnd.getDate()+7);
- const monthDue=rows.filter(b=>!b.paid&&parseDate(b.dueDate)>=monthStart&&parseDate(b.dueDate)<nextMonth), weekDue=rows.filter(b=>!b.paid&&parseDate(b.dueDate)>=now&&parseDate(b.dueDate)<=weekEnd), overdue=rows.filter(b=>!b.paid&&parseDate(b.dueDate)<now), paid=rows.filter(b=>b.paid&&String(b.paidAt||'').slice(0,7)===iso(now).slice(0,7));
+ const monthDue=rows.filter(b=>!b.paid&&parseDate(b.dueDate)>=monthStart&&parseDate(b.dueDate)<nextMonth), weekDue=rows.filter(b=>!b.paid&&parseDate(b.dueDate)>=now&&parseDate(b.dueDate)<=weekEnd), overdue=rows.filter(b=>!b.paid&&parseDate(b.dueDate)<now), paid=rows.filter(b=>String(b.paidAt||b.lastPaidAt||'').slice(0,7)===iso(now).slice(0,7));
  const total=(list)=>list.reduce((a,b)=>a+Number(b.amount||0),0);
  const currencies=[...new Set(rows.map(b=>b.currency||'CAD'))];const fmt=(list)=>currencies.length>1?'Multiple currencies':money(total(list),currencies[0]||'CAD');
  $('monthTotal').textContent=fmt(monthDue);$('monthCount').textContent=monthDue.length+' bill(s)';
