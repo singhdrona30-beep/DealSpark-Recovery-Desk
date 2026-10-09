@@ -124,7 +124,10 @@ async def save_call_lead(
                 parsed = json.loads(body)
                 safe_detail = str(parsed.get("error") or parsed.get("message") or parsed.get("detail") or "HTTP request rejected")
             except (ValueError, AttributeError):
-                safe_detail = "HTTP request rejected"
+                # Non-JSON edge responses often explain 403s (for example, an access or WAF block).
+                safe_detail = "non-JSON response: " + " ".join(body.split())[:140]
+                if token:
+                    safe_detail = safe_detail.replace(token, "[REDACTED]")
         except Exception:
             safe_detail = "HTTP request rejected"
         print(f"VOICE_LEAD_SAVE_HTTP_ERROR status={exc.code} detail={safe_detail[:180]}")
