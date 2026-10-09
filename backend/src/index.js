@@ -177,12 +177,9 @@ export default {
           source: "livekit_voice", name, phone, email, service, intent, appointment_preference: appointmentPreference
         }),created).run();
 
-        // Queue a traceable notification record; delivery is only marked sent after a provider confirms it.
-        await env.DB.prepare(
-          "INSERT INTO notification_deliveries (id,business_id,lead_id,channel,recipient,status,error,attempts,created_at,updated_at) VALUES (?1,?2,?3,'email','', 'pending','Email connection/delivery worker not configured yet',0,?4,?4)"
-        ).bind(crypto.randomUUID(),business.id,leadId,created).run();
+        // Email delivery remains disabled until a business OAuth connection and delivery worker are configured.
 
-        return withCors(json({ ok: true, lead_id: leadId, business_id: business.id, notification_status: "pending_configuration" }, 201));
+        return withCors(json({ ok: true, lead_id: leadId, business_id: business.id, notification_status: "not_configured" }, 201));
       }
 
       if (path.startsWith("/api/leads/") && request.method === "PATCH") {
