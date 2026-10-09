@@ -57,3 +57,4 @@ export async function onRequestPost({request,env}){
   }
   return new Response(JSON.stringify({received:true}),{headers:{"content-type":"application/json"}});
 }
+// Production webhook signing secret is managed in Cloudflare Pages secrets; test live checkout before launch.
