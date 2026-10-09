@@ -4,9 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pull-requests: write
-  actions: read
+  contents: read
 
 concurrency:
   group: dealspark-livekit-deploy-${{ github.ref_name }}
@@ -35,21 +33,36 @@ jobs:
           fi
 
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create agent in LiveKit Cloud
+      - name: Restore existing LiveKit agent configuration
+        env:
+          LIVEKIT_URL: ${{ secrets.LIVEKIT_URL }}
+        run: |
+          # Reuse the agent created by the successful first deployment.
+          host="${LIVEKIT_URL#*://}"
+          host="${host%%/*}"
+          subdomain="${host%%.*}"
+          if [ -z "$subdomain" ] || [ "$subdomain" = "$host" ]; then
+            echo "::error::Could not determine LiveKit project subdomain from LIVEKIT_URL."
+            exit 1
+          fi
+          mkdir -p livekit-agent
+          cat > livekit-agent/livekit.toml <<EOF
+          [project]
+          subdomain = "$subdomain"
+
+          [agent]
+          id = "CA_fbBz3h6eW7xP"
+          EOF
+          echo "Restored configuration for the existing LiveKit agent."
+
+      - name: Deploy existing agent to LiveKit Cloud
         uses: livekit/deploy-action@v2.12.2
         env:
           LIVEKIT_URL: ${{ secrets.LIVEKIT_URL }}
           LIVEKIT_API_KEY: ${{ secrets.LIVEKIT_API_KEY }}
           LIVEKIT_API_SECRET: ${{ secrets.LIVEKIT_API_SECRET }}
           SECRET_LIST: ""
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          OPERATION: create
+          OPERATION: deploy
           WORKING_DIRECTORY: livekit-agent
-
-      - name: Report next step
-        if: always()
-        run: echo "Check the LiveKit action output and any generated livekit.toml pull request before running this workflow again."
