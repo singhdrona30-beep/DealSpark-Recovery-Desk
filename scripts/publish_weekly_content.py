@@ -3,7 +3,7 @@
 
 This intentionally publishes from an editorial queue rather than generating thin,
 unverified pages from search snippets. Each run publishes at most one new page.
-The weekly job refreshes the resource hub, validates every draft, deploys Pages directly, and leaves an audit trail in Git history. It also preserves the existing sitemap and analytics build behavior.
+The weekly job refreshes the resource hub, validates every draft, deploys Pages directly, and leaves an audit trail in Git history. It also preserves the existing sitemap and analytics build behavior, then notifies IndexNow about newly published URLs.
 """
 from __future__ import annotations
 import html
