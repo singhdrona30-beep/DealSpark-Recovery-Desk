@@ -128,6 +128,49 @@ try {
   await page.waitForFunction(() => document.getElementById("opsItems").innerText().includes("approved"));
   if (!(await page.locator("#opsItems").innerText()).includes("approved")) throw new Error("Operations queue approval flow failed");
 
+  // Onboarding form: make sure every field is sent, including fields whose names clash with window globals.
+  let onboardingPayload = null;
+  await page.route("https://dealspark-test-api.pages.dev/api/onboarding", async route => {
+    if (route.request().method() === "GET") {
+      return route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          business: { name: "Smoke Test Business", phone: "+14165550123" },
+          subscription: { plan: "ai_virtual_receptionist", status: "active", current_period_end: null },
+          config: { service_area: "", notification_email: "", services: "", opening_time: "08:00", closing_time: "18:00", greeting: "", forwarding_number: "", phone_connection_method: "not_decided", current_carrier: "" },
+          phone_connection_status: "not_connected"
+        })
+      });
+    }
+    onboardingPayload = route.request().postDataJSON();
+    return route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ ok: true, configuration_saved: true, activated: false, phone_connection_status: "not_connected" })
+    });
+  });
+  const onboardingPage = await page.goto("http://127.0.0.1:8787/onboarding.html", { waitUntil: "domcontentloaded" });
+  if (!onboardingPage?.ok()) throw new Error("Onboarding page failed to load for form test");
+  await page.locator("#status").waitFor({ state: "visible" });
+  await page.locator("#name").fill("Smoke Test HVAC");
+  await page.locator("#phone").fill("+14165550123");
+  await page.locator("#area").fill("Toronto");
+  await page.locator("#notify").fill("qa@example.com");
+  await page.locator("#services").fill("HVAC repairs");
+  await page.locator("#open").fill("07:00");
+  await page.locator("#close").fill("19:00");
+  await page.locator("#greeting").fill("Thanks for calling our HVAC team.");
+  await page.locator("#forwarding").fill("+12402314013");
+  await page.locator("#connection").selectOption("call_forwarding");
+  await page.locator("#carrier").fill("Smoke Test Carrier");
+  await page.locator("#setup button[type=submit]").click();
+  await page.waitForFunction(() => document.getElementById("msg").textContent.includes("Business information saved"));
+  if (!onboardingPayload || onboardingPayload.business_name !== "Smoke Test HVAC" || onboardingPayload.opening_time !== "07:00" || onboardingPayload.closing_time !== "19:00" || onboardingPayload.phone_connection_method !== "call_forwarding" || onboardingPayload.current_carrier !== "Smoke Test Carrier") {
+    throw new Error("Onboarding did not submit all business and phone-routing fields correctly");
+  }
+  if (onboardingPayload.activated === true) throw new Error("Onboarding must not claim phone routing is activated");
+
   await browser.close();
   console.log("DealSpark product UI smoke test: PASS (chat, recovery desk, 10 product demo pages, phone demo disclosure, product suite tabs, and onboarding safeguards)");
 } finally {
