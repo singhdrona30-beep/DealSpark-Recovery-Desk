@@ -18,6 +18,7 @@ try {
     window.DEALSPARK_API_BASE = location.origin + "/mock-api";
     window.DEALSPARK_SITE_KEY = "smoke-test-key";
   });
+  await page.route("https://dealspark-api.singhdrona30.workers.dev/analytics", route => route.fulfill({ status: 200, contentType: "application/json", headers: { "access-control-allow-origin": "*" }, body: JSON.stringify({ ok: true }) }));
   await page.route("http://127.0.0.1:8787/mock-api/api/leads", async route => {
     if (route.request().method() === "POST") {
       chatLeadPayloads.push(route.request().postDataJSON());
