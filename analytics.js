@@ -19,19 +19,16 @@
         referrer: document.referrer || "",
         target: String(target || "").slice(0, 1000)
       });
-      // text/plain is a CORS-safelisted content type and avoids a failing JSON preflight.
-      if (navigator.sendBeacon) {
-        navigator.sendBeacon(endpoint, new Blob([payload], { type: "text/plain;charset=UTF-8" }));
-      } else {
-        fetch(endpoint, {
-          method: "POST",
-          mode: "cors",
-          credentials: "omit",
-          headers: { "content-type": "text/plain;charset=UTF-8" },
-          body: payload,
-          keepalive: true
-        }).catch(function () {});
-      }
+      // Use an anonymous keepalive fetch. sendBeacon uses credentialed CORS in some browsers,
+      // which fails against the wildcard CORS policy used by this privacy-friendly endpoint.
+      fetch(endpoint, {
+        method: "POST",
+        mode: "cors",
+        credentials: "omit",
+        headers: { "content-type": "text/plain;charset=UTF-8" },
+        body: payload,
+        keepalive: true
+      }).catch(function () {});
     }
     send("page_view", location.pathname);
     document.addEventListener("click", function (event) {
