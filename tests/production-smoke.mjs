@@ -36,7 +36,7 @@ try {
   await page.locator("#chatInput").fill("555-0199");
   await page.locator("#chatForm button").click();
   await page.waitForTimeout(1000);
-  const chatText = await page.locator("#messages").innerText();
+  const chatText = await page.locator("#messages").innerText;
   if (!chatText.includes("sent your request") && !chatText.includes("confirm your request")) throw new Error("Chatbot did not finish submission. Messages: " + chatText + " inputDisabled: " + await page.locator("#chatInput").isDisabled() + " API calls: " + chatLeadPayloads.length);
   if (!chatText.includes("sent your request")) throw new Error("Chatbot submission failed. Messages: " + chatText + " API calls: " + chatLeadPayloads.length);
   if (!/follow up|thank/i.test(chatText)) throw new Error("Chatbot lead capture confirmation failed");
@@ -95,7 +95,7 @@ try {
 
   const phoneResponse = await page.goto("http://127.0.0.1:8787/phone-agent.html", { waitUntil: "domcontentloaded" });
   if (!phoneResponse?.ok()) throw new Error("Phone agent demo page failed to load");
-  const phoneText = await page.locator("body").innerText();
+  const phoneText = await page.locator("body").innerText;
   if (!phoneText.includes("Demo mode") || !phoneText.includes("real phone number")) {
     throw new Error("Phone demo must clearly disclose that live carrier routing is not connected");
   }
@@ -167,12 +167,12 @@ try {
   await page.locator("#opsIssue").fill("Call back and record the outcome");
   await page.locator("#opsForm button[type=submit]").click();
   await page.waitForFunction(() => document.getElementById("opsMsg").textContent.includes("Work item saved"));
-  await page.waitForFunction(() => document.getElementById("opsItems").innerText().includes("Smoke test lead"));
-  if (!(await page.locator("#opsItems").innerText()).includes("Smoke test lead")) throw new Error("Operations queue create/read flow failed");
+  await page.waitForFunction(() => document.getElementById("opsItems").innerText.includes("Smoke test lead"));
+  if (!(await page.locator("#opsItems").innerText).includes("Smoke test lead")) throw new Error("Operations queue create/read flow failed");
   await page.locator('#opsItems button[data-ops-action="approve"]').first().click();
   await page.waitForFunction(() => document.getElementById("opsMsg").textContent.includes("No external system was changed"));
-  await page.waitForFunction(() => document.getElementById("opsItems").innerText().includes("approved"));
-  if (!(await page.locator("#opsItems").innerText()).includes("approved")) throw new Error("Operations queue approval flow failed");
+  await page.waitForFunction(() => document.getElementById("opsItems").innerText.includes("approved"));
+  if (!(await page.locator("#opsItems").innerText).includes("approved")) throw new Error("Operations queue approval flow failed");
 
   // Onboarding form: make sure every field is sent, including fields whose names clash with window globals.
   let onboardingPayload = null;
