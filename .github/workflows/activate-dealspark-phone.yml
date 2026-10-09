@@ -62,35 +62,52 @@ jobs:
 
           lk sip dispatch list --json > /tmp/dispatch-before.json
           cat /tmp/dispatch-before.json
-          mapfile -t good_rules < <(jq -r '
+
+          # The existing rules conflict. Remove only those two dispatch rules,
+          # then create one explicit rule tied to the active phone's trunk.
+          mapfile -t conflicting_rules < <(jq -r '
+            .items[]?
+            | select((.sipDispatchRuleId // "") == "SDR_3LfzEeYd7rmQ"
+                  or (.sipDispatchRuleId // "") == "SDR_E8XKvbVXEZTe")
+            | .sipDispatchRuleId
+          ' /tmp/dispatch-before.json | sort -u)
+          if [ "${#conflicting_rules[@]}" -lt 1 ]; then
+            echo "::error::Expected existing conflicting dispatch rules were not found; stopping safely."
+            exit 1
+          fi
+          for old_rule in "${conflicting_rules[@]}"; do
+            echo "Removing conflicting dispatch rule: $old_rule"
+            lk sip dispatch delete "$old_rule"
+          done
+
+          jq -n --arg trunk "$phone_id" '{
+            name: "dealspark-inbound",
+            trunkIds: [$trunk],
+            rule: {dispatchRuleIndividual: {roomPrefix: "dealspark-call-"}},
+            roomConfig: {agents: [{agentName: "dealspark-receptionist"}]}
+          }' > /tmp/dealspark-dispatch-rule.json
+
+          echo "Creating a clean dispatch rule for the active phone trunk."
+          lk sip dispatch create /tmp/dealspark-dispatch-rule.json
+
+          lk sip dispatch list --json > /tmp/dispatch-created.json
+          mapfile -t created_rules < <(jq -r --arg trunk "$phone_id" '
             .items[]?
             | select((.name // "") == "dealspark-inbound")
             | select((.rule.dispatchRuleIndividual.roomPrefix // "") == "dealspark-call-")
             | select(any(.roomConfig.agents[]?; .agentName == "dealspark-receptionist"))
+            | select((.trunkIds // .trunk_ids // []) | index($trunk))
             | .sipDispatchRuleId // empty
-          ' /tmp/dispatch-before.json | sort -u)
-          if [ "${#good_rules[@]}" -ne 1 ]; then
-            echo "::error::Expected exactly one correctly configured receptionist rule; found ${#good_rules[@]}. Refusing to delete or recreate rules automatically."
+          ' /tmp/dispatch-created.json | sort -u)
+          if [ "${#created_rules[@]}" -ne 1 ]; then
+            echo "::error::Expected exactly one new explicit receptionist rule for this phone trunk; found ${#created_rules[@]}."
+            cat /tmp/dispatch-created.json
             exit 1
           fi
-          good_rule_id="${good_rules[0]}"
-          echo "Correct receptionist rule found: $good_rule_id"
+          rule_id="${created_rules[0]}"
+          echo "Created receptionist dispatch rule: $rule_id"
 
-          if [ -n "$attached_rule_ids" ] && [[ "$attached_rule_ids" == *,* ]]; then
-            echo "::error::Multiple rules are attached to the active number; stopping safely."
-            exit 1
-          fi
-
-          if [ -n "$attached_rule_ids" ] && [ "$attached_rule_ids" != "$good_rule_id" ]; then
-            if ! jq -e --arg id "$attached_rule_ids" '.items[]? | select(.sipDispatchRuleId == $id)' /tmp/dispatch-before.json >/dev/null; then
-              echo "::error::Attached rule $attached_rule_ids was not found in the dispatch list; refusing to change routing."
-              exit 1
-            fi
-            echo "Removing only the malformed dispatch rule $attached_rule_ids; the phone number itself will not be released."
-            lk sip dispatch delete "$attached_rule_ids"
-          fi
-
-          lk number update --id "$phone_id" --sip-dispatch-rule-id "$good_rule_id"
+          lk number update --id "$phone_id" --sip-dispatch-rule-id "$rule_id"
 
           echo "Verifying receptionist rule and number assignment."
           lk sip dispatch list --json > /tmp/dispatch-after.json
