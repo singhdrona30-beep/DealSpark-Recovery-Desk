@@ -94,7 +94,8 @@ async function sendVoiceLeadNotification(env, business, lead) {
       method: "POST",
       headers: {
         "authorization": `Bearer ${env.RESEND_API_KEY}`,
-        "content-type": "application/json"
+        "content-type": "application/json",
+        "user-agent": "DealSparkLeadNotifier/1.0"
       },
       body: JSON.stringify({
         from: "DealSpark Lead Alerts <onboarding@resend.dev>",
