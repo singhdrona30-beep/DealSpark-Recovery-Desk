@@ -30,9 +30,9 @@ jobs:
       - name: Deploy Worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ACCOUNT_ID: "72b0a6d76cd42aa06a1a54f7140c7696"
           CLOUDFLARE_D1_DATABASE_ID: ${{ secrets.CLOUDFLARE_D1_DATABASE_ID }}
-        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_D1_DATABASE_ID != '' }}
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_D1_DATABASE_ID != '' }}
         run: |
           sed -i "s/REPLACE_WITH_CLOUDFLARE_D1_DATABASE_ID/$CLOUDFLARE_D1_DATABASE_ID/" wrangler.toml
           npx wrangler d1 migrations apply dealspark --remote
