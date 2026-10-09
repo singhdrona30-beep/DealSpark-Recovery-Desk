@@ -75,6 +75,58 @@ try {
     if (!onboardingHtml.includes(label)) throw new Error("Onboarding is missing phone-connection safeguard: " + label);
   }
 
+  // Product workspace: exercise the real dashboard UI against mocked API responses.
+  let mockItems = [{
+    id: "existing-item",
+    product: "LeadFlow",
+    item: "Missed inquiry",
+    issue: "Call back the customer",
+    status: "needs_review",
+    created_at: new Date().toISOString()
+  }];
+  await page.addInitScript(() => {
+    localStorage.setItem("dealspark_dashboard_key", "smoke-test-public-key");
+    localStorage.setItem("ds_token", "smoke-test-session-token");
+  });
+  await page.route("https://dealspark-test-api.pages.dev/api/account", route => route.fulfill({
+    status: 200,
+    contentType: "application/json",
+    body: JSON.stringify({
+      business: { name: "Smoke Test Business", phone: "+14165550123" },
+      subscription: { plan: "leadflow", status: "active", current_period_end: null },
+      effective_status: "active",
+      locked: false,
+      leads: []
+    })
+  }));
+  await page.route("https://dealspark-test-api.pages.dev/api/items", async route => {
+    if (route.request().method() === "GET") {
+      return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true, items: mockItems }) });
+    }
+    const body = route.request().postDataJSON();
+    const item = { id: "created-item", product: body.product, item: body.item, issue: body.issue, status: "needs_review", created_at: new Date().toISOString() };
+    mockItems.unshift(item);
+    return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true, id: item.id }) });
+  });
+  await page.route(/https:\/\/dealspark-test-api\.pages\.dev\/api\/items\/[^/]+\/(approve|dismiss)$/, async route => {
+    const action = route.request().url().endsWith("/approve") ? "approve" : "dismiss";
+    const id = route.request().url().split("/").slice(-2)[0];
+    mockItems = mockItems.map(item => item.id === id ? { ...item, status: action === "approve" ? "approved" : "dismissed" } : item);
+    return route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ ok: true, id, status: action === "approve" ? "approved" : "dismissed", external_action_executed: false }) });
+  });
+  const dashboardResponse = await page.goto("http://127.0.0.1:8787/dashboard.html", { waitUntil: "domcontentloaded" });
+  if (!dashboardResponse?.ok()) throw new Error("Dashboard failed to load");
+  await page.locator("#opsSection").waitFor({ state: "visible" });
+  if (await page.locator("#opsProduct option").count() !== 1) throw new Error("Standalone plan product scoping failed");
+  await page.locator("#opsItem").fill("Smoke test lead");
+  await page.locator("#opsIssue").fill("Call back and record the outcome");
+  await page.locator("#opsForm button[type=submit]").click();
+  await page.waitForFunction(() => document.getElementById("opsMsg").textContent.includes("Work item saved"));
+  if (!(await page.locator("#opsItems").innerText()).includes("Smoke test lead")) throw new Error("Operations queue create/read flow failed");
+  await page.locator('#opsItems button[data-ops-action="approve"]').first().click();
+  await page.waitForFunction(() => document.getElementById("opsMsg").textContent.includes("No external system was changed"));
+  if (!(await page.locator("#opsItems").innerText()).includes("approved")) throw new Error("Operations queue approval flow failed");
+
   await browser.close();
   console.log("DealSpark product UI smoke test: PASS (chat, recovery desk, 10 product demo pages, phone demo disclosure, product suite tabs, and onboarding safeguards)");
 } finally {
