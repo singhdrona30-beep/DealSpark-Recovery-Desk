@@ -80,6 +80,38 @@ jobs:
           print("Direct lead-saving tool test passed.")
           PY
 
+      - name: Verify tenant-safe inbound number routing
+        shell: bash
+        run: |
+          set -euo pipefail
+          payload='{"business_id":"","called_number":"+12402314013","is_phone_call":true,"name":"DealSpark Route QA","phone":"202-555-0147","service":"Automated inbound route test","email":"","appointment_preference":"","notes":"ROUTE_TEST_ONLY_DO_NOT_CONTACT","intent":"call"}'
+          http_code="$(curl -sS -o /tmp/route-response.json -w "%{http_code}" \
+            -X POST "$DEALSPARK_API_URL/api/voice-leads" \
+            -H "authorization: Bearer $VOICE_AGENT_TOKEN" \
+            -H "content-type: application/json" \
+            -H "user-agent: DealSparkVoiceAgent/1.0" \
+            --data "$payload")"
+          if [ "$http_code" != "201" ]; then
+            echo "::error::Dialed-number route test returned HTTP $http_code."
+            cat /tmp/route-response.json
+            exit 1
+          fi
+          jq -e '.ok == true and .business_id == "65e080fb-8e38-4785-9193-a9a0898556f8" and .notification_status == "not_configured"' /tmp/route-response.json
+          echo "Known demo DID routes to the demo tenant without using the global business ID."
+
+          missing_number='{"business_id":"","called_number":"","is_phone_call":true,"name":"No Route QA","phone":"202-555-0146","service":"Missing route rejection test","notes":"ROUTE_TEST_ONLY_DO_NOT_CONTACT"}'
+          missing_code="$(curl -sS -o /tmp/missing-route-response.json -w "%{http_code}" \
+            -X POST "$DEALSPARK_API_URL/api/voice-leads" \
+            -H "authorization: Bearer $VOICE_AGENT_TOKEN" \
+            -H "content-type: application/json" \
+            --data "$missing_number")"
+          if [ "$missing_code" != "422" ]; then
+            echo "::error::Missing dialed-number test should fail safely with HTTP 422, got $missing_code."
+            cat /tmp/missing-route-response.json
+            exit 1
+          fi
+          echo "Calls without a dialed number are rejected safely instead of falling back to the demo tenant."
+
       - name: Run one synthetic text conversation and verify transcript evidence
         shell: bash
         run: |
