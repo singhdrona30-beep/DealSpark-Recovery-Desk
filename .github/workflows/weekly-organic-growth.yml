@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "scripts/publish_weekly_content.py"
+      - ".github/workflows/weekly-organic-growth.yml"
   workflow_dispatch:
   schedule:
     - cron: "20 13 * * 1"
