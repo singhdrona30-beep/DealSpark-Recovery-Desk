@@ -2,12 +2,6 @@ name: Deploy DealSpark LiveKit Agent
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - "livekit-agent/**"
-      - ".github/workflows/deploy-livekit-agent.yml"
 
 permissions:
   contents: read
