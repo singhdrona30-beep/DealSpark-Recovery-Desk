@@ -11,15 +11,20 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
-  group: dealspark-weekly-content
-  cancel-in-progress: false
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout public website
         uses: actions/checkout@v4
@@ -34,27 +39,23 @@ jobs:
           class Check(HTMLParser):
               def __init__(self):
                   super().__init__()
-                  self.title = False
-                  self.h1 = 0
                   self.description = False
                   self.canonical = False
               def handle_starttag(self, tag, attrs):
                   a = dict(attrs)
-                  if tag == "title": self.title = True
-                  if tag == "h1": self.h1 += 1
                   if tag == "meta" and a.get("name") == "description" and a.get("content"): self.description = True
                   if tag == "link" and a.get("rel") == "canonical" and a.get("href"): self.canonical = True
           pages = list(Path(".").glob("*-script.html")) + list(Path(".").glob("*-checklist.html")) + list(Path(".").glob("*-template.html")) + list(Path(".").glob("*-comparison.html")) + [Path("resources.html")]
           failures = []
           for page in pages:
               if not page.exists(): continue
-              html = page.read_text(encoding="utf-8")
+              source = page.read_text(encoding="utf-8")
               check = Check()
-              check.feed(html)
-              if "<!doctype html>" not in html.lower() or "<html" not in html.lower(): failures.append(f"{page}: missing HTML shell")
+              check.feed(source)
+              if "<!doctype html>" not in source.lower() or "<html" not in source.lower(): failures.append(f"{page}: missing HTML shell")
               if not check.description: failures.append(f"{page}: missing meta description")
               if not check.canonical: failures.append(f"{page}: missing canonical")
-              if not re.search(r'href="(?:index\.html#pricing|chatbot\.html|resources\.html|index\.html#resources)', html): failures.append(f"{page}: missing useful internal CTA")
+              if not re.search(r'href="(?:index\.html#pricing|chatbot\.html|resources\.html|index\.html#resources)', source): failures.append(f"{page}: missing useful internal CTA")
           if failures:
               print("\n".join(failures))
               sys.exit(1)
@@ -67,3 +68,59 @@ jobs:
           git add '*.html' scripts/publish_weekly_content.py
           git diff --cached --quiet || git commit -m "Publish weekly DealSpark business guide"
           git push
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Inject analytics and rebuild the public sitemap
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          base = "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk"
+          excluded = {
+              "signup.html", "dashboard.html", "sales-agent.html", "chatbot.html", "lead-radar.html",
+              "onboarding.html", "thank-you.html", "ops-lab/connector-status.html",
+              "ops-lab/integrations-demo.html", "ops-lab/top10-integrations.html", "traffic-report.html"
+          }
+          for page in Path(".").rglob("*.html"):
+              rel = page.as_posix()
+              if rel.startswith((".git/", "node_modules/")) or rel == "traffic-report.html":
+                  continue
+              source = page.read_text(encoding="utf-8")
+              source = re.sub(
+                  r'<script\b[^>]*>(?:(?!</script>).)*?dealspark-analytics\.singhdrona30\.workers\.dev(?:(?!</script>).)*?</script>',
+                  "", source, flags=re.IGNORECASE | re.DOTALL
+              )
+              tag = '<script defer src="/DealSpark-Recovery-Desk/analytics.js"></script>'
+              if tag not in source and "</head>" in source:
+                  source = source.replace("</head>", "  " + tag + "\n</head>", 1)
+              page.write_text(source, encoding="utf-8")
+          urls = []
+          for page in Path(".").rglob("*.html"):
+              rel = page.as_posix()
+              if rel.startswith((".git/", "node_modules/")) or rel in excluded or rel.startswith("global/"):
+                  continue
+              if rel.endswith("-demo.html") or (rel.startswith("ops-lab/") and rel not in {"ops-lab/index.html"}):
+                  continue
+              if rel == "product/recovery-desk/index.html":
+                  continue
+              if rel == "index.html":
+                  url = base + "/"
+              elif rel.endswith("/index.html"):
+                  url = base + "/" + rel[:-len("index.html")]
+              else:
+                  url = base + "/" + rel
+              urls.append(url)
+          urls = sorted(set(urls))
+          xml = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+          xml.extend("  <url><loc>" + url + "</loc></url>" for url in urls)
+          xml.append("</urlset>")
+          Path("sitemap.xml").write_text("\n".join(xml) + "\n", encoding="utf-8")
+          print(f"Built public site with analytics and {len(urls)} sitemap URLs.")
+          PY
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - name: Deploy public website
+        id: deployment
+        uses: actions/deploy-pages@v4
