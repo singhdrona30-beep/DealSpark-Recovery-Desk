@@ -154,14 +154,12 @@ class App:
                                     page.goto(search_url, wait_until="domcontentloaded", timeout=45000)
                                     page.wait_for_timeout(2500)
                                     links = page.locator("a").all()
-                                    rank = 0
-                                    for link in links:
+                                    for rank, link in enumerate(links, start=1):
                                         try:
                                             href = link.get_attribute("href") or ""
                                             txt = (link.inner_text(timeout=700) or "").strip()
                                             if not href.startswith("http") or not txt: continue
                                             if host_is_store(href):
-                                                rank += 1
                                                 found = True; pos = str(rank); result_url = href
                                                 break
                                         except Exception:
