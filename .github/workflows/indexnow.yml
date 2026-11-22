@@ -1,0 +1,35 @@
+name: Notify IndexNow after DealSpark Pages deploy
+
+on:
+  workflow_run:
+    workflows: ["Publish DealSpark buyer pages"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  submit:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Submit updated buyer URLs to IndexNow
+        env:
+          INDEXNOW_KEY: "dealspark-indexnow-2026-buyer-pages-7f3c9a1d"
+        run: |
+          curl --fail-with-body --silent --show-error \
+            -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            --data-binary @- <<JSON
+          {
+            "host": "singhdrona30-beep.github.io",
+            "key": "${INDEXNOW_KEY}",
+            "keyLocation": "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/dealspark-indexnow-2026-buyer-pages-7f3c9a1d.txt",
+            "urlList": [
+              "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/",
+              "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/buy/46-inch-pet-grooming-table.html",
+              "https://singhdrona30-beep.github.io/DealSpark-Recovery-Desk/buy/wright-watchmaking-kit.html"
+            ]
+          }
+          JSON
